@@ -89,7 +89,7 @@ Map create_map(char* path, uint8_t type) {
             }
         }
     }
-
+    
     map.assets = al_load_bitmap("Assets/map_packets.png");
     if (!map.assets) {
         game_abort("Can't load map assets");
