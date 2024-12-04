@@ -100,7 +100,9 @@ void draw_bullet(Bullet * bullet, Point camera){
 
 void destroy_bullet(Bullet * bullet){
     // In case you are using immage asset for the bullet, free it here
-    al_destroy_bitmap(bullet->image);
+    if (bullet && bullet->image) {
+        al_destroy_bitmap(bullet->image);
+    }
 }
 
 /*
@@ -152,11 +154,13 @@ void drawBulletList(BulletNode * dummyhead, Point camera){
     }
 }
 
-void destroyBulletList(BulletNode * dummyhead){
-    while(dummyhead != NULL){
-        BulletNode * del = dummyhead;
-        dummyhead = dummyhead->next;
+void destroyBulletList(BulletNode* dummyhead) {
+    BulletNode* cur = dummyhead->next;
+    while (cur != NULL) {
+        BulletNode* del = cur;
+        cur = cur->next;
         destroy_bullet(&del->bullet);
         free(del);
     }
+    free(dummyhead);
 }

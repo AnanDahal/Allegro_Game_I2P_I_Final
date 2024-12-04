@@ -16,63 +16,45 @@
 [LOG] coord x:1 
  coords y:3 
 
-[LOG] Key 4 down
 [LOG] Key 19 down
+[LOG] Key 1 down
+[LOG] Key 1 up
 [LOG] Key 19 up
-[LOG] Key 19 down
+[LOG] Key 4 down
 [LOG] Key 4 up
+[LOG] Key 19 down
 [LOG] Key 19 up
 [LOG] Key 19 down
 [LOG] Key 19 up
-[LOG] Key 4 down
+[LOG] Change scene from game to lose
+[LOG] Change scene from lose to loading
+[LOG] No BGM File found [None], no sound will be played
+[LOG] Change scene from loading to game
+[LOG] Using Assets/map0.txt to load the map
+[LOG] Creating Enemy at ( 6, 3 )
+[LOG] Creating Enemy at ( 15, 3 )
+[LOG] coord x:1 
+ coords y:3 
+
 [LOG] Key 19 down
 [LOG] Key 19 up
-[LOG] Key 4 up
 [LOG] Key 1 down
+[LOG] Key 19 down
 [LOG] Key 1 up
-[LOG] Key 1 down
-[LOG] Key 1 up
-[LOG] Key 1 down
-[LOG] Key 1 up
-[LOG] Key 1 down
-[LOG] Key 1 up
+[LOG] Key 19 up
+[LOG] Key 19 down
 [LOG] Key 4 down
+[LOG] Key 19 up
+[LOG] Key 19 down
+[LOG] Key 19 up
 [LOG] Key 4 up
 [LOG] Key 4 down
 [LOG] Key 23 down
 [LOG] Key 23 up
-[LOG] Key 4 up
+[LOG] Key 19 down
+[LOG] Key 19 up
 [LOG] Key 1 down
-[LOG] Key 19 down
-[LOG] Key 1 up
-[LOG] Key 19 up
-[LOG] Key 19 down
-[LOG] Key 19 up
-[LOG] Key 4 down
-[LOG] Key 19 down
-[LOG] Key 19 up
 [LOG] Key 4 up
-[LOG] Key 0 up
-[LOG] Key 0 up
-[LOG] Key 0 up
-[LOG] Key 0 up
-[LOG] Key 4 down
-[LOG] Key 19 down
-[LOG] Key 4 up
-[LOG] Key 19 up
-[LOG] Key 19 down
-[LOG] Key 4 down
-[LOG] Key 19 up
-[LOG] Key 4 up
-[LOG] Key 1 down
-[LOG] Key 1 up
-[LOG] Key 1 down
-[LOG] Key 23 down
-[LOG] Key 23 up
-[LOG] Key 19 down
-[LOG] Key 19 up
-[LOG] Key 19 down
-[LOG] Key 19 up
 [LOG] Key 19 down
 [LOG] Key 1 up
 [LOG] Key 1 down
@@ -82,39 +64,7 @@
 [LOG] Key 19 down
 [LOG] Key 19 up
 [LOG] Key 4 up
-[LOG] Key 1 down
-[LOG] Key 19 down
-[LOG] Key 1 up
-[LOG] Key 4 down
-[LOG] Key 19 up
-[LOG] Key 1 down
-[LOG] Key 4 up
-[LOG] Key 1 up
-[LOG] Key 19 down
-[LOG] Key 19 up
-[LOG] Key 4 down
-[LOG] Key 19 down
-[LOG] Key 4 up
-[LOG] Key 1 down
-[LOG] Key 19 up
-[LOG] Key 4 down
-[LOG] Key 1 up
-[LOG] Key 19 down
-[LOG] Key 4 up
-[LOG] Key 1 down
-[LOG] Key 19 up
-[LOG] Key 1 up
-[LOG] Key 19 down
-[LOG] Key 1 down
-[LOG] Key 19 up
-[LOG] Key 1 up
-[LOG] Key 4 down
-[LOG] Key 1 down
-[LOG] Key 4 up
-[LOG] Key 1 up
-[LOG] Key 23 down
-[LOG] Key 4 down
-[LOG] Key 23 up
-[LOG] Key 4 up
+[LOG] Change scene from game to win
+[LOG] No BGM File found [Assets/audio/victory_theme.mp3], no sound will be played
 [LOG] Window close button pressed
 [LOG] Terminating ...
