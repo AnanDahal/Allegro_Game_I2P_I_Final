@@ -18,7 +18,7 @@ BulletNode * bulletList; // Bullet List
 
 // Weapon
 Weapon weapon; 
-int coins_obtained;
+
 
 static void init(void){
     timer_countdown = 60;
@@ -55,7 +55,6 @@ static void update(void){
     if (coins_obtained == 3) {
         timer_countdown--;
         if (timer_countdown == 0) {
-            coins_obtained = 0;
             change_scene(create_win_scene());
             return;
         }
@@ -248,9 +247,9 @@ static void draw_lose(void) {
     draw_button(restartButton);
     al_draw_text(
         P2_FONT,
-        restartButton.hovered ? al_map_rgb(255, 255, 100) : al_map_rgb(225, 225, 225), // Hover changes color
+        al_map_rgb(66, 76, 110), // Hover changes color
         SCREEN_W / 2,
-        restartButton.y + (restartButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (restartButton.hovered ? 2 : 0), // Shift downward slightly if hovered
+        restartButton.y + (restartButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (restartButton.hovered ? 7 : 0), // Shift downward slightly if hovered
         ALLEGRO_ALIGN_CENTER,
         "Restart"
     );
@@ -259,9 +258,9 @@ static void draw_lose(void) {
     draw_button(quitButton);
     al_draw_text(
         P2_FONT,
-        quitButton.hovered ? al_map_rgb(255, 255, 100) : al_map_rgb(225, 225, 225), // Hover changes color
+        al_map_rgb(66, 76, 110), // Hover changes color
         SCREEN_W / 2,
-        quitButton.y + (quitButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (quitButton.hovered ? 2 : 0), // Shift downward slightly if hovered
+        quitButton.y + (quitButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (quitButton.hovered ? 7 : 0), // Shift downward slightly if hovered
         ALLEGRO_ALIGN_CENTER,
         "Quit"
     );
@@ -321,6 +320,7 @@ static void update_win(void) {
         change_scene(create_menu_scene());
     }
     if (quitButton.hovered && (mouseState.buttons & 1)) { // Quit button pressed
+        coins_obtained = 0;
         al_rest(0.2); // Add a small delay to avoid abrupt exit
         exit(0);
     }
@@ -355,9 +355,9 @@ static void draw_win(void) {
     draw_button(mainMenuButton);
     al_draw_text(
         P2_FONT,
-        mainMenuButton.hovered ? al_map_rgb(255, 255, 100) : al_map_rgb(225, 225, 225),
+        al_map_rgb(66, 76, 110),
         SCREEN_W / 2,
-        mainMenuButton.y + (mainMenuButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (mainMenuButton.hovered ? 2 : 0),
+        mainMenuButton.y + (mainMenuButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (mainMenuButton.hovered ? 7 : 0),
         ALLEGRO_ALIGN_CENTER,
         "Main Menu"
     );
@@ -366,9 +366,9 @@ static void draw_win(void) {
     draw_button(quitButton);
     al_draw_text(
         P2_FONT,
-        quitButton.hovered ? al_map_rgb(255, 255, 100) : al_map_rgb(225, 225, 225),
+        al_map_rgb(66, 76, 110),
         SCREEN_W / 2,
-        quitButton.y + (quitButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (quitButton.hovered ? 2 : 0),
+        quitButton.y + (quitButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (quitButton.hovered ? 7 : 0),
         ALLEGRO_ALIGN_CENTER,
         "Quit"
     );

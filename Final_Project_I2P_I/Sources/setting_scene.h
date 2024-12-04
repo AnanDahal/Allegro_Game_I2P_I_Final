@@ -4,5 +4,6 @@
 #include "utility.h"
 
 Scene create_setting_scene(void);
+Scene create_shop_scene(void);
 
 #endif /* setting_scene_h */

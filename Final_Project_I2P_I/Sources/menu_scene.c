@@ -9,9 +9,30 @@
 #include "game.h"
 
 static Button settingButton;
+static ALLEGRO_BITMAP* nthu_bitmap;
+static ALLEGRO_BITMAP* iskcon_bitmap;
+static ALLEGRO_BITMAP* menu_bitmap;
 
 static void init(void) {
     settingButton = button_create(SCREEN_W / 2 - 200, 600, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+
+    nthu_bitmap = al_load_bitmap("Assets/nthu.png");
+
+    if (!nthu_bitmap) {
+        game_abort("Failed to load nthu bitmap");
+    }
+
+    iskcon_bitmap = al_load_bitmap("Assets/iskcon.png");
+
+    if (!iskcon_bitmap) {
+        game_abort("Failed to load iskcon bitmap");
+    }
+
+    menu_bitmap = al_load_bitmap("Assets/menu_bg.png");
+
+   if (!menu_bitmap) {
+        game_abort("Failed to load menu bitmap");
+    }
 
     change_bgm("Assets/audio/rickroll.mp3");
 }
@@ -39,6 +60,12 @@ static void update(void) {
 
 static void draw(void) {
     // Title Text
+    al_draw_scaled_bitmap(menu_bitmap,
+        0, 0, 1640, 1000,
+        0, 0, 1640, 1000, 0);
+    al_draw_scaled_bitmap(nthu_bitmap,
+        0, 0, 32, 32,
+        SCREEN_W / 4, SCREEN_H / 2, 64, 64, 0);
     al_draw_text(
         TITLE_FONT,
         al_map_rgb(146, 161, 185),
@@ -56,11 +83,24 @@ static void draw(void) {
         "NIO's HELL"
     );
 
+    
+
+    
+
     al_draw_text(
         P2_FONT,
         al_map_rgb(255, 255, 255),
         SCREEN_W / 2,
         500,
+        ALLEGRO_ALIGN_CENTER,
+        "PRESS [ENTER] TO PLAY"
+    );
+
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(199, 207, 221),
+        SCREEN_W / 2,
+        498,
         ALLEGRO_ALIGN_CENTER,
         "PRESS [ENTER] TO PLAY"
     );
@@ -84,10 +124,20 @@ static void draw(void) {
         ALLEGRO_ALIGN_CENTER,
         "SETTING"
     );
+    al_draw_scaled_bitmap(nthu_bitmap,
+        0, 0, 317, 318,
+        100, 100, 300, 300, 0);
+
+    al_draw_scaled_bitmap(iskcon_bitmap,
+        0, 0, 520, 480,
+        1300, 100, 300, 300, 0);
 }
 
 static void destroy(void) {
     destroy_button(&settingButton);
+    al_destroy_bitmap(nthu_bitmap);
+    al_destroy_bitmap(iskcon_bitmap);
+    al_destroy_bitmap(menu_bitmap);
 }
 
 
