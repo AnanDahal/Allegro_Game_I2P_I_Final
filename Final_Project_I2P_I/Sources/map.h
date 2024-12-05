@@ -12,18 +12,24 @@
 #define MAX_MAP_ROW 100
 #define MAX_MAP_COL 100
 #define MAX_ENEMY_SPAWN 100
+#define MAX_DOORS 3
 
 /*
     Map Tiles type
     Hint : Some type might need a background, to configure it try to modify "get_map_offset(Map * map)"
 */
+
+int coin_counter;
 typedef enum _BLOCK_TYPE{
     FLOOR,
     WALL,
     DOOR_CLOSE,
     HOLE,
     COIN,
-    NOTHING
+    NOTHING,
+    TROPHY,
+    BUTTON,
+    DOOR_OPEN
 } BLOCK_TYPE;
 
 typedef enum _COIN_STATUS {
@@ -31,6 +37,20 @@ typedef enum _COIN_STATUS {
     DISAPPEARING,
     DISAPPEAR
 } COIN_STATUS;
+
+typedef enum _TROPHY_STATUS {
+    T_APPEAR,
+    T_DISAPPEARING, 
+    T_DISAPPEAR
+} TROPHY_STATUS;
+
+
+typedef enum _DOOR_STATUS {
+    CLOSED,
+    OPENING,
+    OPEN
+} DOOR_STATUS;
+
 
 // Map Struct
 typedef struct Map_{
@@ -43,8 +63,24 @@ typedef struct Map_{
     ALLEGRO_BITMAP* assets;
     ALLEGRO_BITMAP* coin_assets;
 
+    ALLEGRO_BITMAP* trophy_assets;
     // Coin Properties
     ALLEGRO_SAMPLE* coin_audio;
+
+    uint8_t animation;
+
+    COIN_STATUS coin_status[MAX_MAP_ROW][MAX_MAP_COL];
+    int coin_disappear_animation[MAX_MAP_ROW][MAX_MAP_COL];
+
+    ALLEGRO_SAMPLE* trophy_audio;
+    TROPHY_STATUS trophy_status[MAX_MAP_ROW][MAX_MAP_COL];
+
+    // Door Properties
+    ALLEGRO_BITMAP* door_assets;
+    DOOR_STATUS door_status;
+
+    // Button Assets
+    ALLEGRO_BITMAP* button_assets;
     
     // Spawn Coordinate
     Point Spawn;
@@ -52,7 +88,11 @@ typedef struct Map_{
     char EnemyCode[MAX_ENEMY_SPAWN];
     uint8_t EnemySpawnSize;
 
+    bool win;
+
 } Map;
+
+
 
 /*
     MAP FUNCTION

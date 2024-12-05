@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "map.h"
+#include "game_scene.h"
 
 /*
     [OFFSET CALCULATOR FUNCTIONS]
@@ -16,10 +17,19 @@ static Point get_hole_offset_assets(Map* map, int i, int j);
 static const int offset = 16;
 
 
+static int coin_animation = 0;
+static int trophy_animation = 0;
+static int button_animation = 0;
+static int door_animation = 0;
+
+
 static bool tile_collision(Point player, Point tile_coord);
 
 Map create_map(char* path, uint8_t type) {
     Map map;
+
+    button_animation = 0;
+    door_animation = 0;
 
     memset(&map, 0, sizeof(Map));
 
@@ -45,7 +55,7 @@ Map create_map(char* path, uint8_t type) {
         map.offset_assets[i] = (Point*)malloc(map.col * sizeof(Point));
     }
 
-    int coin_counter = 0;
+    coin_counter = 0;
 
     // Scan the map to the array
     int door_counter = 0;
@@ -76,9 +86,14 @@ Map create_map(char* path, uint8_t type) {
 
             case 'C': // Coins
                 map.map[i][j] = COIN;
+                map.coin_status[i][j] = APPEAR;
                 coin_counter++;
                 break;
 
+            case 'T': // Trophy
+                map.map[i][j] = TROPHY;
+                map.trophy_status[i][j] = T_DISAPPEAR;
+                break;
             case '_': // Nothing
                 map.map[i][j] = HOLE;
                 break;
@@ -100,14 +115,25 @@ Map create_map(char* path, uint8_t type) {
         game_abort("Can't load coin assets");
     }
 
+    // load the offset for each tiles type
+    get_map_offset(&map);
+
     map.coin_audio = al_load_sample("Assets/audio/coins.mp3");
     if (!map.coin_audio) {
         game_abort("Can't load coin audio");
     }
 
-    // load the offset for each tiles type
-    get_map_offset(&map);
+    map.trophy_assets = al_load_bitmap("Assets/trophy.png");
+    if (!map.trophy_assets) {
+        game_abort("Can't load trophy assets");
+    }
 
+    map.trophy_audio = al_load_sample("Assets/audio/win.mp3");
+    if (!map.trophy_audio) {
+        game_abort("Can't load trophy audio");
+    }
+
+    map.win = false;
 
     fclose(f);
 
@@ -132,13 +158,66 @@ void draw_map(Map* map, Point cam) {
                 0 // flag : set 0
             );
 
+            int src_coin_width = 16;
+            int src_coin_height = 16;
+            
+
             switch (map->map[i][j]) {
-            case COIN:
+            case COIN: {
+                int offsetx = 0;
+                int offsety = 0;
+                if (map->coin_status[i][j] == APPEAR) {
+                    offsetx = src_coin_width * (int)(coin_animation / 8);
+                }
+                else if (map->coin_status[i][j] == DISAPPEARING) {
+                    offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 8);
+                    offsety = 1 * src_coin_height;
+                    map->coin_disappear_animation[i][j] += 1;
+                    if (map->coin_disappear_animation[i][j] == 64) {
+                        map->coin_status[i][j] = DISAPPEAR;
+                    }
+                }
+                else if (map->coin_status[i][j] == DISAPPEAR) {
+                    map->map[i][j] = FLOOR;
+                    break;
+                }
                 al_draw_scaled_bitmap(map->coin_assets,
-                    0, 0, 16, 16,
+                    offsetx, offsety, src_coin_width, src_coin_height,
                     dx, dy, TILE_SIZE, TILE_SIZE,
                     0);
                 break;
+            }
+            case TROPHY: {
+                if (coins_obtained == coin_counter && map->trophy_status[i][j] != T_DISAPPEARING) {
+                    int offsetx = 32 * (int)(trophy_animation / (64 / 9));
+                    if (offsetx > 32 * 9) {
+                        offsetx = 0;
+                    }
+                    int offsety = 0;
+
+                    al_draw_scaled_bitmap(map->trophy_assets,
+                        offsetx, offsety, 32, 32,
+                        dx, dy, TILE_SIZE, TILE_SIZE,
+                        0);
+                    break;
+                }
+            
+                if (map->trophy_status[i][j] == T_DISAPPEARING) {
+                    int offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 8) + 16;
+                    int offsety = 1 * src_coin_height;
+                    map->coin_disappear_animation[i][j] += 1;
+                    if (map->coin_disappear_animation[i][j] == 64) {
+                        map->win = true;
+                    }
+                    al_draw_scaled_bitmap(map->coin_assets,
+                        offsetx, offsety, 16, 16,
+                        dx, dy, TILE_SIZE, TILE_SIZE,
+                        0);
+                    break;
+                }
+                
+                break;
+            }
             default:
                 break;
             }
@@ -158,20 +237,26 @@ void update_map(Map* map, Point player_coord, int* total_coins) {
         e.g. to update the coins if you touch it
     */
 
-    for (int i = 0; i < map->row; i++) {
-        for (int j = 0; j < map->col; j++) {
-            if (map->map[i][j] == COIN) {
-                Point coin_coord = { j * TILE_SIZE, i * TILE_SIZE };
-                if (tile_collision(player_coord, coin_coord)) {
-                    map->map[i][j] = FLOOR; // Remove coin from the map
-                    (*total_coins)++; // Increment coin counter
-                    al_play_sample(map->coin_audio, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-                }
-            }
-        }
+    coin_animation = (coin_animation + 1) % 64;
+    trophy_animation = (trophy_animation + 1) % (64 * 2);
+
+    int center_x = (int)((player_coord.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
+    int center_y = (int)((player_coord.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
+
+    if (map->map[center_y][center_x] == COIN &&
+        map->coin_status[center_y][center_x] == APPEAR) {
+        *total_coins += 1;
+        map->coin_disappear_animation[center_y][center_x] = 0;
+        map->coin_status[center_y][center_x] = DISAPPEARING;
+        al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
 
-
+    if (map->map[center_y][center_x] == TROPHY &&
+        (coins_obtained == coin_counter)) {
+        map->coin_disappear_animation[center_y][center_x] = 0;
+        map->trophy_status[center_y][center_x] = T_DISAPPEARING;
+        al_play_sample(map->trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
 }
 
 void destroy_map(Map* map) {
@@ -185,10 +270,11 @@ void destroy_map(Map* map) {
     al_destroy_bitmap(map->assets);
     al_destroy_bitmap(map->coin_assets);
     al_destroy_sample(map->coin_audio);
+    al_destroy_sample(map->trophy_audio);
 }
 
 bool isWalkable(BLOCK_TYPE block) {
-    if (block == FLOOR || block == COIN) return true;
+    if (block == FLOOR || block == COIN || block == TROPHY) return true;
     return false;
 }
 
@@ -391,6 +477,10 @@ static void get_map_offset(Map* map) {
                 break;
             case FLOOR:
             case COIN:
+                map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
+                break;
+
+            case TROPHY:
                 map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
                 break;
 

@@ -52,7 +52,7 @@ static void update(void){
     // Start HW 
     
 
-    if (coins_obtained == 3) {
+    if (map.win) {
         timer_countdown--;
         if (timer_countdown == 0) {
             change_scene(create_win_scene());

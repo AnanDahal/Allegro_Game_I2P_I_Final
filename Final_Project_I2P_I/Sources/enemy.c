@@ -190,22 +190,21 @@ void drawEnemy(Enemy * enemy, Point cam){
         }
     }
     else if(enemy->status == DYING){
-                /*
-                    [TODO Homework]
+        /*
+        [TODO Homework]
 
-                Draw Dying Animation for enemy
-            */
+        Draw Dying Animation for enemy
+        */
 
-            // Start HW
+        // Start HW
 
         int flag = enemy->dir == RIGHT ? 1 : 0;
         int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
 
         int frame = enemy->death_animation_tick / 8; // Assuming 8 ticks per frame
         al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, frame * 16, 16, 16, 16, al_map_rgb(255, 255, 255), 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16, 0, flag);
-            // End HW
-    
-
+        
+        // End HW
     }
     
 #ifdef DRAW_HITBOX

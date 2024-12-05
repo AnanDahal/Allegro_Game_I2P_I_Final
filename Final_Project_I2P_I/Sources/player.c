@@ -151,12 +151,12 @@ void update_player(Player* player, Map* map) {
 
     // End HW
 }
-
+int flag = 0; // Change the flag to flip character
 void draw_player(Player* player, Point cam) {
     int dy = player->coord.y - cam.y; // destiny y axis
     int dx = player->coord.x - cam.x; // destiny x axis
 
-    int flag = 0; // Change the flag to flip character
+    
 
     /*
         [TODO Homework]
@@ -172,14 +172,19 @@ void draw_player(Player* player, Point cam) {
 
     switch (player->status) {
     case (PLAYER_IDLE):
+        if (keyState[ALLEGRO_KEY_D]) flag = 1;
+        if (keyState[ALLEGRO_KEY_A]) flag = 0;
         scene_x = (int)(player->animation_tick / 32);
         break;
     case (PLAYER_WALKING):
         scene_y = 32;
+        if (keyState[ALLEGRO_KEY_D]) flag = 1;
+        if (keyState[ALLEGRO_KEY_A]) flag = 0;
         scene_x = (int)(player->animation_tick / 16);
         break;
     case (PLAYER_DYING):
         scene_y = 64;
+        flag = 0;
         scene_x = (int)(player->animation_tick / 16);
         red_tint = 255;
         break;
