@@ -19,6 +19,9 @@ BulletNode * bulletList; // Bullet List
 // Weapon
 Weapon weapon; 
 
+// initialize coin obtained
+coins_obtained = 100;
+
 
 static void init(void){
     timer_countdown = 60;
