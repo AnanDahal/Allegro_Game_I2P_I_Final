@@ -83,7 +83,8 @@ typedef struct Map_{
     ALLEGRO_BITMAP* button_assets;
     
     // Spawn Coordinate
-    Point Spawn;
+    Point SpawnP;
+    Point SpawnJ;
     Point EnemySpawn[MAX_ENEMY_SPAWN];
     char EnemyCode[MAX_ENEMY_SPAWN];
     uint8_t EnemySpawnSize;
@@ -100,7 +101,7 @@ typedef struct Map_{
  */
 Map create_map(char * path, uint8_t type); // Create a map based on given file path
 void draw_map(Map * map, Point cam); // Draw the map
-void update_map(Map * map, Point player_coord, int * total_coins); // Update map : you might want add some parameter here
+void update_map(Map * map, Point player_coord, int * total_coins, Point cocudos_coord); // Update map : you might want add some parameter here
 void destroy_map(Map * map); // Destroy map
 
 

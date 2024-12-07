@@ -75,8 +75,14 @@ Map create_map(char* path, uint8_t type) {
 
             case 'P': // Spawn Point
                 map.map[i][j] = FLOOR;
-                map.Spawn = (Point){ i, j };
+                map.SpawnP = (Point){ i, j };
                 break;
+
+            case 'J': // Cocudos Spawn
+                map.map[i][j] = FLOOR;
+                map.SpawnJ = (Point){ i, j };
+                break;
+
 
             case 'S': // Slime Enemy
                 map.map[i][j] = FLOOR;

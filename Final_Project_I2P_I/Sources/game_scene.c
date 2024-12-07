@@ -13,6 +13,7 @@
 #include <math.h>
 static int timer_countdown;
 Player player; // Player
+Player cocudos; // Cocudos
 Map map; // Map
 enemyNode * enemyList; // Enemy List
 BulletNode * bulletList; // Bullet 
@@ -28,7 +29,8 @@ static void init(void){
     
     map = create_map("Assets/map0.txt", 0);
 
-    player = create_player("Assets/panda2.png", map.Spawn.x, map.Spawn.y);
+    player = create_player("Assets/panda2.png", map.SpawnP.x, map.SpawnP.y);
+    cocudos = create_player("Assets/player.png", map.SpawnJ.x, map.SpawnJ.y);
 
     enemyList = createEnemyList();
     bulletList = createBulletList();
@@ -86,7 +88,8 @@ static void init(void){
         insertEnemyList(enemyList, enemy);
     }
 
-    game_log("coord x:%d \n coords y:%d \n", map.Spawn.x, map.Spawn.y);
+    game_log("Player = coord x:%d \n coords y:%d \n", map.SpawnP.x, map.SpawnP.y);
+    game_log("Cocudos = coord x:%d \n coords y:%d \n", map.SpawnJ.x, map.SpawnJ.y);
     change_bgm("Assets/audio/wii_music.mp3");
 }
 
@@ -108,7 +111,7 @@ static void update(void){
         }
     }
     
-    if(player.health == 0) {
+    if(player.health == 0 || cocudos.health == 0) {
         timer_countdown--;
         if (timer_countdown == 0) {
             coins_obtained = 0;
@@ -122,6 +125,7 @@ static void update(void){
     // End HW
 
     update_player(&player, &map);
+    update_player2(&cocudos, &map);
 
     Point Camera;
     /*
@@ -144,7 +148,7 @@ static void update(void){
     updateEnemyList(enemyList, &map, &player);
     update_weapon(&weapon, bulletList, player.coord, Camera);
     updateBulletList(bulletList, enemyList, &map);
-    update_map(&map, player.coord, &coins_obtained);
+    update_map(&map, player.coord, &coins_obtained, cocudos.coord);
     
     
 }
@@ -170,6 +174,7 @@ static void draw(void){
     
     draw_map(&map, Camera);
     draw_player(&player, Camera);
+    draw_player2(&cocudos, Camera);
     
 
     /*
@@ -198,12 +203,17 @@ static void draw(void){
         al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1300 + ((50 - player.health) * 6)), 0, 100, 100, 0);
     }
 
+    for (int i = 0; i < cocudos.health / 10; i++) {
+        al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1300 + ((50 - cocudos.health) * 6)), 40, 100, 100, 0);
+    }
+
 
     // End HW
 }
 
 static void destroy(void){
     delete_player(&player);
+    delete_player(&cocudos);
     delete_weapon(&weapon);
     destroy_map(&map);
     destroyBulletList(bulletList);

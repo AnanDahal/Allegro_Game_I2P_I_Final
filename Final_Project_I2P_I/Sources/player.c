@@ -73,7 +73,6 @@ void update_player(Player* player, Map* map) {
 
 
     // Start 1 - 1
-
     if ((keyState[ALLEGRO_KEY_W] || keyState[ALLEGRO_KEY_S] || keyState[ALLEGRO_KEY_A] || keyState[ALLEGRO_KEY_D]) && player->health > 0) {
         player->status = PLAYER_WALKING;
     }
@@ -151,7 +150,9 @@ void update_player(Player* player, Map* map) {
 
     // End HW
 }
+
 int flag = 0; // Change the flag to flip character
+
 void draw_player(Player* player, Point cam) {
     int dy = player->coord.y - cam.y; // destiny y axis
     int dx = player->coord.x - cam.x; // destiny x axis
@@ -213,6 +214,138 @@ void draw_player(Player* player, Point cam) {
     );
 #endif
 
+}
+
+void update_player2(Player* player, Map* map) {
+    Point original = player->coord;
+
+    // Knockback effect
+    if (player->knockback_CD > 0) {
+
+        player->knockback_CD--;
+        int next_x = player->coord.x + player->speed * cos(player->knockback_angle);
+        int next_y = player->coord.y + player->speed * sin(player->knockback_angle);
+        Point next;
+        next = (Point){ next_x, player->coord.y };
+
+        if (!isCollision(player, map)) {
+            player->coord = next;
+        }
+
+        next = (Point){ player->coord.x, next_y };
+        if (!isCollision(player, map)) {
+            player->coord = next;
+        }
+    }
+
+    /*
+        [TODO HACKATHON 1-1]
+
+        Player Movement
+        Adjust the movement by player->speed
+
+        if (keyState[ALLEGRO_KEY_W]) {
+            player->coord.y = ...
+            player->direction = ...
+        }
+        if (keyState[ALLEGRO_KEY_S]) {
+            player->coord.y = ...
+            player->direction = ...
+        }
+    */
+
+
+    // Start 1 - 1
+    if ((keyState[ALLEGRO_KEY_UP] || keyState[ALLEGRO_KEY_DOWN] || keyState[ALLEGRO_KEY_LEFT] || keyState[ALLEGRO_KEY_RIGHT]) && player->health > 0) {
+        player->status = PLAYER_WALKING;
+    }
+    else if (player->health > 0) {
+        player->status = PLAYER_IDLE;
+    }
+    else {
+        player->status = PLAYER_DYING;
+    }
+    if (player->status != PLAYER_DYING) {
+        if (keyState[ALLEGRO_KEY_UP]) {
+            player->coord.y -= player->speed;
+            player->direction = UP;
+        }
+        if (keyState[ALLEGRO_KEY_DOWN]) {
+            player->coord.y += player->speed;
+            player->direction = DOWN;
+        }
+    }
+
+
+    // if Collide, snap to the grid to make it pixel perfect
+    if (isCollision(player, map)) {
+        player->coord.y = round((float)original.y / (float)TILE_SIZE) * TILE_SIZE;
+    }
+
+    if (player->status != PLAYER_DYING) {
+
+        if (keyState[ALLEGRO_KEY_LEFT]) {
+            player->coord.x -= player->speed;
+            player->direction = LEFT;
+        }
+        if (keyState[ALLEGRO_KEY_RIGHT]) {
+            player->coord.x += player->speed;
+            player->direction = RIGHT;
+        }
+    }
+
+
+
+
+    if (isCollision(player, map)) {
+        player->coord.x = round((float)original.x / (float)TILE_SIZE) * TILE_SIZE;
+    }
+
+    player->animation_tick = (player->animation_tick + 1) % 64;
+
+}
+
+
+void draw_player2(Player* player, Point cam) {
+    int dy = player->coord.y - cam.y; // destiny y axis
+    int dx = player->coord.x - cam.x; // destiny x axis
+
+    int scene_x = 0;
+    int scene_y = 0;
+    int red_tint = player->knockback_CD > 0 ? 0 : 255;
+
+    switch (player->status) {
+    case (PLAYER_IDLE):
+        if (keyState[ALLEGRO_KEY_RIGHT]) flag = 0;
+        if (keyState[ALLEGRO_KEY_LEFT]) flag = 1;
+        scene_x = 0;
+        break;
+    case (PLAYER_WALKING):
+        scene_y = 0;
+        if (keyState[ALLEGRO_KEY_RIGHT]) flag = 0;
+        if (keyState[ALLEGRO_KEY_LEFT]) flag = 1;
+        scene_x = (int)(player->animation_tick / 16);
+        break;
+    case (PLAYER_DYING):
+        flag = 0;
+        red_tint = 255;
+        break;
+    }
+
+    int src_w = 48;
+    int src_h = 48;
+    int srcx = scene_x * 48;
+    //int srcy = scene_y * 32;
+
+
+
+    al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, red_tint, red_tint),
+        srcx, scene_y, src_w, src_h, // source image x, y, width, height
+        dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
+        flag // Flip or not
+    );
+
+    // End HW
 }
 
 void delete_player(Player* player) {
