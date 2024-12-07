@@ -1,6 +1,7 @@
 #include <string.h>
 #include "game_scene.h"
 #include "menu_scene.h"
+#include "setting_scene.h"
 #include "loading_scene.h"
 #include "game.h"
 #include "player.h"
@@ -14,13 +15,11 @@ static int timer_countdown;
 Player player; // Player
 Map map; // Map
 enemyNode * enemyList; // Enemy List
-BulletNode * bulletList; // Bullet List
-
+BulletNode * bulletList; // Bullet 
 // Weapon
 Weapon weapon; 
-
 // initialize coin obtained
-coins_obtained = 100;
+coins_obtained = 0;
 
 
 static void init(void){
@@ -34,7 +33,53 @@ static void init(void){
     enemyList = createEnemyList();
     bulletList = createBulletList();
 
-    weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
+    // cooldown , speed, damage
+    
+    if (guns_eq) {
+        game_log("LMAO");
+        if (yellow_eq) {
+            game_log("1");
+            weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
+        }
+        else if (orange_eq) {
+            game_log("2");
+            weapon = create_weapon("Assets/guns.png", "Assets/orange_bullet.png", 16, 8, 15);
+        }
+        else if (fireball_eq) {
+            game_log("3");
+            weapon = create_weapon("Assets/guns.png", "Assets/fireball.png", 16, 8, 25);
+        }
+    }
+    else if (sniper_eq) {
+        if (yellow_eq) {
+            game_log("4");
+            weapon = create_weapon("Assets/sniper.png", "Assets/yellow_bullet.png", 50, 20, 50);
+        }
+        else if (orange_eq) {
+            game_log("5");
+            weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 50, 20, 75);
+        }
+        else if (fireball_eq) {
+            game_log("6");
+            weapon = create_weapon("Assets/sniper.png", "Assets/fireball.png", 50, 20, 100);
+        }
+    }
+    else if (machine_gun_eq) {
+        if (yellow_eq) {
+            game_log("7");
+            weapon = create_weapon("Assets/machine_gun.png", "Assets/yellow_bullet.png", 5, 15, 20);
+        }
+        else if (orange_eq) {
+            game_log("8");
+            weapon = create_weapon("Assets/machine_gun.png", "Assets/orange_bullet.png", 5, 15, 25);
+        }
+        else if (fireball_eq) {
+            game_log("9");
+            weapon = create_weapon("Assets/machine_gun.png", "Assets/fireball.png", 5, 15, 34);
+        }
+    }
+
+    //weapon = create_weapon("Assets/guns.png", "Assets/orange_bullet.png", 16, 8, 10);
     
     for(int i=0; i<map.EnemySpawnSize; i++){
         Enemy enemy = createEnemy(map.EnemySpawn[i].x, map.EnemySpawn[i].y, map.EnemyCode[i]);

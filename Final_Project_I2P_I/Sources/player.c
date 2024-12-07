@@ -26,7 +26,7 @@ Player create_player(char* path, int row, int col) {
 
     player.hurt_audio = al_load_sample("Assets/audio/hurt.mp3");
     if (!player.hurt_audio) {
-        game_abort("Can't load coin audio");
+        game_abort("Can't load hurt audio");
     }
 
     return player;

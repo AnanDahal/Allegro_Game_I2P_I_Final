@@ -5,6 +5,7 @@
 
 #include <math.h>
 
+
 Weapon create_weapon(char * weapon_path, char * bullet_path, int cooldown, int speed, int damage){
     Weapon weapon;
     weapon.image = al_load_bitmap(weapon_path);

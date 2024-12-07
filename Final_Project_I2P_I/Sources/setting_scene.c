@@ -12,6 +12,7 @@ static Button backButton;
 static Button shopButton;
 static ALLEGRO_BITMAP* coin_bitmap;
 
+
 static void init(void) {
     backButton = button_create(SCREEN_W / 2 - 200, 650, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     shopButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
@@ -127,18 +128,18 @@ static ALLEGRO_BITMAP* sniper_bitmap;
 static ALLEGRO_BITMAP* fireball_bullet_bitmap;
 static ALLEGRO_BITMAP* machine_gun_bitmap;
 
-bool yellow_eq = true;
-bool guns_eq = true;
+ bool yellow_eq = true;
+ bool guns_eq = true;
 
-bool orange_eq = false;
-bool sniper_eq = false;
-bool orange_bought = false;
-bool sniper_bought = false;
+ bool orange_eq = false;
+ bool sniper_eq = false;
+ bool orange_bought = false;
+ bool sniper_bought = false;
 
-bool fireball_eq = false;
-bool machine_gun_eq = false;
-bool fireball_bought = false;
-bool machine_gun_bought = false;
+ bool fireball_eq = false;
+ bool machine_gun_eq = false;
+ bool fireball_bought = false;
+ bool machine_gun_bought = false;
 
 const int orange_bullet_price = 5;
 const int sniper_price = 5;

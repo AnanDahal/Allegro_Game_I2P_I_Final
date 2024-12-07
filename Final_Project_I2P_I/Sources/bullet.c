@@ -80,7 +80,7 @@ bool update_bullet(Bullet * bullet, enemyNode * enemyList, Map * map){
         // start 3 - 2
 
         if (tile_y >= enemyCoord.x / TILE_SIZE && tile_x >= enemyCoord.y / TILE_SIZE && tile_x <= (enemyCoord.y + TILE_SIZE - 1)/ TILE_SIZE && tile_y <= (enemyCoord.x + TILE_SIZE - 1) / TILE_SIZE) {
-            hitEnemy(&cur->enemy, 1, bullet->angle);
+            hitEnemy(&cur->enemy, bullet->damage, bullet->angle);
             return true;
         }
 

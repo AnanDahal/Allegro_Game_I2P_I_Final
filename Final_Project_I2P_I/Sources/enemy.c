@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "enemy.h"
 #include "utility.h"
-
+#include "setting_scene.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -56,14 +56,20 @@ Enemy createEnemy(int row, int col, char type){
     
     switch(type){
         case 'S':
-            enemy.health = 5;
+            enemy.health = 100;
             enemy.type = slime;
             enemy.speed = 2;
             enemy.image = slimeBitmap;
             break;
         // Insert more here to have more enemy variant
+        case 'M':
+            enemy.health = 200;
+            enemy.type = magma;
+            enemy.speed = 4;
+            enemy.image = slimeBitmap;
+            break;
         default:
-            enemy.health = 5;
+            enemy.health = 100;
             enemy.type = slime;
             enemy.speed = 2;
             enemy.image = slimeBitmap;
@@ -165,6 +171,13 @@ bool updateEnemy(Enemy * enemy, Map * map, Player * player){
                 hitPlayer(player, enemy->coord, 10);
             }
         }
+        if (enemy->type == magma) {
+            if (playerCollision(enemy->coord, player->coord) && enemy->animation_hit_tick == 0) {
+                enemy->animation_tick = 0;
+                enemy->animation_hit_tick = 32;
+                hitPlayer(player, enemy->coord, 20);
+            }
+        }
     }
 
     return false;
@@ -182,10 +195,16 @@ void drawEnemy(Enemy * enemy, Point cam){
         }
         int flag = enemy->dir == RIGHT ? 1 : 0;
         int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
-        
+        int tint_red2 = enemy->knockback_CD > 0 ? 255 : 160;
         if (enemy->type == slime) {
             al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, 0, 16, 16, al_map_rgb(tint_red, 255, 255),
                 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16,
+                0, flag);
+        }
+
+        if (enemy->type == magma) {
+            al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, 0, 16, 16, al_map_rgb(tint_red2, 32, 240),
+                0, 0, dx, dy, TILE_SIZE / 12, TILE_SIZE / 12,
                 0, flag);
         }
     }
@@ -199,7 +218,7 @@ void drawEnemy(Enemy * enemy, Point cam){
         // Start HW
 
         int flag = enemy->dir == RIGHT ? 1 : 0;
-        int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
+        //int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
 
         int frame = enemy->death_animation_tick / 8; // Assuming 8 ticks per frame
         al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, frame * 16, 16, 16, 16, al_map_rgb(255, 255, 255), 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16, 0, flag);
@@ -246,7 +265,16 @@ void hitEnemy(Enemy * enemy, int damage, float angle){
 
 
     enemy->knockback_angle = angle;
-    enemy->knockback_CD = 16;
+    if (yellow_eq) {
+        enemy->knockback_CD = 16;
+    }
+    else if (orange_eq) {
+        enemy->knockback_CD = 30;
+    }
+    else if (fireball_eq) {
+        enemy->knockback_CD = 50;
+    }
+    
 }
 
 /*

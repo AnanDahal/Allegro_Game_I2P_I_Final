@@ -11,7 +11,7 @@
 #include "player.h"
 
 typedef enum{
-    slime,
+    slime, magma
 } enemyType;
 
 typedef enum{
