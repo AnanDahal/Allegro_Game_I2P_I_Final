@@ -6,10 +6,6 @@
 [LOG] Scene menu created, initializing ... 
 [LOG] Start Game Event Loop
 [LOG] Change scene from menu to setting
-[LOG] Change scene from setting to menu
-[LOG] Change scene from menu to setting
-[LOG] Change scene from setting to menu
-[LOG] Change scene from menu to setting
 [LOG] Change scene from setting to shop
 [LOG] Change scene from shop to menu
 [LOG] Window close button pressed

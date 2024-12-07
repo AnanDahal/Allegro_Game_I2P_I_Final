@@ -428,7 +428,7 @@ static void draw_shop(void) {
     draw_button(buy_fireball_bullet_Button);
     if (fireball_eq) {
         al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 70 + buy_fireball_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIPPED");
-        al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), bullet_x3 + button_width / 2, bullet_y + button_height - 67 + buy_fireball_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIPPED");
+        al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 67 + buy_fireball_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIPPED");
     }
     else if (!fireball_eq && fireball_bought) {
         al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 70 + buy_fireball_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIP");
@@ -439,6 +439,51 @@ static void draw_shop(void) {
         al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 67 + buy_fireball_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "BUY");
     }
 
+    // Descriptions
+
+    // guns
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), button_x1 + button_width / 2 - 25, row1_y + button_height - 125, ALLEGRO_ALIGN_CENTER, "FIRING RATE: 3");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), button_x1 + button_width / 2 - 25, row1_y + button_height - 122, ALLEGRO_ALIGN_CENTER, "FIRING RATE: 3");
+
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), button_x1 + button_width / 2 - 25, row1_y + button_height - 165, ALLEGRO_ALIGN_CENTER, "DAMAGE: 1");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), button_x1 + button_width / 2 - 25, row1_y + button_height - 162, ALLEGRO_ALIGN_CENTER, "DAMAGE: 1");
+
+    // sniper
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), button_x2 + button_width / 2, row1_y + button_height - 125, ALLEGRO_ALIGN_CENTER, "FIRING RATE: 1");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), button_x2 + button_width / 2, row1_y + button_height - 122, ALLEGRO_ALIGN_CENTER, "FIRING RATE: 1");
+    
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), button_x2 + button_width / 2, row1_y + button_height - 165, ALLEGRO_ALIGN_CENTER, "DAMAGE: 5");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), button_x2 + button_width / 2, row1_y + button_height - 162, ALLEGRO_ALIGN_CENTER, "DAMAGE: 5");
+
+    // machine gun
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), button_x3 + button_width / 2 + 20, row1_y + button_height - 125, ALLEGRO_ALIGN_CENTER, "FIRING RATE: 5");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), button_x3 + button_width / 2 + 20, row1_y + button_height - 122, ALLEGRO_ALIGN_CENTER, "FIRING RATE: 5");
+
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), button_x3 + button_width / 2 + 20, row1_y + button_height - 165, ALLEGRO_ALIGN_CENTER, "DAMAGE: 5");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), button_x3 + button_width / 2 + 20, row1_y + button_height - 162, ALLEGRO_ALIGN_CENTER, "DAMAGE: 5");
+
+    // yellow bullet
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), bullet_x1 + button_width / 2 - 25, bullet_y + button_height - 125, ALLEGRO_ALIGN_CENTER, "KNOCKBACK: 1");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), bullet_x1 + button_width / 2 - 25, bullet_y + button_height - 122, ALLEGRO_ALIGN_CENTER, "KNOCKBACK: 1");
+
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), bullet_x1 + button_width / 2 - 25, bullet_y + button_height - 165, ALLEGRO_ALIGN_CENTER, "DAMAGE: 1");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), bullet_x1 + button_width / 2 - 25, bullet_y + button_height - 162, ALLEGRO_ALIGN_CENTER, "DAMAGE: 1");
+
+    // orange bullet
+    
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), bullet_x2 + button_width / 2, bullet_y + button_height - 125, ALLEGRO_ALIGN_CENTER, "KNOCKBACK: 3");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), bullet_x2 + button_width / 2, bullet_y + button_height - 122, ALLEGRO_ALIGN_CENTER, "KNOCKBACK: 3");
+
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), bullet_x2 + button_width / 2, bullet_y + button_height - 165, ALLEGRO_ALIGN_CENTER, "DAMAGE: 3");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), bullet_x2 + button_width / 2, bullet_y + button_height - 162, ALLEGRO_ALIGN_CENTER, "DAMAGE: 3");
+
+    // fireball bullet
+    
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 125, ALLEGRO_ALIGN_CENTER, "KNOCKBACK: 5");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 122, ALLEGRO_ALIGN_CENTER, "KNOCKBACK: 5");
+
+    al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 165, ALLEGRO_ALIGN_CENTER, "DAMAGE: 5");
+    al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 162, ALLEGRO_ALIGN_CENTER, "DAMAGE: 5");
 
     // Draw Back Button
     draw_button(backButton);

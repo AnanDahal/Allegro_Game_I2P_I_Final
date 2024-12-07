@@ -1,5 +1,4 @@
 #include "bullet.h"
-
 #include <math.h>
 
 Bullet create_bullet(char* bullet_path, PointFloat coord, float angle, float speed, float damage){
