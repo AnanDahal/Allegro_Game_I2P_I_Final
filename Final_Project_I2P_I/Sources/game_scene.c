@@ -145,7 +145,7 @@ static void update(void){
     
     
 
-    updateEnemyList(enemyList, &map, &player);
+    updateEnemyList(enemyList, &map, &player, &cocudos);
     update_weapon(&weapon, bulletList, player.coord, Camera);
     updateBulletList(bulletList, enemyList, &map);
     update_map(&map, player.coord, &coins_obtained, cocudos.coord);
@@ -171,7 +171,6 @@ static void draw(void){
     // End 1 - 4
 
     // Draw
-    
     draw_map(&map, Camera);
     draw_player(&player, Camera);
     draw_player2(&cocudos, Camera);

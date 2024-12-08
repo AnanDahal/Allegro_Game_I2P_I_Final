@@ -305,7 +305,7 @@ void update_player2(Player* player, Map* map) {
 
 }
 
-
+int flag2 = 0;
 void draw_player2(Player* player, Point cam) {
     int dy = player->coord.y - cam.y; // destiny y axis
     int dx = player->coord.x - cam.x; // destiny x axis
@@ -316,18 +316,18 @@ void draw_player2(Player* player, Point cam) {
 
     switch (player->status) {
     case (PLAYER_IDLE):
-        if (keyState[ALLEGRO_KEY_RIGHT]) flag = 0;
-        if (keyState[ALLEGRO_KEY_LEFT]) flag = 1;
+        if (keyState[ALLEGRO_KEY_RIGHT]) flag2 = 0;
+        if (keyState[ALLEGRO_KEY_LEFT]) flag2 = 1;
         scene_x = 0;
         break;
     case (PLAYER_WALKING):
         scene_y = 0;
-        if (keyState[ALLEGRO_KEY_RIGHT]) flag = 0;
-        if (keyState[ALLEGRO_KEY_LEFT]) flag = 1;
+        if (keyState[ALLEGRO_KEY_RIGHT]) flag2 = 0;
+        if (keyState[ALLEGRO_KEY_LEFT]) flag2 = 1;
         scene_x = (int)(player->animation_tick / 16);
         break;
     case (PLAYER_DYING):
-        flag = 0;
+        flag2 = 0;
         red_tint = 255;
         break;
     }
@@ -342,7 +342,7 @@ void draw_player2(Player* player, Point cam) {
     al_draw_tinted_scaled_bitmap(player->image, al_map_rgb(255, red_tint, red_tint),
         srcx, scene_y, src_w, src_h, // source image x, y, width, height
         dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, y, width, height
-        flag // Flip or not
+        flag2 // Flip or not
     );
 
     // End HW

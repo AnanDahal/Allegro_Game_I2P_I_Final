@@ -9,7 +9,7 @@
 
 /*
     ENEMY IMPLEMENTATION
-*/
+ */
 
 ALLEGRO_BITMAP* slimeBitmap;
 
@@ -25,6 +25,7 @@ static Point findScaledDistance(Point p1, Point p2);
 static bool isCollision(Point enemyCoord, Map* map);
 // Return true if player collide with enemy
 static bool playerCollision(Point enemyCoord, Point playerCoord);
+static bool cocudosCollision(Point enemyCoord, Point cocudosCoord);
 
 
 void initEnemy(void) {
@@ -80,7 +81,7 @@ Enemy createEnemy(int row, int col, char type) {
 }
 
 // Return True if the enemy is dead
-bool updateEnemy(Enemy* enemy, Map* map, Player* player) {
+bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
 
     if (enemy->status == DYING) {
         /*
@@ -136,8 +137,52 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player) {
         */
 
         // Start HW
-        Point delta = shortestPath(map, enemy->coord, player->coord);;
-        // End HW
+        Point delta;
+        Point delta1 = shortestPath(map, enemy->coord, player->coord);
+        Point delta2 = shortestPath(map, enemy->coord, cocudos->coord);
+
+        // Check if directions to both targets are the same
+        if (delta1.x == delta2.x && delta1.y == delta2.y) {
+            delta = delta1;
+        }
+        else {
+            // Calculate squared distances for comparison
+            int dist1 = (player->coord.x - enemy->coord.x) * (player->coord.x - enemy->coord.x) +
+                (player->coord.y - enemy->coord.y) * (player->coord.y - enemy->coord.y);
+            int dist2 = (cocudos->coord.x - enemy->coord.x) * (cocudos->coord.x - enemy->coord.x) +
+                (cocudos->coord.y - enemy->coord.y) * (cocudos->coord.y - enemy->coord.y);
+
+            // Determine closer target
+            if (dist1 < dist2) {
+                // Move towards player
+                if (abs(player->coord.x - enemy->coord.x) > abs(player->coord.y - enemy->coord.y)) {
+                    // Horizontal movement
+                    delta = (Point){ player->coord.x > enemy->coord.x ? 1 : -1, 0 };
+                }
+                else {
+                    // Vertical movement
+                    delta = (Point){ 0, player->coord.y > enemy->coord.y ? 1 : -1 };
+                }
+            }
+            else {
+                // Move towards cocudos
+                if (abs(cocudos->coord.x - enemy->coord.x) > abs(cocudos->coord.y - enemy->coord.y)) {
+                    // Horizontal movement
+                    delta = (Point){ cocudos->coord.x > enemy->coord.x ? 1 : -1, 0 };
+                }
+                else {
+                    // Vertical movement
+                    delta = (Point){ 0, cocudos->coord.y > enemy->coord.y ? 1 : -1 };
+                }
+            }
+        }
+
+
+        // Calculate squared distances
+
+
+        //game_log("1 ===== x == %d y == %d ", delta1.x, delta1.y);
+        //game_log("2 ===== x == %d y == %d ", delta2.x, delta2.y);
 
 
         Point next, prev = enemy->coord;
@@ -170,12 +215,22 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player) {
                 enemy->animation_hit_tick = 32;
                 hitPlayer(player, enemy->coord, 10);
             }
+            else if (cocudosCollision(enemy->coord, cocudos->coord) && enemy->animation_hit_tick == 0) {
+                enemy->animation_tick = 0;
+                enemy->animation_hit_tick = 32;
+                hitPlayer(cocudos, enemy->coord, 10);
+            }
         }
         if (enemy->type == magma) {
             if (playerCollision(enemy->coord, player->coord) && enemy->animation_hit_tick == 0) {
                 enemy->animation_tick = 0;
                 enemy->animation_hit_tick = 32;
                 hitPlayer(player, enemy->coord, 20);
+            }
+            else if (cocudosCollision(enemy->coord, cocudos->coord) && enemy->animation_hit_tick == 0) {
+                enemy->animation_tick = 0;
+                enemy->animation_hit_tick = 32;
+                hitPlayer(cocudos, enemy->coord, 20);
             }
         }
     }
@@ -300,12 +355,12 @@ void insertEnemyList(enemyNode* dummyhead, Enemy _enemy) {
     dummyhead->next = tmp;
 }
 
-void updateEnemyList(enemyNode* dummyhead, Map* map, Player* player) {
+void updateEnemyList(enemyNode* dummyhead, Map* map, Player* player, Player* cocudos) {
     enemyNode* cur = dummyhead->next;
     enemyNode* prev = dummyhead;
 
     while (cur != NULL) {
-        bool shouldDelete = updateEnemy(&cur->enemy, map, player);
+        bool shouldDelete = updateEnemy(&cur->enemy, map, player, cocudos);
         if (shouldDelete) {
             prev->next = cur->next;
             destroyEnemy(&cur->enemy);
@@ -501,6 +556,19 @@ static bool playerCollision(Point enemyCoord, Point playerCoord) {
         enemyCoord.x + TILE_SIZE > playerCoord.x &&
         enemyCoord.y < playerCoord.y + TILE_SIZE &&
         enemyCoord.y + TILE_SIZE > playerCoord.y) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+static bool cocudosCollision(Point enemyCoord, Point cocudosCoord) {
+    // Rectangle & Rectanlge Collision
+    if (enemyCoord.x < cocudosCoord.x + TILE_SIZE &&
+            enemyCoord.x + TILE_SIZE > cocudosCoord.x &&
+            enemyCoord.y < cocudosCoord.y + TILE_SIZE &&
+            enemyCoord.y + TILE_SIZE > cocudosCoord.y) {
         return true;
     }
     else {
