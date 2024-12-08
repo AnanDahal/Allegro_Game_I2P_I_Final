@@ -20,7 +20,7 @@
 */
 
 int coin_counter;
-typedef enum _BLOCK_TYPE{
+typedef enum _BLOCK_TYPE {
     FLOOR,
     WALL,
     DOOR_CLOSE,
@@ -40,7 +40,7 @@ typedef enum _COIN_STATUS {
 
 typedef enum _TROPHY_STATUS {
     T_APPEAR,
-    T_DISAPPEARING, 
+    T_DISAPPEARING,
     T_DISAPPEAR
 } TROPHY_STATUS;
 
@@ -53,12 +53,12 @@ typedef enum _DOOR_STATUS {
 
 
 // Map Struct
-typedef struct Map_{
-    uint8_t ** map; // Map array
-    Point ** offset_assets; // Assets
-    
+typedef struct Map_ {
+    uint8_t** map; // Map array
+    Point** offset_assets; // Assets
+
     int row, col;
-    
+
     // Map assets
     ALLEGRO_BITMAP* assets;
     ALLEGRO_BITMAP* coin_assets;
@@ -81,7 +81,7 @@ typedef struct Map_{
 
     // Button Assets
     ALLEGRO_BITMAP* button_assets;
-    
+
     // Spawn Coordinate
     Point SpawnP;
     Point SpawnJ;
@@ -99,10 +99,10 @@ typedef struct Map_{
     MAP FUNCTION
     Feel free to add more if you have some idea or interaction with the map
  */
-Map create_map(char * path, uint8_t type); // Create a map based on given file path
-void draw_map(Map * map, Point cam); // Draw the map
-void update_map(Map * map, Point player_coord, int * total_coins, Point cocudos_coord); // Update map : you might want add some parameter here
-void destroy_map(Map * map); // Destroy map
+Map create_map(char* path, uint8_t type); // Create a map based on given file path
+void draw_map(Map* map, Point cam); // Draw the map
+void update_map(Map* map, Point player_coord, int* total_coins, Point cocudos_coord); // Update map : you might want add some parameter here
+void destroy_map(Map* map); // Destroy map
 
 
 bool isWalkable(BLOCK_TYPE block);

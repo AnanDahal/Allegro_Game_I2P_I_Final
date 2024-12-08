@@ -116,7 +116,7 @@ Map create_map(char* path, uint8_t type) {
             }
         }
     }
-    
+
     map.assets = al_load_bitmap("Assets/map_packets.png");
     if (!map.assets) {
         game_abort("Can't load map assets");
@@ -172,7 +172,7 @@ void draw_map(Map* map, Point cam) {
 
             int src_coin_width = 16;
             int src_coin_height = 16;
-            
+
 
             switch (map->map[i][j]) {
             case COIN: {
@@ -213,7 +213,7 @@ void draw_map(Map* map, Point cam) {
                         0);
                     break;
                 }
-            
+
                 if (map->trophy_status[i][j] == T_DISAPPEARING) {
                     int offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 8) + 16;
                     int offsety = 1 * src_coin_height;
@@ -227,7 +227,7 @@ void draw_map(Map* map, Point cam) {
                         0);
                     break;
                 }
-                
+
                 break;
             }
             default:

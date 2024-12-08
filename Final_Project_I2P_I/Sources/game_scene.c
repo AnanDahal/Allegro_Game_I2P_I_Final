@@ -111,7 +111,7 @@ static void update(void){
         }
     }
     
-    if(player.health == 0 || cocudos.health == 0) {
+    if(player.health <= 0 || cocudos.health <= 0) {
         timer_countdown--;
         if (timer_countdown == 0) {
             coins_obtained = 0;
@@ -203,7 +203,7 @@ static void draw(void){
     }
 
     for (int i = 0; i < cocudos.health / 10; i++) {
-        al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1300 + ((50 - cocudos.health) * 6)), 40, 100, 100, 0);
+        al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1300 + ((50 - cocudos.health) * 6)), 60, 100, 100, 0);
     }
 
 
