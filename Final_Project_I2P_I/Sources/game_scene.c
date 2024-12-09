@@ -38,45 +38,35 @@ static void init(void){
     // cooldown , speed, damage
     
     if (guns_eq) {
-        game_log("LMAO");
         if (yellow_eq) {
-            game_log("1");
             weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
         }
         else if (orange_eq) {
-            game_log("2");
             weapon = create_weapon("Assets/guns.png", "Assets/orange_bullet.png", 16, 8, 15);
         }
         else if (fireball_eq) {
-            game_log("3");
             weapon = create_weapon("Assets/guns.png", "Assets/fireball.png", 16, 8, 25);
         }
     }
     else if (sniper_eq) {
         if (yellow_eq) {
-            game_log("4");
             weapon = create_weapon("Assets/sniper.png", "Assets/yellow_bullet.png", 50, 20, 50);
         }
         else if (orange_eq) {
-            game_log("5");
             weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 50, 20, 75);
         }
         else if (fireball_eq) {
-            game_log("6");
             weapon = create_weapon("Assets/sniper.png", "Assets/fireball.png", 50, 20, 100);
         }
     }
     else if (machine_gun_eq) {
         if (yellow_eq) {
-            game_log("7");
             weapon = create_weapon("Assets/machine_gun.png", "Assets/yellow_bullet.png", 5, 15, 20);
         }
         else if (orange_eq) {
-            game_log("8");
             weapon = create_weapon("Assets/machine_gun.png", "Assets/orange_bullet.png", 5, 15, 25);
         }
         else if (fireball_eq) {
-            game_log("9");
             weapon = create_weapon("Assets/machine_gun.png", "Assets/fireball.png", 5, 15, 34);
         }
     }
@@ -88,8 +78,6 @@ static void init(void){
         insertEnemyList(enemyList, enemy);
     }
 
-    game_log("Player = coord x:%d \n coords y:%d \n", map.SpawnP.x, map.SpawnP.y);
-    game_log("Cocudos = coord x:%d \n coords y:%d \n", map.SpawnJ.x, map.SpawnJ.y);
     change_bgm("Assets/audio/wii_music.mp3");
 }
 
@@ -144,13 +132,13 @@ static void update(void){
 
     
     
-
     updateEnemyList(enemyList, &map, &player, &cocudos);
     update_weapon(&weapon, bulletList, player.coord, Camera);
     updateBulletList(bulletList, enemyList, &map);
+    
+    
     update_map(&map, player.coord, &coins_obtained, cocudos.coord);
-    
-    
+
 }
 
 static void draw(void){
@@ -198,12 +186,15 @@ static void draw(void){
 
     al_draw_text(P3_FONT, al_map_rgb(255, 255, 255), 52, 75, ALLEGRO_ALIGN_CENTER, coin_text);
 
+    al_draw_scaled_bitmap(player.image, 0, 0, 32, 32, 1590, 20, 50, 50, 0);
+    al_draw_scaled_bitmap(cocudos.image, 0, 0, 48, 48, 1590, 75, 50, 50, 1);
+
     for (int i = 0; i < player.health / 10; i++) {
-        al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1300 + ((50 - player.health) * 6)), 0, 100, 100, 0);
+        al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1240 + ((50 - player.health) * 6)), 0, 100, 100, 0);
     }
 
     for (int i = 0; i < cocudos.health / 10; i++) {
-        al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1300 + ((50 - cocudos.health) * 6)), 60, 100, 100, 0);
+        al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1240 + ((50 - cocudos.health) * 6)), 60, 100, 100, 0);
     }
 
 

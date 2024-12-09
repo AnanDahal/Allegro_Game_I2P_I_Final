@@ -29,7 +29,8 @@ typedef enum _BLOCK_TYPE {
     NOTHING,
     TROPHY,
     BUTTON,
-    DOOR_OPEN
+    DOOR_OPEN,
+    HEALTH
 } BLOCK_TYPE;
 
 typedef enum _COIN_STATUS {
@@ -43,6 +44,12 @@ typedef enum _TROPHY_STATUS {
     T_DISAPPEARING,
     T_DISAPPEAR
 } TROPHY_STATUS;
+
+typedef enum _HEALTH_STATUS {
+    H_APPEAR,
+    H_DISAPPEARING,
+    H_DISAPPEAR
+} HEALTH_STATUS;
 
 
 typedef enum _DOOR_STATUS {
@@ -66,6 +73,7 @@ typedef struct Map_ {
     ALLEGRO_BITMAP* trophy_assets;
     // Coin Properties
     ALLEGRO_SAMPLE* coin_audio;
+    
 
     uint8_t animation;
 
@@ -74,6 +82,9 @@ typedef struct Map_ {
 
     ALLEGRO_SAMPLE* trophy_audio;
     TROPHY_STATUS trophy_status[MAX_MAP_ROW][MAX_MAP_COL];
+
+    ALLEGRO_SAMPLE* health_audio;
+    HEALTH_STATUS health_status[MAX_MAP_ROW][MAX_MAP_COL];
 
     // Door Properties
     ALLEGRO_BITMAP* door_assets;

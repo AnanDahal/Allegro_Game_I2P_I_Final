@@ -262,6 +262,32 @@ void drawEnemy(Enemy* enemy, Point cam) {
                 0, 0, dx, dy, TILE_SIZE / 12, TILE_SIZE / 12,
                 0, flag);
         }
+
+        // Health bar dimensions and colors
+        int bar_width = TILE_SIZE;   // Total width of the health bar
+        int bar_height = 5;         // Height of the health bar
+        int bar_x = dx;             // X position of the health bar
+        int bar_y = dy - bar_height - 2; // Y position above the enemy
+        int max_health;
+        if (enemy->type == magma) {
+            max_health = 200; // Max health of the enemy
+        }
+        else {
+            max_health = 100; // Max health of the enemy
+        }
+        
+        int health_width = (enemy->health * bar_width) / max_health; // Scale health proportionally
+
+        // Clamp health width to avoid overflow
+        if (health_width > bar_width) health_width = bar_width;
+
+        // Draw health bar (background and health)
+        al_draw_filled_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height, al_map_rgb(100, 100, 100)); // Gray background
+        al_draw_filled_rectangle(bar_x, bar_y, bar_x + health_width, bar_y + bar_height, al_map_rgb(255, 0, 0)); // Red for current health
+
+        // Optional: Add border for health bar
+        al_draw_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height, al_map_rgb(0, 0, 0), 2); // Black border
+
     }
     else if (enemy->status == DYING) {
         /*

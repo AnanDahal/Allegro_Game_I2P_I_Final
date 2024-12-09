@@ -11,42 +11,58 @@
 [LOG] Key 67 up
 [LOG] Change scene from loading to game
 [LOG] Using Assets/map0.txt to load the map
-[LOG] LMAO
-[LOG] 1
 [LOG] Creating Enemy at ( 15, 15 )
 [LOG] Creating Enemy at ( 15, 18 )
-[LOG] Player = coord x:1 
- coords y:3 
-
-[LOG] Cocudos = coord x:2 
- coords y:5 
-
 [LOG] Key 19 down
-[LOG] Key 4 down
-[LOG] Key 4 up
-[LOG] Key 1 down
-[LOG] Key 1 up
-[LOG] Key 4 down
 [LOG] Key 19 up
-[LOG] Key 23 down
-[LOG] Key 23 up
-[LOG] Key 4 up
-[LOG] Key 19 down
-[LOG] Key 1 down
-[LOG] Key 1 up
-[LOG] Key 19 up
-[LOG] Key 1 down
-[LOG] Key 23 down
-[LOG] Key 1 up
-[LOG] Key 23 up
-[LOG] Key 23 down
-[LOG] Key 4 down
-[LOG] Key 23 up
-[LOG] Key 4 up
-[LOG] Key 23 down
-[LOG] Key 23 up
 [LOG] Key 4 down
 [LOG] Key 4 up
+[LOG] Key 4 down
+[LOG] Key 23 down
+[LOG] Key 4 up
+[LOG] Key 4 down
+[LOG] Key 4 up
+[LOG] Key 23 up
 [LOG] Key 4 down
 [LOG] Key 4 up
 [LOG] Change scene from game to lose
+[LOG] Change scene from lose to loading
+[LOG] No BGM File found [None], no sound will be played
+[LOG] Change scene from loading to game
+[LOG] Using Assets/map0.txt to load the map
+[LOG] Creating Enemy at ( 15, 15 )
+[LOG] Creating Enemy at ( 15, 18 )
+[LOG] Key 4 down
+[LOG] Key 19 down
+[LOG] Key 4 up
+[LOG] Key 1 down
+[LOG] Key 1 up
+[LOG] Key 19 up
+[LOG] Key 4 down
+[LOG] Key 4 up
+[LOG] Key 4 down
+[LOG] Key 4 up
+[LOG] Key 19 down
+[LOG] Key 19 up
+[LOG] Key 4 down
+[LOG] Key 4 up
+[LOG] Change scene from game to lose
+[LOG] Change scene from lose to loading
+[LOG] No BGM File found [None], no sound will be played
+[LOG] Key 19 down
+[LOG] Change scene from loading to game
+[LOG] Using Assets/map0.txt to load the map
+[LOG] Creating Enemy at ( 15, 15 )
+[LOG] Creating Enemy at ( 15, 18 )
+[LOG] Key 4 down
+[LOG] Key 4 up
+[LOG] Key 19 up
+[LOG] Key 4 down
+[LOG] Key 19 down
+[LOG] Key 4 up
+[LOG] Key 19 up
+[LOG] Key 4 down
+[LOG] Key 4 up
+[LOG] Change scene from game to lose
+[LOG] Window close button pressed
+[LOG] Terminating ...

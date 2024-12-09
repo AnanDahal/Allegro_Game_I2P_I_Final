@@ -495,7 +495,9 @@ static void get_map_offset(Map* map) {
             case TROPHY:
                 map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
                 break;
-
+            case HEALTH:
+                map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
+                break;
             case HOLE:
                 map->offset_assets[i][j] = get_hole_offset_assets(map, i, j);
                 break;
