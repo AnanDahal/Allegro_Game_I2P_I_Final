@@ -5,8 +5,9 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
-#include "utility.h"
 #include "map.h"
+#include "utility.h"
+
 
 typedef enum {
     PLAYER_IDLE, PLAYER_WALKING, PLAYER_DYING

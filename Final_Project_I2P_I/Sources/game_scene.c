@@ -1,4 +1,5 @@
 #include <string.h>
+#include <math.h>
 #include "game_scene.h"
 #include "menu_scene.h"
 #include "setting_scene.h"
@@ -90,6 +91,23 @@ static void update(void){
 
     // Start HW 
     
+    int distance = sqrt((player.coord.x - cocudos.coord.x) * (player.coord.x - cocudos.coord.x) +
+        (player.coord.y - cocudos.coord.y) * (player.coord.y - cocudos.coord.y));
+
+    if (distance >= 400) {
+        map.far = true;
+    }
+    else {
+        map.far = false;
+    }
+
+    if (distance >= 500) {
+        map.toofar = true;
+    }
+    else {
+        map.toofar = false;
+    }
+
 
     if (map.win) {
         timer_countdown--;
@@ -99,7 +117,7 @@ static void update(void){
         }
     }
     
-    if(player.health <= 0 || cocudos.health <= 0) {
+    if(player.health <= 0 || cocudos.health <= 0 || map.toofar) {
         timer_countdown--;
         if (timer_countdown == 0) {
             coins_obtained = 0;
@@ -108,7 +126,13 @@ static void update(void){
         }
     }
 
+    if (add_health) {
+        add_health = false;
+        player.health += 10;
+        cocudos.health += 10;
+    }
 
+    
 
     // End HW
 
@@ -135,10 +159,8 @@ static void update(void){
     updateEnemyList(enemyList, &map, &player, &cocudos);
     update_weapon(&weapon, bulletList, player.coord, Camera);
     updateBulletList(bulletList, enemyList, &map);
-    
-    
-    update_map(&map, player.coord, &coins_obtained, cocudos.coord);
-
+ 
+    update_map(&map, player.coord, cocudos.coord, &coins_obtained);
 }
 
 static void draw(void){
@@ -188,6 +210,25 @@ static void draw(void){
 
     al_draw_scaled_bitmap(player.image, 0, 0, 32, 32, 1590, 20, 50, 50, 0);
     al_draw_scaled_bitmap(cocudos.image, 0, 0, 48, 48, 1590, 75, 50, 50, 1);
+
+    if (map.far) {
+        al_draw_text(
+            TITLE_FONT,
+            al_map_rgb(146, 161, 185), // Hover changes color
+            SCREEN_W / 2,
+            50,
+            ALLEGRO_ALIGN_CENTER,
+            "PRINCESS IS TOO FAR"
+        );
+        al_draw_text(
+            TITLE_FONT,
+            al_map_rgb(255, 69, 69), // Hover changes color
+            SCREEN_W / 2,
+            53,
+            ALLEGRO_ALIGN_CENTER,
+            "PRINCESS IS TOO FAR"
+        );
+    }
 
     for (int i = 0; i < player.health / 10; i++) {
         al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1240 + ((50 - player.health) * 6)), 0, 100, 100, 0);

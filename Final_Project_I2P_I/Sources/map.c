@@ -101,7 +101,10 @@ Map create_map(char* path, uint8_t type) {
                 map.coin_status[i][j] = APPEAR;
                 coin_counter++;
                 break;
-
+            case 'H': // Health
+                map.map[i][j] = HEALTH;
+                map.health_status[i][j] = H_APPEAR;
+                break;
             case 'T': // Trophy
                 map.map[i][j] = TROPHY;
                 map.trophy_status[i][j] = T_DISAPPEAR;
@@ -140,12 +143,24 @@ Map create_map(char* path, uint8_t type) {
         game_abort("Can't load trophy assets");
     }
 
+    map.health_assets = al_load_bitmap("Assets/health_box.png");
+    if (!map.health_assets) {
+        game_abort("Can't load health assets");
+    }
+
     map.trophy_audio = al_load_sample("Assets/audio/win.mp3");
     if (!map.trophy_audio) {
         game_abort("Can't load trophy audio");
     }
 
+    map.health_audio = al_load_sample("Assets/audio/health.mp3");
+    if (!map.health_audio) {
+        game_abort("Can't load health audio");
+    }
+
     map.win = false;
+    map.far = false;
+    map.toofar = false;
 
     fclose(f);
 
@@ -230,6 +245,32 @@ void draw_map(Map* map, Point cam) {
 
                 break;
             }
+            case HEALTH: {
+                if (map->health_status[i][j] == H_APPEAR) {
+
+                    al_draw_scaled_bitmap(map->health_assets,
+                        0, 0, 32, 32,
+                        dx, dy, TILE_SIZE, TILE_SIZE,
+                        0);
+                    break;
+                }
+
+                if (map->health_status[i][j] == H_DISAPPEARING) {
+                    int offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 8) + 16;
+                    int offsety = 1 * src_coin_height;
+                    map->coin_disappear_animation[i][j] += 1;
+                    if (map->coin_disappear_animation[i][j] == 64) {
+                        map->trophy_status[i][j] = H_DISAPPEAR;
+                    }
+                    al_draw_scaled_bitmap(map->coin_assets,
+                        offsetx, offsety, 16, 16,
+                        dx, dy, TILE_SIZE, TILE_SIZE,
+                        0);
+                    break;
+                }
+
+                break;
+            }
             default:
                 break;
             }
@@ -243,7 +284,7 @@ void draw_map(Map* map, Point cam) {
     }
 }
 
-void update_map(Map* map, Point player_coord, int* total_coins) {
+void update_map(Map* map, Point player, Point cocudos, int* total_coins) {
     /*
         Hint: To check if it's collide with object in map, you can use tile_collision function
         e.g. to update the coins if you touch it
@@ -252,8 +293,11 @@ void update_map(Map* map, Point player_coord, int* total_coins) {
     coin_animation = (coin_animation + 1) % 64;
     trophy_animation = (trophy_animation + 1) % (64 * 2);
 
-    int center_x = (int)((player_coord.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
-    int center_y = (int)((player_coord.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
+    int center_x = (int)((player.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
+    int center_y = (int)((player.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
+
+    int center_x_cocudos = (int)((cocudos.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
+    int center_y_cocudos = (int)((cocudos.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
 
     if (map->map[center_y][center_x] == COIN &&
         map->coin_status[center_y][center_x] == APPEAR) {
@@ -263,11 +307,20 @@ void update_map(Map* map, Point player_coord, int* total_coins) {
         al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
 
-    if (map->map[center_y][center_x] == TROPHY &&
+    if (map->map[center_y_cocudos][center_x_cocudos] == TROPHY &&
         (coins_obtained == coin_counter)) {
-        map->coin_disappear_animation[center_y][center_x] = 0;
-        map->trophy_status[center_y][center_x] = T_DISAPPEARING;
+        map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 0;
+        map->trophy_status[center_y_cocudos][center_x_cocudos] = T_DISAPPEARING;
         al_play_sample(map->trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+
+    if (map->map[center_y_cocudos][center_x_cocudos] == HEALTH &&
+        map->health_status[center_y_cocudos][center_x_cocudos] == APPEAR) {
+        map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 0;
+        map->health_status[center_y_cocudos][center_x_cocudos] = DISAPPEARING;
+        // change health status when picked here
+        add_health = true;
+        al_play_sample(map->health_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
 }
 
@@ -282,11 +335,14 @@ void destroy_map(Map* map) {
     al_destroy_bitmap(map->assets);
     al_destroy_bitmap(map->coin_assets);
     al_destroy_sample(map->coin_audio);
+    al_destroy_bitmap(map->trophy_assets);
     al_destroy_sample(map->trophy_audio);
+    al_destroy_bitmap(map->health_assets);
+    al_destroy_sample(map->health_audio);
 }
 
 bool isWalkable(BLOCK_TYPE block) {
-    if (block == FLOOR || block == COIN || block == TROPHY) return true;
+    if (block == FLOOR || block == COIN || block == TROPHY || block == HEALTH) return true;
     return false;
 }
 

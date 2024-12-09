@@ -43,6 +43,8 @@ extern ALLEGRO_FONT* P1_FONT; // 48px
 extern ALLEGRO_FONT* P2_FONT; // 36px
 extern ALLEGRO_FONT* P3_FONT; // 24px
 
+extern bool add_health;
+
 /*
     FUNCTION POINTER
     You can add if you have an unique function pointer
