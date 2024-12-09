@@ -7,7 +7,7 @@
 
 static bool isCollision(Player* player, Map* map);
 
-Player create_player(char* path, int row, int col) {
+Player create_player(char* path, int row, int col, int sound) {
     Player player;
     memset(&player, 0, sizeof(player));
 
@@ -24,9 +24,17 @@ Player create_player(char* path, int row, int col) {
         game_abort("Error Load Bitmap with path : %s", path);
     }
 
-    player.hurt_audio = al_load_sample("Assets/audio/hurt.mp3");
-    if (!player.hurt_audio) {
-        game_abort("Can't load hurt audio");
+    if (sound) {
+        player.hurt_audio = al_load_sample("Assets/audio/hurt.mp3");
+        if (!player.hurt_audio) {
+            game_abort("Can't load hurt audio");
+        }
+    }
+    else {
+        player.hurt_audio = al_load_sample("Assets/audio/hurt_cocudos.mp3");
+        if (!player.hurt_audio) {
+            game_abort("Can't load hurt audio");
+        }
     }
 
     return player;

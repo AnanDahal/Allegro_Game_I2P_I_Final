@@ -30,8 +30,8 @@ static void init(void){
     
     map = create_map("Assets/map0.txt", 0);
 
-    player = create_player("Assets/panda2.png", map.SpawnP.x, map.SpawnP.y);
-    cocudos = create_player("Assets/player.png", map.SpawnJ.x, map.SpawnJ.y);
+    player = create_player("Assets/panda2.png", map.SpawnP.x, map.SpawnP.y, 1);
+    cocudos = create_player("Assets/player.png", map.SpawnJ.x, map.SpawnJ.y, 0);
 
     enemyList = createEnemyList();
     bulletList = createBulletList();

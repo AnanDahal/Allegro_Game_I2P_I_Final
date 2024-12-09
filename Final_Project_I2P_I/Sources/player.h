@@ -33,7 +33,7 @@ typedef struct _Player{
 
 
 
-Player create_player(char * path,int row,int col);
+Player create_player(char * path,int row,int col, int sound);
 void update_player(Player * player, Map * map);
 void draw_player(Player * player, Point cam);
 void delete_player(Player * player);
