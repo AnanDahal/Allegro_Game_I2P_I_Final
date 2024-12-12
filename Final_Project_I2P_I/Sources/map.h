@@ -31,7 +31,8 @@ typedef enum _BLOCK_TYPE {
     TROPHY,
     BUTTON,
     DOOR_OPEN,
-    HEALTH
+    HEALTH,
+    S_COIN
 } BLOCK_TYPE;
 
 typedef enum _COIN_STATUS {

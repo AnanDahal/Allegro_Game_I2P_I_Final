@@ -214,6 +214,30 @@ void draw_map(Map* map, Point cam) {
                     0);
                 break;
             }
+            case S_COIN: {
+                int offsetx = 0;
+                int offsety = 0;
+                if (map->coin_status[i][j] == APPEAR) {
+                    offsetx = src_coin_width * (int)(coin_animation / 8);
+                }
+                else if (map->coin_status[i][j] == DISAPPEARING) {
+                    offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 8);
+                    offsety = 1 * src_coin_height;
+                    map->coin_disappear_animation[i][j] += 1;
+                    if (map->coin_disappear_animation[i][j] == 64) {
+                        map->coin_status[i][j] = DISAPPEAR;
+                    }
+                }
+                else if (map->coin_status[i][j] == DISAPPEAR) {
+                    map->map[i][j] = FLOOR;
+                    break;
+                }
+                al_draw_tinted_scaled_bitmap(map->coin_assets, al_map_rgb(160, 32, 240),
+                    offsetx, offsety, src_coin_width, src_coin_height,
+                    dx, dy, TILE_SIZE + 5, TILE_SIZE + 5,
+                    0);
+                break;
+            }
             case TROPHY: {
                 if (coins_obtained == coin_counter && map->trophy_status[i][j] != T_DISAPPEARING) {
                     int offsetx = 32 * (int)(trophy_animation / (64 / 9));
@@ -307,6 +331,14 @@ void update_map(Map* map, Point player, Point cocudos, int* total_coins) {
         al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
 
+    if (map->map[center_y][center_x] == S_COIN &&
+        map->coin_status[center_y][center_x] == APPEAR) {
+        *total_coins += 3;
+        map->coin_disappear_animation[center_y][center_x] = 0;
+        map->coin_status[center_y][center_x] = DISAPPEARING;
+        al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+
     if (map->map[center_y_cocudos][center_x_cocudos] == TROPHY &&
         (coins_obtained == coin_counter)) {
         map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 0;
@@ -342,7 +374,7 @@ void destroy_map(Map* map) {
 }
 
 bool isWalkable(BLOCK_TYPE block) {
-    if (block == FLOOR || block == COIN || block == TROPHY || block == HEALTH) return true;
+    if (block == FLOOR || block == COIN || block == TROPHY || block == HEALTH || block == S_COIN) return true;
     return false;
 }
 

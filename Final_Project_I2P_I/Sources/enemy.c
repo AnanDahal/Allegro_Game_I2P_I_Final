@@ -83,7 +83,6 @@ Enemy createEnemy(int row, int col, char type) {
 // Return True if the enemy is dead
 bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
 
-    if (enemy->status == DYING) {
         /*
             [TODO Homework]
 
@@ -92,16 +91,33 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
         */
 
         // Start HW
-        if (enemy->status == DYING) {
-            enemy->death_animation_tick++;
-            if (enemy->death_animation_tick > 64) { // Assuming 64 ticks for the animation
-                return true; // Enemy is considered "dead" after animation
-            }
-            return false; // Continue animation
-        }
-        // End HW
+    if (enemy->status == DYING) {
+        enemy->death_animation_tick++;
+        if (enemy->death_animation_tick > 64) { // Assuming 64 ticks for the animation
+            
+            int tileX = enemy->coord.x / TILE_SIZE;
+            int tileY = enemy->coord.y / TILE_SIZE;
 
+            // Set the tile to a coin
+            if (enemy->type == slime) {
+                map->map[tileY][tileX] = COIN;
+                map->coin_status[tileY][tileX] = APPEAR;
+                coin_counter++;
+            }
+            else {
+                map->map[tileY][tileX] = S_COIN;
+                map->coin_status[tileY][tileX] = APPEAR;
+                coin_counter += 3;
+            }
+            
+
+            
+
+            return true; // Enemy is considered "dead" after animation
+        }
+        return false; // Continue animation
     }
+        // End 
 
     if (enemy->status != ALIVE) return false;
 
