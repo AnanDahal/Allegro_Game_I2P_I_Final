@@ -13,11 +13,30 @@ Weapon create_weapon(char * weapon_path, char * bullet_path, int cooldown, int s
         game_abort("Failed to load Image %s", weapon_path);
     }
     
-    const char* audio_path = "Assets/audio/shooting.mp3";
-    weapon.shooting_audio = al_load_sample(audio_path);
-    if(!weapon.shooting_audio){
-        game_abort("Failed to load Audio %s", audio_path);
+    // 16 50 5
+
+    if (cooldown == 16) {
+        const char* audio_path = "Assets/audio/shooting.mp3";
+        weapon.shooting_audio = al_load_sample(audio_path);
+        if (!weapon.shooting_audio) {
+            game_abort("Failed to load Audio %s", audio_path);
+        }
     }
+    else if (cooldown == 50) {
+        const char* audio_path = "Assets/audio/sniper_sfx.mp3";
+        weapon.shooting_audio = al_load_sample(audio_path);
+        if (!weapon.shooting_audio) {
+            game_abort("Failed to load Audio %s", audio_path);
+        }
+    }
+    else if(cooldown == 5){
+        const char* audio_path = "Assets/audio/machine_gun_sfx.mp3";
+        weapon.shooting_audio = al_load_sample(audio_path);
+        if (!weapon.shooting_audio) {
+            game_abort("Failed to load Audio %s", audio_path);
+        }
+    }
+    
     
     weapon.bullet_path = bullet_path;
     weapon.cooldown = cooldown;

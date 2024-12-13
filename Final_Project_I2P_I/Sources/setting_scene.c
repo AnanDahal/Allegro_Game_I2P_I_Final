@@ -128,18 +128,18 @@ static ALLEGRO_BITMAP* sniper_bitmap;
 static ALLEGRO_BITMAP* fireball_bullet_bitmap;
 static ALLEGRO_BITMAP* machine_gun_bitmap;
 
- bool yellow_eq = true;
- bool guns_eq = true;
+bool yellow_eq = true;
+bool guns_eq = true;
 
- bool orange_eq = false;
- bool sniper_eq = false;
- bool orange_bought = false;
- bool sniper_bought = false;
+bool orange_eq = false;
+bool sniper_eq = false;
+bool orange_bought = false;
+bool sniper_bought = false;
 
- bool fireball_eq = false;
- bool machine_gun_eq = false;
- bool fireball_bought = false;
- bool machine_gun_bought = false;
+bool fireball_eq = false;
+bool machine_gun_eq = false;
+bool fireball_bought = false;
+bool machine_gun_bought = false;
 
 const int orange_bullet_price = 5;
 const int sniper_price = 5;
@@ -196,7 +196,7 @@ static void init_shop(void) {
     if (!machine_gun_bitmap) {
         game_abort("Failed to load machine gun bitmap");
     }
-    
+
 
     // end pic shop
 
@@ -229,7 +229,7 @@ static void update_shop(void) {
     char coin_text[32]; // Ensure the buffer is large enough to hold the text
 
     // Format the integer into the buffer as a string
-    al_clear_to_color(al_map_rgb(128, 128, 128)); 
+    al_clear_to_color(al_map_rgb(128, 128, 128));
     snprintf(coin_text, sizeof(coin_text), "%d", coins_obtained);
     al_draw_scaled_bitmap(coin_bitmap, 0, 0, 16, 16, 0, 0, 100, 100, 0);
     al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), 52, 80, ALLEGRO_ALIGN_CENTER, coin_text);
@@ -237,7 +237,7 @@ static void update_shop(void) {
     if (mouseState.buttons && backButton.hovered == true) {
         change_scene(create_menu_scene());
     }
-    
+
 
     if (!mouseState.buttons) {
         test = false;
@@ -294,7 +294,7 @@ static void update_shop(void) {
             fireball_eq = false;
         }
     }
-    
+
 
     // machine gun
     if (mouseState.buttons && buy_machine_gun_Button.hovered == true && !test) {
@@ -380,7 +380,7 @@ static void draw_shop(void) {
         al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), button_x3 + button_width / 2 + 20, row1_y + button_height - 70 + buy_machine_gun_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIPPED");
         al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), button_x3 + button_width / 2 + 20, row1_y + button_height - 67 + buy_machine_gun_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIPPED");
     }
-    else if(!machine_gun_eq && machine_gun_bought){
+    else if (!machine_gun_eq && machine_gun_bought) {
         al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), button_x3 + button_width / 2 + 20, row1_y + button_height - 70 + buy_machine_gun_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIP");
         al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), button_x3 + button_width / 2 + 20, row1_y + button_height - 67 + buy_machine_gun_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIP");
     }
@@ -452,7 +452,7 @@ static void draw_shop(void) {
     // sniper
     al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), button_x2 + button_width / 2, row1_y + button_height - 125, ALLEGRO_ALIGN_CENTER, "FIRING RATE: 1");
     al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), button_x2 + button_width / 2, row1_y + button_height - 122, ALLEGRO_ALIGN_CENTER, "FIRING RATE: 1");
-    
+
     al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), button_x2 + button_width / 2, row1_y + button_height - 165, ALLEGRO_ALIGN_CENTER, "DAMAGE: 5");
     al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), button_x2 + button_width / 2, row1_y + button_height - 162, ALLEGRO_ALIGN_CENTER, "DAMAGE: 5");
 
@@ -471,7 +471,7 @@ static void draw_shop(void) {
     al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), bullet_x1 + button_width / 2 - 25, bullet_y + button_height - 162, ALLEGRO_ALIGN_CENTER, "DAMAGE: 1");
 
     // orange bullet
-    
+
     al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), bullet_x2 + button_width / 2, bullet_y + button_height - 125, ALLEGRO_ALIGN_CENTER, "KNOCKBACK: 3");
     al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), bullet_x2 + button_width / 2, bullet_y + button_height - 122, ALLEGRO_ALIGN_CENTER, "KNOCKBACK: 3");
 
@@ -479,7 +479,7 @@ static void draw_shop(void) {
     al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), bullet_x2 + button_width / 2, bullet_y + button_height - 162, ALLEGRO_ALIGN_CENTER, "DAMAGE: 3");
 
     // fireball bullet
-    
+
     al_draw_text(P3_FONT, al_map_rgb(66, 76, 110), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 125, ALLEGRO_ALIGN_CENTER, "KNOCKBACK: 5");
     al_draw_text(P3_FONT, al_map_rgb(225, 225, 225), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 122, ALLEGRO_ALIGN_CENTER, "KNOCKBACK: 5");
 

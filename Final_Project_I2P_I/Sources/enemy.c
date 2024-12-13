@@ -80,6 +80,44 @@ Enemy createEnemy(int row, int col, char type) {
     return enemy;
 }
 
+// Function to check if a tile is available for placing a coin
+bool isTileAvailable(Map* map, int x, int y) {
+    // Check bounds
+    if (x < 0 || x >= map->row || y < 0 || y >= map->col) {
+        return false; // Out of bounds
+    }
+
+    // Check if the tile is not a coin, wall, or hole
+    return map->map[y][x] != COIN &&
+        map->map[y][x] != S_COIN &&
+        map->map[y][x] != WALL &&
+        map->map[y][x] != HOLE;
+}
+
+// Helper function to find the nearest available tile
+void findAvailableTile(Map* map, int* tileX, int* tileY) {
+    // Directions to check: right, left, down, up
+    int directions[4][2] = {
+        {1, 0},  // right
+        {-1, 0}, // left
+        {0, 1},  // down
+        {0, -1}  // up
+    };
+
+    for (int i = 0; i < 4; i++) {
+        int newX = *tileX + directions[i][0];
+        int newY = *tileY + directions[i][1];
+        if (isTileAvailable(map, newX, newY)) {
+            *tileX = newX;
+            *tileY = newY;
+            return;
+        }
+    }
+
+    // If no adjacent tiles are available, keep the coin in the original location
+    // You could also expand this logic to search further away if needed
+}
+
 // Return True if the enemy is dead
 bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
 
@@ -98,6 +136,10 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
             int tileX = enemy->coord.x / TILE_SIZE;
             int tileY = enemy->coord.y / TILE_SIZE;
 
+            if (!isTileAvailable(map, tileX, tileY)) {
+                findAvailableTile(map, &tileX, &tileY);
+            }
+
             // Set the tile to a coin
             if (enemy->type == slime) {
                 map->map[tileY][tileX] = COIN;
@@ -109,9 +151,6 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
                 map->coin_status[tileY][tileX] = APPEAR;
                 coin_counter += 3;
             }
-            
-
-            
 
             return true; // Enemy is considered "dead" after animation
         }
