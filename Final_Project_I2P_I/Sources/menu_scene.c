@@ -40,6 +40,8 @@ static void init(void) {
         game_abort("Failed to load menu bitmap");
     }
 
+     
+
     change_bgm("Assets/audio/rickroll.mp3");
 }
 

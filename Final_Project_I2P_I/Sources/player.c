@@ -5,6 +5,7 @@
 
 #include <math.h>
 
+
 static bool isCollision(Player* player, Map* map);
 
 Player create_player(char* path, int row, int col, int sound) {
@@ -30,11 +31,8 @@ Player create_player(char* path, int row, int col, int sound) {
         if (!player.hurt_audio) {
             game_abort("Can't load hurt audio");
         }
- 
-        player.up = ALLEGRO_KEY_W;
-        player.down = ALLEGRO_KEY_S;
-        player.left = ALLEGRO_KEY_A;
-        player.right = ALLEGRO_KEY_D;
+        
+        
     }
     else {
         player.hurt_audio = al_load_sample("Assets/audio/hurt_cocudos.mp3");
@@ -42,10 +40,7 @@ Player create_player(char* path, int row, int col, int sound) {
             game_abort("Can't load hurt audio");
         }
        
-        player.up = ALLEGRO_KEY_UP;
-        player.down = ALLEGRO_KEY_DOWN;
-        player.left = ALLEGRO_KEY_LEFT;
-        player.right = ALLEGRO_KEY_RIGHT;
+        
     }
 
     return player;
@@ -92,7 +87,7 @@ void update_player(Player* player, Map* map) {
 
 
     // Start 1 - 1
-    if ((keyState[player->up] || keyState[player->down] || keyState[player->left] || keyState[player->right]) && player->health > 0) {
+    if ((keyState[player_up] || keyState[player_down] || keyState[player_left] || keyState[player_right]) && player->health > 0) {
         player->status = PLAYER_WALKING;
     }
     else if (player->health > 0) {
@@ -102,11 +97,11 @@ void update_player(Player* player, Map* map) {
         player->status = PLAYER_DYING;
     }
     if (player->status != PLAYER_DYING) {
-        if (keyState[player->up]) {
+        if (keyState[player_up]) {
             player->coord.y -= player->speed;
             player->direction = UP;
         }
-        if (keyState[player->down]) {
+        if (keyState[player_down]) {
             player->coord.y += player->speed;
             player->direction = DOWN;
         }
@@ -140,11 +135,11 @@ void update_player(Player* player, Map* map) {
     // Start 1 - 2
     if (player->status != PLAYER_DYING) {
 
-        if (keyState[player->left]) {
+        if (keyState[player_left]) {
             player->coord.x -= player->speed;
             player->direction = LEFT;
         }
-        if (keyState[player->right]) {
+        if (keyState[player_right]) {
             player->coord.x += player->speed;
             player->direction = RIGHT;
         }
@@ -191,14 +186,14 @@ void draw_player(Player* player, Point cam) {
 
     switch (player->status) {
     case (PLAYER_IDLE):
-        if (keyState[player->right]) flag = 1;
-        if (keyState[player->left]) flag = 0;
+        if (keyState[player_right]) flag = 1;
+        if (keyState[player_left]) flag = 0;
         scene_x = (int)(player->animation_tick / 32);
         break;
     case (PLAYER_WALKING):
         scene_y = 32;
-        if (keyState[player->right]) flag = 1;
-        if (keyState[player->left]) flag = 0;
+        if (keyState[player_right]) flag = 1;
+        if (keyState[player_left]) flag = 0;
         scene_x = (int)(player->animation_tick / 16);
         break;
     case (PLAYER_DYING):
@@ -274,7 +269,7 @@ void update_player2(Player* player, Map* map) {
 
 
     // Start 1 - 1
-    if ((keyState[player->up] || keyState[player->down] || keyState[player->left] || keyState[player->right]) && player->health > 0) {
+    if ((keyState[cocudos_up] || keyState[cocudos_down] || keyState[cocudos_left] || keyState[cocudos_right]) && player->health > 0) {
         player->status = PLAYER_WALKING;
     }
     else if (player->health > 0) {
@@ -284,11 +279,11 @@ void update_player2(Player* player, Map* map) {
         player->status = PLAYER_DYING;
     }
     if (player->status != PLAYER_DYING) {
-        if (keyState[player->up]) {
+        if (keyState[cocudos_up]) {
             player->coord.y -= player->speed;
             player->direction = UP;
         }
-        if (keyState[player->down]) {
+        if (keyState[cocudos_down]) {
             player->coord.y += player->speed;
             player->direction = DOWN;
         }
@@ -302,11 +297,11 @@ void update_player2(Player* player, Map* map) {
 
     if (player->status != PLAYER_DYING) {
 
-        if (keyState[player->left]) {
+        if (keyState[cocudos_left]) {
             player->coord.x -= player->speed;
             player->direction = LEFT;
         }
-        if (keyState[player->right]) {
+        if (keyState[cocudos_right]) {
             player->coord.x += player->speed;
             player->direction = RIGHT;
         }
@@ -334,14 +329,14 @@ void draw_player2(Player* player, Point cam) {
 
     switch (player->status) {
     case (PLAYER_IDLE):
-        if (keyState[player->right]) flag2 = 0;
-        if (keyState[player->left]) flag2 = 1;
+        if (keyState[cocudos_right]) flag2 = 0;
+        if (keyState[cocudos_left]) flag2 = 1;
         scene_x = 0;
         break;
     case (PLAYER_WALKING):
         scene_y = 0;
-        if (keyState[player->right]) flag2 = 0;
-        if (keyState[player->left]) flag2 = 1;
+        if (keyState[cocudos_right]) flag2 = 0;
+        if (keyState[cocudos_left]) flag2 = 1;
         scene_x = (int)(player->animation_tick / 16);
         break;
     case (PLAYER_DYING):

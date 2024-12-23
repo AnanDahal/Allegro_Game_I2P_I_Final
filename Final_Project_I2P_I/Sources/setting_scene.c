@@ -12,31 +12,153 @@
 Player player; // Player
 Player cocudos; // Cocudos
 
+
+
+ALLEGRO_KEYBOARD_STATE keyboardState;
+
 Map map;
 static Button backButton;
 static ALLEGRO_BITMAP* coin_bitmap;
 
+static Button player_up_button;
+static Button player_down_button;
+static Button player_left_button;
+static Button player_right_button;
+
+static Button cocudos_up_button;
+static Button cocudos_down_button;
+static Button cocudos_left_button;
+static Button cocudos_right_button;
+
+
 static void init(void) {
-    
     button_sfx = al_load_sample("Assets/audio/button.mp3");
+
+    // Initialize back button
     backButton = button_create(SCREEN_W / 2 - 200, 800, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+
+    // Initialize keybinding buttons
+    int button_width = 300;
+    int button_height = 50;
+    int y_offset = 200;
+
+    player_up_button = button_create(SCREEN_W / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    y_offset += 70;
+
+    player_down_button = button_create(SCREEN_W / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    y_offset += 70;
+
+    player_left_button = button_create(SCREEN_W / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    y_offset += 70;
+
+    player_right_button = button_create(SCREEN_W / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+
+    y_offset = 200;
+    cocudos_up_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    y_offset += 70;
+
+    cocudos_down_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    y_offset += 70;
+
+    cocudos_left_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    y_offset += 70;
+
+    cocudos_right_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 }
 
-static void update(void) {
-    update_button(&backButton);
 
+
+typedef enum {
+    NONE,
+    PLAYER_UP,
+    PLAYER_DOWN,
+    PLAYER_LEFT,
+    PLAYER_RIGHT,
+    COCUDOS_UP,
+    COCUDOS_DOWN,
+    COCUDOS_LEFT,
+    COCUDOS_RIGHT
+} KeyBinding;
+
+static KeyBinding waiting_for_key = NONE;
+
+static void update(void) {
+    // Update all buttons
+    update_button(&backButton);
+    update_button(&player_up_button);
+    update_button(&player_down_button);
+    update_button(&player_left_button);
+    update_button(&player_right_button);
+    update_button(&cocudos_up_button);
+    update_button(&cocudos_down_button);
+    update_button(&cocudos_left_button);
+    update_button(&cocudos_right_button);
+
+    // Handle back button
     if (mouseState.buttons && backButton.hovered == true) {
         al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_menu_scene());
     }
+
+    // Handle key rebinding
+    if (waiting_for_key != NONE) {
+        al_get_keyboard_state(&keyboardState);
+        for (int i = 0; i < ALLEGRO_KEY_MAX; i++) {
+            if (al_key_down(&keyboardState, i)) {
+                switch (waiting_for_key) {
+                case PLAYER_UP:
+                    player_up = i;
+                    break;
+                case PLAYER_DOWN:
+                    player_down = i;
+                    break;
+                case PLAYER_LEFT:
+                    player_left = i;
+                    break;
+                case PLAYER_RIGHT:
+                    player_right = i;
+                    break;
+                case COCUDOS_UP:
+                    cocudos_up = i;
+                    break;
+                case COCUDOS_DOWN:
+                    cocudos_down = i;
+                    break;
+                case COCUDOS_LEFT:
+                    cocudos_left = i;
+                    break;
+                case COCUDOS_RIGHT:
+                    cocudos_right = i;
+                    break;
+                }
+                waiting_for_key = NONE; // Reset state
+                return;
+            }
+        }
+    }
+
+    // Handle button clicks for key rebinding
+    if (mouseState.buttons) {
+        if (player_up_button.hovered == true) waiting_for_key = PLAYER_UP;
+        else if (player_down_button.hovered == true) waiting_for_key = PLAYER_DOWN;
+        else if (player_left_button.hovered == true) waiting_for_key = PLAYER_LEFT;
+        else if (player_right_button.hovered == true) waiting_for_key = PLAYER_RIGHT;
+        else if (cocudos_up_button.hovered == true) waiting_for_key = COCUDOS_UP;
+        else if (cocudos_down_button.hovered == true) waiting_for_key = COCUDOS_DOWN;
+        else if (cocudos_left_button.hovered == true) waiting_for_key = COCUDOS_LEFT;
+        else if (cocudos_right_button.hovered == true) waiting_for_key = COCUDOS_RIGHT;
+    }
 }
+
+
+
 
 static void draw(void) {
     // Draw back button
     draw_button(backButton);
     al_draw_text(
         P2_FONT,
-        al_map_rgb(66, 76, 110),
+        al_map_rgb(200, 200, 0), // Bright yellow text
         SCREEN_W / 2,
         800 + 28 + backButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
@@ -50,11 +172,71 @@ static void draw(void) {
         ALLEGRO_ALIGN_CENTER,
         "BACK"
     );
+
+    // Indicate waiting for key input
+    if (waiting_for_key != NONE) {
+        al_draw_text(
+            P2_FONT,
+            al_map_rgb(255, 0, 0),
+            SCREEN_W / 2,
+            100,
+            ALLEGRO_ALIGN_CENTER,
+            "Press any key to rebind!"
+        );
+    }
+
+    // Draw player key buttons
+    draw_button(player_up_button);
+    al_draw_textf(P2_FONT, player_up_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
+        SCREEN_W / 4, player_up_button.y, ALLEGRO_ALIGN_CENTER, "Up: %s", al_keycode_to_name(player_up));
+
+    draw_button(player_down_button);
+    al_draw_textf(P2_FONT, player_down_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
+        SCREEN_W / 4, player_down_button.y, ALLEGRO_ALIGN_CENTER, "Down: %s", al_keycode_to_name(player_down));
+
+    draw_button(player_left_button);
+    al_draw_textf(P2_FONT, player_left_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
+        SCREEN_W / 4, player_left_button.y, ALLEGRO_ALIGN_CENTER, "Left: %s", al_keycode_to_name(player_left));
+
+    draw_button(player_right_button);
+    al_draw_textf(P2_FONT, player_right_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
+        SCREEN_W / 4, player_right_button.y, ALLEGRO_ALIGN_CENTER, "Right: %s", al_keycode_to_name(player_right));
+
+    // Draw cocudos key buttons
+    draw_button(cocudos_up_button);
+    al_draw_textf(P2_FONT, cocudos_up_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
+        SCREEN_W * 3 / 4, cocudos_up_button.y, ALLEGRO_ALIGN_CENTER, "Up: %s", al_keycode_to_name(cocudos_up));
+
+    draw_button(cocudos_down_button);
+    al_draw_textf(P2_FONT, cocudos_down_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
+        SCREEN_W * 3 / 4, cocudos_down_button.y, ALLEGRO_ALIGN_CENTER, "Down: %s", al_keycode_to_name(cocudos_down));
+
+    draw_button(cocudos_left_button);
+    al_draw_textf(P2_FONT, cocudos_left_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
+        SCREEN_W * 3 / 4, cocudos_left_button.y, ALLEGRO_ALIGN_CENTER, "Left: %s", al_keycode_to_name(cocudos_left));
+
+    draw_button(cocudos_right_button);
+    al_draw_textf(P2_FONT, cocudos_right_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
+        SCREEN_W * 3 / 4, cocudos_right_button.y, ALLEGRO_ALIGN_CENTER, "Right: %s", al_keycode_to_name(cocudos_right));
 }
+
+
+
 
 static void destroy(void) {
     destroy_button(&backButton);
+
+    destroy_button(&player_up_button);
+    destroy_button(&player_down_button);
+    destroy_button(&player_left_button);
+    destroy_button(&player_right_button);
+
+    destroy_button(&cocudos_up_button);
+    destroy_button(&cocudos_down_button);
+    destroy_button(&cocudos_left_button);
+    destroy_button(&cocudos_right_button);
 }
+
 
 Scene create_setting_scene(void) {
     Scene scene;

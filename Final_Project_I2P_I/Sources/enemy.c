@@ -91,6 +91,7 @@ bool isTileAvailable(Map* map, int x, int y) {
     return map->map[y][x] != COIN &&
         map->map[y][x] != S_COIN &&
         map->map[y][x] != WALL &&
+        map->map[y][x] != HEALTH &&
         map->map[y][x] != HOLE;
 }
 

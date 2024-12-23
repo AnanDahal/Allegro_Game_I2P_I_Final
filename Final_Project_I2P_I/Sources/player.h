@@ -19,10 +19,7 @@ typedef struct _Player{
     int direction;
     int health;
 
-    int up;
-    int down;
-    int left;
-    int right;
+    
 
 
     ALLEGRO_SAMPLE* hurt_audio;
@@ -37,6 +34,16 @@ typedef struct _Player{
 
 } Player;
 
+
+int player_up;
+int player_down;
+int player_left;
+int player_right;
+
+int cocudos_up;
+int cocudos_down;
+int cocudos_left;
+int cocudos_right;
 
 Player create_player(char * path,int row,int col, int sound);
 void update_player(Player * player, Map * map);

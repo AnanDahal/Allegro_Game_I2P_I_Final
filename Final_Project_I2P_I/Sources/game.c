@@ -2,6 +2,7 @@
 #include "utility.h"
 #include "menu_scene.h"
 
+
 static ALLEGRO_DISPLAY* gameDisplay;
 static ALLEGRO_TIMER* gameTimer;
 static ALLEGRO_TIMER* gameTick;
@@ -109,6 +110,7 @@ void initGame(void){
     // Create the current scene
     change_scene(create_menu_scene());
     game_log("Scene %s created, initializing ... ", current_scene.name);
+
 }
 
 // Destroy resources if the game done
