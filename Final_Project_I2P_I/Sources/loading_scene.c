@@ -17,17 +17,6 @@ bool starttimer = false;
 
 static ALLEGRO_BITMAP* player_bitmap;
 
-static ALLEGRO_BITMAP* player_bitmap1;
-static ALLEGRO_BITMAP* player_bitmap2;
-static ALLEGRO_BITMAP* player_bitmap3;
-static ALLEGRO_BITMAP* player_bitmap4;
-static ALLEGRO_BITMAP* player_bitmap5;
-static ALLEGRO_BITMAP* cocudos_bitmap1;
-static ALLEGRO_BITMAP* cocudos_bitmap2;
-static ALLEGRO_BITMAP* cocudos_bitmap3;
-static ALLEGRO_BITMAP* cocudos_bitmap4;
-static ALLEGRO_BITMAP* cocudos_bitmap5;
-
 // Add a pointer array to hold the background bitmaps
 static ALLEGRO_BITMAP* backgrounds[10];
 
@@ -35,6 +24,7 @@ static void init(void) {
     timer_countdown = 60;
     scene = 0;
 
+    button_sfx = al_load_sample("Assets/audio/button.mp3");
 
     // Load background and player bitmaps
     player_bitmap = al_load_bitmap("Assets/panda2.png");
@@ -73,12 +63,14 @@ static void update(void) {
 
     // If SPACEBAR is pressed, increment scene
     if (mouseState.buttons && scene < 10 && !starttimer && !click) {
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         scene++;
         click = true;
     }
 
     // If ENTER is pressed, set scene to 10 and start timer
     if ((scene == 10 || al_key_down(&key_state, ALLEGRO_KEY_SPACE)) && !starttimer) {
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         scene = 10;
         starttimer = true;
         click = true;

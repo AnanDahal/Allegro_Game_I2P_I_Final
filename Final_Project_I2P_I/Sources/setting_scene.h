@@ -17,6 +17,8 @@ extern bool machine_gun_eq;
 extern bool fireball_bought;
 extern bool machine_gun_bought;
 
+ALLEGRO_SAMPLE* buy_sfx;
+
 Scene create_setting_scene(void);
 Scene create_shop_scene(void);
 

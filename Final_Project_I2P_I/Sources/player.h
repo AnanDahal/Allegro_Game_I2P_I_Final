@@ -19,18 +19,23 @@ typedef struct _Player{
     int direction;
     int health;
 
+    int up;
+    int down;
+    int left;
+    int right;
+
+
     ALLEGRO_SAMPLE* hurt_audio;
 
     ALLEGRO_BITMAP* image;
     uint8_t animation_tick; // For animation
-    
+
     float knockback_angle;
     uint8_t knockback_CD;
 
     PLAYER_STATUS status;
 
 } Player;
-
 
 
 Player create_player(char * path,int row,int col, int sound);

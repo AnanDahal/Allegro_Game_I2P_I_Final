@@ -20,6 +20,8 @@ const int TILE_SIZE = 64;
 bool add_health = false;
 
 ALLEGRO_SAMPLE* BGM = NULL;
+
+
 float SFX_VOLUME = 0.5f;
 float BGM_VOLUME = 0.5f;
 

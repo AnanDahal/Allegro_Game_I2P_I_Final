@@ -9,6 +9,7 @@ static bool isCollision(Player* player, Map* map);
 
 Player create_player(char* path, int row, int col, int sound) {
     Player player;
+
     memset(&player, 0, sizeof(player));
 
     player.coord = (Point){
@@ -29,12 +30,22 @@ Player create_player(char* path, int row, int col, int sound) {
         if (!player.hurt_audio) {
             game_abort("Can't load hurt audio");
         }
+ 
+        player.up = ALLEGRO_KEY_W;
+        player.down = ALLEGRO_KEY_S;
+        player.left = ALLEGRO_KEY_A;
+        player.right = ALLEGRO_KEY_D;
     }
     else {
         player.hurt_audio = al_load_sample("Assets/audio/hurt_cocudos.mp3");
         if (!player.hurt_audio) {
             game_abort("Can't load hurt audio");
         }
+       
+        player.up = ALLEGRO_KEY_UP;
+        player.down = ALLEGRO_KEY_DOWN;
+        player.left = ALLEGRO_KEY_LEFT;
+        player.right = ALLEGRO_KEY_RIGHT;
     }
 
     return player;
@@ -69,11 +80,11 @@ void update_player(Player* player, Map* map) {
         Player Movement
         Adjust the movement by player->speed
 
-        if (keyState[ALLEGRO_KEY_W]) {
+        if (keyState[player->up]) {
             player->coord.y = ...
             player->direction = ...
         }
-        if (keyState[ALLEGRO_KEY_S]) {
+        if (keyState[player->down]) {
             player->coord.y = ...
             player->direction = ...
         }
@@ -81,7 +92,7 @@ void update_player(Player* player, Map* map) {
 
 
     // Start 1 - 1
-    if ((keyState[ALLEGRO_KEY_W] || keyState[ALLEGRO_KEY_S] || keyState[ALLEGRO_KEY_A] || keyState[ALLEGRO_KEY_D]) && player->health > 0) {
+    if ((keyState[player->up] || keyState[player->down] || keyState[player->left] || keyState[player->right]) && player->health > 0) {
         player->status = PLAYER_WALKING;
     }
     else if (player->health > 0) {
@@ -91,11 +102,11 @@ void update_player(Player* player, Map* map) {
         player->status = PLAYER_DYING;
     }
     if (player->status != PLAYER_DYING) {
-        if (keyState[ALLEGRO_KEY_W]) {
+        if (keyState[player->up]) {
             player->coord.y -= player->speed;
             player->direction = UP;
         }
-        if (keyState[ALLEGRO_KEY_S]) {
+        if (keyState[player->down]) {
             player->coord.y += player->speed;
             player->direction = DOWN;
         }
@@ -115,11 +126,11 @@ void update_player(Player* player, Map* map) {
         Player Movement
         Add/Subtract the movement by player->speed
 
-        if (keyState[ALLEGRO_KEY_A]) {
+        if (keyState[player->left]) {
             player->coord.y = ...
             player->direction = ...
         }
-        if (keyState[ALLEGRO_KEY_D]) {
+        if (keyState[player->right]) {
             player->coord.y = ...
             player->direction = ...
 
@@ -129,11 +140,11 @@ void update_player(Player* player, Map* map) {
     // Start 1 - 2
     if (player->status != PLAYER_DYING) {
 
-        if (keyState[ALLEGRO_KEY_A]) {
+        if (keyState[player->left]) {
             player->coord.x -= player->speed;
             player->direction = LEFT;
         }
-        if (keyState[ALLEGRO_KEY_D]) {
+        if (keyState[player->right]) {
             player->coord.x += player->speed;
             player->direction = RIGHT;
         }
@@ -153,7 +164,6 @@ void update_player(Player* player, Map* map) {
         Calculate the animation tick to draw animation later
     */
     // Start HW 
-
     player->animation_tick = (player->animation_tick + 1) % 64;
 
     // End HW
@@ -181,14 +191,14 @@ void draw_player(Player* player, Point cam) {
 
     switch (player->status) {
     case (PLAYER_IDLE):
-        if (keyState[ALLEGRO_KEY_D]) flag = 1;
-        if (keyState[ALLEGRO_KEY_A]) flag = 0;
+        if (keyState[player->right]) flag = 1;
+        if (keyState[player->left]) flag = 0;
         scene_x = (int)(player->animation_tick / 32);
         break;
     case (PLAYER_WALKING):
         scene_y = 32;
-        if (keyState[ALLEGRO_KEY_D]) flag = 1;
-        if (keyState[ALLEGRO_KEY_A]) flag = 0;
+        if (keyState[player->right]) flag = 1;
+        if (keyState[player->left]) flag = 0;
         scene_x = (int)(player->animation_tick / 16);
         break;
     case (PLAYER_DYING):
@@ -252,11 +262,11 @@ void update_player2(Player* player, Map* map) {
         Player Movement
         Adjust the movement by player->speed
 
-        if (keyState[ALLEGRO_KEY_W]) {
+        if (keyState[player->up]) {
             player->coord.y = ...
             player->direction = ...
         }
-        if (keyState[ALLEGRO_KEY_S]) {
+        if (keyState[player->down]) {
             player->coord.y = ...
             player->direction = ...
         }
@@ -264,7 +274,7 @@ void update_player2(Player* player, Map* map) {
 
 
     // Start 1 - 1
-    if ((keyState[ALLEGRO_KEY_UP] || keyState[ALLEGRO_KEY_DOWN] || keyState[ALLEGRO_KEY_LEFT] || keyState[ALLEGRO_KEY_RIGHT]) && player->health > 0) {
+    if ((keyState[player->up] || keyState[player->down] || keyState[player->left] || keyState[player->right]) && player->health > 0) {
         player->status = PLAYER_WALKING;
     }
     else if (player->health > 0) {
@@ -274,11 +284,11 @@ void update_player2(Player* player, Map* map) {
         player->status = PLAYER_DYING;
     }
     if (player->status != PLAYER_DYING) {
-        if (keyState[ALLEGRO_KEY_UP]) {
+        if (keyState[player->up]) {
             player->coord.y -= player->speed;
             player->direction = UP;
         }
-        if (keyState[ALLEGRO_KEY_DOWN]) {
+        if (keyState[player->down]) {
             player->coord.y += player->speed;
             player->direction = DOWN;
         }
@@ -292,11 +302,11 @@ void update_player2(Player* player, Map* map) {
 
     if (player->status != PLAYER_DYING) {
 
-        if (keyState[ALLEGRO_KEY_LEFT]) {
+        if (keyState[player->left]) {
             player->coord.x -= player->speed;
             player->direction = LEFT;
         }
-        if (keyState[ALLEGRO_KEY_RIGHT]) {
+        if (keyState[player->right]) {
             player->coord.x += player->speed;
             player->direction = RIGHT;
         }
@@ -324,14 +334,14 @@ void draw_player2(Player* player, Point cam) {
 
     switch (player->status) {
     case (PLAYER_IDLE):
-        if (keyState[ALLEGRO_KEY_RIGHT]) flag2 = 0;
-        if (keyState[ALLEGRO_KEY_LEFT]) flag2 = 1;
+        if (keyState[player->right]) flag2 = 0;
+        if (keyState[player->left]) flag2 = 1;
         scene_x = 0;
         break;
     case (PLAYER_WALKING):
         scene_y = 0;
-        if (keyState[ALLEGRO_KEY_RIGHT]) flag2 = 0;
-        if (keyState[ALLEGRO_KEY_LEFT]) flag2 = 1;
+        if (keyState[player->right]) flag2 = 0;
+        if (keyState[player->left]) flag2 = 1;
         scene_x = (int)(player->animation_tick / 16);
         break;
     case (PLAYER_DYING):

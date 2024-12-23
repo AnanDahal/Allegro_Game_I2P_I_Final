@@ -27,6 +27,7 @@ coins_obtained = 0;
 static void init(void){
     timer_countdown = 60;
     initEnemy();
+
     
     map = create_map("Assets/map0.txt", 0);
 
@@ -268,11 +269,22 @@ Scene create_game_scene(void){
 
 static Button restartButton;
 static Button quitButton;
+static ALLEGRO_BITMAP* lose_bitmap;
+
+
 
 static void init_lose(void) {
     int button_width = 300;
     int button_height = 80;
     int button_spacing = 30;
+
+    lose_bitmap = al_load_bitmap("Assets/lose_scene.png");
+
+    if (!lose_bitmap) {
+        game_abort("Failed to load lose bitmap");
+    }
+
+    button_sfx = al_load_sample("Assets/audio/button.mp3");
 
     restartButton = button_create(
         (SCREEN_W - button_width) / 2, // Centered horizontally
@@ -302,17 +314,21 @@ static void update_lose(void) {
     update_button(&restartButton);
 
     if (restartButton.hovered && (mouseState.buttons & 1)) { // Check if hovered and left mouse button is pressed.
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_loading_scene());
     }
 
     if (quitButton.hovered && (mouseState.buttons & 1)) { // Check if hovered and left mouse button is pressed.
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         exit(0);
     }
 }
 
 static void draw_lose(void) {
     // Draw a background color or image
-    al_clear_to_color(al_map_rgb(30, 30, 30)); // Dark background
+    al_draw_scaled_bitmap(lose_bitmap,
+        0, 0, 1640, 1000,
+        0, 0, 1640, 1000, 0);
 
     // Draw the "YOU LOSE" text with a glow effect
     al_draw_text(
@@ -369,6 +385,7 @@ static void draw_lose(void) {
 static void destroy_lose(void) {
     destroy_button(&restartButton);
     destroy_button(&quitButton);
+    al_destroy_bitmap(lose_bitmap);
 }
 
 Scene create_lose_scene(void) {
@@ -387,12 +404,22 @@ Scene create_lose_scene(void) {
 // Button declarations
 static Button mainMenuButton;
 static Button quitButton;
+static ALLEGRO_BITMAP* win_bitmap;
+
 
 // Initialization function for the win scene
 static void init_win(void) {
     // Create buttons
     mainMenuButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     quitButton = button_create(SCREEN_W / 2 - 200, 650, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+
+    win_bitmap = al_load_bitmap("Assets/win_scene.png");
+
+    if (!win_bitmap) {
+        game_abort("Failed to load win bitmap");
+    }
+
+    button_sfx = al_load_sample("Assets/audio/button.mp3");
 
     // Change background music
     change_bgm("Assets/audio/victory_theme.mp3");
@@ -406,9 +433,11 @@ static void update_win(void) {
 
     // Handle button actions
     if (mainMenuButton.hovered && (mouseState.buttons & 1)) { // Main Menu button pressed
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_menu_scene());
     }
     if (quitButton.hovered && (mouseState.buttons & 1)) { // Quit button pressed
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         coins_obtained = 0;
         al_rest(0.2); // Add a small delay to avoid abrupt exit
         exit(0);
@@ -418,7 +447,9 @@ static void update_win(void) {
 // Draw function for the win scene
 static void draw_win(void) {
     // Draw background color
-    al_clear_to_color(al_map_rgb(40, 150, 40)); // Victory green
+    al_draw_scaled_bitmap(win_bitmap,
+        0, 0, 1640, 1000,
+        0, 0, 1640, 1000, 0);
 
     // Draw the "YOU WIN!" title with a glow effect
 
@@ -467,6 +498,7 @@ static void draw_win(void) {
 static void destroy_win(void) {
     destroy_button(&mainMenuButton);
     destroy_button(&quitButton);
+    al_destroy_bitmap(win_bitmap);
 }
 
 // Function to create the win scene

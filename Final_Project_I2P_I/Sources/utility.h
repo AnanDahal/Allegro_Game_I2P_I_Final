@@ -38,6 +38,8 @@ extern const int TILE_SIZE; // TILE SIZE Displayed in the game
 extern float SFX_VOLUME; // Sound Effects Volume
 extern float BGM_VOLUME; // Background Music Volume
 
+ALLEGRO_SAMPLE* button_sfx;
+
 extern ALLEGRO_FONT* TITLE_FONT; // 64px
 extern ALLEGRO_FONT* P1_FONT; // 48px
 extern ALLEGRO_FONT* P2_FONT; // 36px

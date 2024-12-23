@@ -6,43 +6,39 @@
 #include "game.h"
 #include "game_scene.h"
 #include "map.h"
+#include "player.h"
+
+
+Player player; // Player
+Player cocudos; // Cocudos
 
 Map map;
 static Button backButton;
-static Button shopButton;
 static ALLEGRO_BITMAP* coin_bitmap;
 
-
 static void init(void) {
-    backButton = button_create(SCREEN_W / 2 - 200, 650, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    shopButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    
+    button_sfx = al_load_sample("Assets/audio/button.mp3");
+    backButton = button_create(SCREEN_W / 2 - 200, 800, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 }
 
 static void update(void) {
-
     update_button(&backButton);
 
     if (mouseState.buttons && backButton.hovered == true) {
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_menu_scene());
     }
-
-    update_button(&shopButton);
-
-    if (mouseState.buttons && shopButton.hovered == true) {
-        change_scene(create_shop_scene());
-    }
-
 }
 
 static void draw(void) {
-    // button
+    // Draw back button
     draw_button(backButton);
-    //button text
     al_draw_text(
         P2_FONT,
         al_map_rgb(66, 76, 110),
         SCREEN_W / 2,
-        650 + 28 + backButton.hovered * 11,
+        800 + 28 + backButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "BACK"
     );
@@ -50,37 +46,14 @@ static void draw(void) {
         P2_FONT,
         al_map_rgb(225, 225, 225),
         SCREEN_W / 2,
-        650 + 31 + backButton.hovered * 11,
+        800 + 31 + backButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "BACK"
     );
-
-    // button
-    draw_button(shopButton);
-    //button text
-    al_draw_text(
-        P2_FONT,
-        al_map_rgb(66, 76, 110),
-        SCREEN_W / 2,
-        500 + 28 + shopButton.hovered * 11,
-        ALLEGRO_ALIGN_CENTER,
-        "SHOP"
-    );
-    al_draw_text(
-        P2_FONT,
-        al_map_rgb(225, 225, 225),
-        SCREEN_W / 2,
-        500 + 31 + shopButton.hovered * 11,
-        ALLEGRO_ALIGN_CENTER,
-        "SHOP"
-    );
-
-
 }
 
 static void destroy(void) {
     destroy_button(&backButton);
-    destroy_button(&shopButton);
 }
 
 Scene create_setting_scene(void) {
@@ -95,7 +68,6 @@ Scene create_setting_scene(void) {
 
     return scene;
 }
-
 
 
 
@@ -150,6 +122,9 @@ const int machine_gun_price = 10;
 
 static void init_shop(void) {
     coin_bitmap = al_load_bitmap("Assets/coin_icon.png");
+
+    buy_sfx = al_load_sample("Assets/audio/buying.mp3");
+    button_sfx = al_load_sample("Assets/audio/button.mp3");
 
     if (!coin_bitmap) {
         game_abort("Failed to load coin bitmap");
@@ -213,6 +188,7 @@ static void init_shop(void) {
     buy_orange_bullet_Button = button_create(SCREEN_W / 2 - 138, 600, 275, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     buy_fireball_bullet_Button = button_create(1100, 600, 275, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
+    change_bgm("Assets/audio/shopping_bgm.mp3");
 }
 bool test = false;
 static void update_shop(void) {
@@ -235,6 +211,7 @@ static void update_shop(void) {
     al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), 52, 80, ALLEGRO_ALIGN_CENTER, coin_text);
 
     if (mouseState.buttons && backButton.hovered == true) {
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_menu_scene());
     }
 
@@ -264,6 +241,7 @@ static void update_shop(void) {
     // sniper
     if (mouseState.buttons && buy_sniper_Button.hovered == true && !test) {
         if (!sniper_bought && coins_obtained >= sniper_price) {
+            al_play_sample(buy_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             coins_obtained -= sniper_price;
             test = true;
             sniper_bought = true;
@@ -281,6 +259,7 @@ static void update_shop(void) {
     // orange bullet
     if (mouseState.buttons && buy_orange_bullet_Button.hovered == true && !test) {
         if (!orange_bought && coins_obtained >= orange_bullet_price) {
+            al_play_sample(buy_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             coins_obtained -= orange_bullet_price;
             test = true;
             orange_bought = true;
@@ -299,6 +278,7 @@ static void update_shop(void) {
     // machine gun
     if (mouseState.buttons && buy_machine_gun_Button.hovered == true && !test) {
         if (!machine_gun_bought && coins_obtained >= machine_gun_price) {
+            al_play_sample(buy_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             coins_obtained -= machine_gun_price;
             test = true;
             machine_gun_bought = true;
@@ -316,6 +296,7 @@ static void update_shop(void) {
     // fireball bullet
     if (mouseState.buttons && buy_fireball_bullet_Button.hovered == true && !test) {
         if (!fireball_bought && coins_obtained >= fireball_bullet_price) {
+            al_play_sample(buy_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             coins_obtained -= fireball_bullet_price;
             test = true;
             fireball_bought = true;
@@ -369,8 +350,8 @@ static void draw_shop(void) {
         al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), button_x2 + button_width / 2, row1_y + button_height - 67 + buy_sniper_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIP");
     }
     else {
-        al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), button_x2 + button_width / 2, row1_y + button_height - 70 + buy_sniper_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "BUY");
-        al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), button_x2 + button_width / 2, row1_y + button_height - 67 + buy_sniper_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "BUY");
+        al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), button_x2 + button_width / 2, row1_y + button_height - 70 + buy_sniper_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "5 COINS");
+        al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), button_x2 + button_width / 2, row1_y + button_height - 67 + buy_sniper_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "5 COINS");
     }
 
     // Draw Machine Gun Section
@@ -385,8 +366,8 @@ static void draw_shop(void) {
         al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), button_x3 + button_width / 2 + 20, row1_y + button_height - 67 + buy_machine_gun_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIP");
     }
     else {
-        al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), button_x3 + button_width / 2 + 20, row1_y + button_height - 70 + buy_machine_gun_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "BUY");
-        al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), button_x3 + button_width / 2 + 20, row1_y + button_height - 67 + buy_machine_gun_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "BUY");
+        al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), button_x3 + button_width / 2 + 20, row1_y + button_height - 70 + buy_machine_gun_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "10 COINS");
+        al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), button_x3 + button_width / 2 + 20, row1_y + button_height - 67 + buy_machine_gun_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "10 COINS");
 
     }
 
@@ -420,8 +401,8 @@ static void draw_shop(void) {
         al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), bullet_x2 + button_width / 2, bullet_y + button_height - 67 + buy_orange_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIP");
     }
     else {
-        al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), bullet_x2 + button_width / 2, bullet_y + button_height - 70 + buy_orange_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "BUY");
-        al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), bullet_x2 + button_width / 2, bullet_y + button_height - 67 + buy_orange_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "BUY");
+        al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), bullet_x2 + button_width / 2, bullet_y + button_height - 70 + buy_orange_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "5 COINS");
+        al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), bullet_x2 + button_width / 2, bullet_y + button_height - 67 + buy_orange_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "5 COINS");
     }
 
     // Fireball Bullet
@@ -436,8 +417,8 @@ static void draw_shop(void) {
         al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 67 + buy_fireball_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "EQUIP");
     }
     else {
-        al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 70 + buy_fireball_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "BUY");
-        al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 67 + buy_fireball_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "BUY");
+        al_draw_text(P2_FONT, al_map_rgb(66, 76, 110), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 70 + buy_fireball_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "10 COINS");
+        al_draw_text(P2_FONT, al_map_rgb(225, 225, 225), bullet_x3 + button_width / 2 + 20, bullet_y + button_height - 67 + buy_fireball_bullet_Button.hovered * 11, ALLEGRO_ALIGN_CENTER, "10 COINS");
     }
 
     // Descriptions
