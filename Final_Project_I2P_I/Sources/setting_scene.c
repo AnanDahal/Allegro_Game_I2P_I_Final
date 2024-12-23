@@ -29,7 +29,8 @@ static Button cocudos_up_button;
 static Button cocudos_down_button;
 static Button cocudos_left_button;
 static Button cocudos_right_button;
-
+int button_width = 400;
+int button_height = 100;
 
 static void init(void) {
     button_sfx = al_load_sample("Assets/audio/button.mp3");
@@ -37,34 +38,37 @@ static void init(void) {
     // Initialize back button
     backButton = button_create(SCREEN_W / 2 - 200, 800, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
-    // Initialize keybinding buttons
-    int button_width = 300;
-    int button_height = 50;
-    int y_offset = 200;
+    // Initialize keybinding buttons (set to the same size as backButton)
+    
 
-    player_up_button = button_create(SCREEN_W / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    y_offset += 70;
+    // Player Controls buttons
+    int player_y_offset = 150;
+    player_up_button = button_create(SCREEN_W / 4 - button_width / 2, player_y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    player_y_offset += 120;  // Added more space to separate the buttons
 
-    player_down_button = button_create(SCREEN_W / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    y_offset += 70;
+    player_down_button = button_create(SCREEN_W / 4 - button_width / 2, player_y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    player_y_offset += 120;
 
-    player_left_button = button_create(SCREEN_W / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    y_offset += 70;
+    player_left_button = button_create(SCREEN_W / 4 - button_width / 2, player_y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    player_y_offset += 120;
 
-    player_right_button = button_create(SCREEN_W / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    player_right_button = button_create(SCREEN_W / 4 - button_width / 2, player_y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
-    y_offset = 200;
-    cocudos_up_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    y_offset += 70;
+    // Cocudos Controls buttons
+    int cocudos_y_offset = 150;
+    cocudos_up_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, cocudos_y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    cocudos_y_offset += 120;
 
-    cocudos_down_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    y_offset += 70;
+    cocudos_down_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, cocudos_y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    cocudos_y_offset += 120;
 
-    cocudos_left_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    y_offset += 70;
+    cocudos_left_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, cocudos_y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    cocudos_y_offset += 120;
 
-    cocudos_right_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    cocudos_right_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, cocudos_y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 }
+
+
 
 
 
@@ -158,9 +162,9 @@ static void draw(void) {
     draw_button(backButton);
     al_draw_text(
         P2_FONT,
-        al_map_rgb(200, 200, 0), // Bright yellow text
+        al_map_rgb(50, 50, 50), 
         SCREEN_W / 2,
-        800 + 28 + backButton.hovered * 11,
+        800 + 30 + backButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "BACK"
     );
@@ -168,7 +172,7 @@ static void draw(void) {
         P2_FONT,
         al_map_rgb(225, 225, 225),
         SCREEN_W / 2,
-        800 + 31 + backButton.hovered * 11,
+        800 + 28 + backButton.hovered * 11,
         ALLEGRO_ALIGN_CENTER,
         "BACK"
     );
@@ -185,40 +189,163 @@ static void draw(void) {
         );
     }
 
-    // Draw player key buttons
+    // Draw Player Controls section
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(255, 255, 255),
+        SCREEN_W / 4, 50,
+        ALLEGRO_ALIGN_CENTER,
+        "Player Controls"
+    );
+
+    // Draw player key buttons with shadow effect
     draw_button(player_up_button);
-    al_draw_textf(P2_FONT, player_up_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
-        SCREEN_W / 4, player_up_button.y, ALLEGRO_ALIGN_CENTER, "Up: %s", al_keycode_to_name(player_up));
+    int offsety = 130;
+    al_draw_textf(
+        P2_FONT,
+        al_map_rgb(50, 50, 50), // Shadow (dark gray)
+        player_up_button.x + button_width / 2, offsety + button_height / 2 + player_up_button.hovered * 11 + 2,
+        ALLEGRO_ALIGN_CENTER, "Up: %s", al_keycode_to_name(player_up)
+    );
+    al_draw_textf(
+        P2_FONT,
+        player_up_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255), // Main text color
+        player_up_button.x + button_width / 2, offsety + button_height / 2 + player_up_button.hovered * 11,
+        ALLEGRO_ALIGN_CENTER, "Up: %s", al_keycode_to_name(player_up)
+    );
+
+    offsety += 120;
 
     draw_button(player_down_button);
-    al_draw_textf(P2_FONT, player_down_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
-        SCREEN_W / 4, player_down_button.y, ALLEGRO_ALIGN_CENTER, "Down: %s", al_keycode_to_name(player_down));
+    al_draw_textf(
+        P2_FONT,
+        al_map_rgb(50, 50, 50), // Shadow (dark gray)
+        player_down_button.x + button_width / 2, offsety + button_height / 2 + player_down_button.hovered * 11 + 2,
+        ALLEGRO_ALIGN_CENTER, "Down: %s", al_keycode_to_name(player_down)
+    );
+    al_draw_textf(
+        P2_FONT,
+        player_down_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255), // Main text color
+        player_down_button.x + button_width / 2, offsety + button_height / 2 + player_down_button.hovered * 11,
+        ALLEGRO_ALIGN_CENTER, "Down: %s", al_keycode_to_name(player_down)
+    );
+
+    offsety += 120;
 
     draw_button(player_left_button);
-    al_draw_textf(P2_FONT, player_left_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
-        SCREEN_W / 4, player_left_button.y, ALLEGRO_ALIGN_CENTER, "Left: %s", al_keycode_to_name(player_left));
+    al_draw_textf(
+        P2_FONT,
+        al_map_rgb(50, 50, 50), // Shadow (dark gray)
+        player_left_button.x + button_width / 2, offsety + button_height / 2 + player_left_button.hovered * 11 + 2,
+        ALLEGRO_ALIGN_CENTER, "Left: %s", al_keycode_to_name(player_left)
+    );
+    al_draw_textf(
+        P2_FONT,
+        player_left_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255), // Main text color
+        player_left_button.x + button_width / 2, offsety + button_height / 2 + player_left_button.hovered * 11,
+        ALLEGRO_ALIGN_CENTER, "Left: %s", al_keycode_to_name(player_left)
+    );
+
+    offsety += 120;
 
     draw_button(player_right_button);
-    al_draw_textf(P2_FONT, player_right_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
-        SCREEN_W / 4, player_right_button.y, ALLEGRO_ALIGN_CENTER, "Right: %s", al_keycode_to_name(player_right));
+    al_draw_textf(
+        P2_FONT,
+        al_map_rgb(50, 50, 50), // Shadow (dark gray)
+        player_right_button.x + button_width / 2, offsety + button_height / 2 + player_right_button.hovered * 11 + 2,
+        ALLEGRO_ALIGN_CENTER, "Right: %s", al_keycode_to_name(player_right)
+    );
+    al_draw_textf(
+        P2_FONT,
+        player_right_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255), // Main text color
+        player_right_button.x + button_width / 2, offsety + button_height / 2 + player_right_button.hovered * 11,
+        ALLEGRO_ALIGN_CENTER, "Right: %s", al_keycode_to_name(player_right)
+    );
 
-    // Draw cocudos key buttons
+
+    // Draw Cocudos Controls section
+    al_draw_textf(
+        P2_FONT,
+        al_map_rgb(50, 50, 50), // Shadow (dark gray)
+        SCREEN_W * 3 / 4, 50 + 2,
+        ALLEGRO_ALIGN_CENTER,
+        "Cocudos Controls"
+    );
+    al_draw_textf(
+        P2_FONT,
+        al_map_rgb(255, 255, 255), // Main text color
+        SCREEN_W * 3 / 4, 50,
+        ALLEGRO_ALIGN_CENTER,
+        "Cocudos Controls"
+    );
+
+    // Cocudos Controls - Adjust layout to match Player Controls
+    int cocudos_offsety = 130;
+
     draw_button(cocudos_up_button);
-    al_draw_textf(P2_FONT, cocudos_up_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
-        SCREEN_W * 3 / 4, cocudos_up_button.y, ALLEGRO_ALIGN_CENTER, "Up: %s", al_keycode_to_name(cocudos_up));
+    al_draw_textf(
+        P2_FONT,
+        al_map_rgb(50, 50, 50), // Shadow (dark gray)
+        cocudos_up_button.x + button_width / 2, cocudos_offsety + button_height / 2 + cocudos_up_button.hovered * 11 + 2,
+        ALLEGRO_ALIGN_CENTER, "Up: %s", al_keycode_to_name(cocudos_up)
+    );
+    al_draw_textf(
+        P2_FONT,
+        cocudos_up_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255), // Main text color
+        cocudos_up_button.x + button_width / 2, cocudos_offsety + button_height / 2 + cocudos_up_button.hovered * 11,
+        ALLEGRO_ALIGN_CENTER, "Up: %s", al_keycode_to_name(cocudos_up)
+    );
+
+    cocudos_offsety += 120;
 
     draw_button(cocudos_down_button);
-    al_draw_textf(P2_FONT, cocudos_down_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
-        SCREEN_W * 3 / 4, cocudos_down_button.y, ALLEGRO_ALIGN_CENTER, "Down: %s", al_keycode_to_name(cocudos_down));
+    al_draw_textf(
+        P2_FONT,
+        al_map_rgb(50, 50, 50), // Shadow (dark gray)
+        cocudos_down_button.x + button_width / 2, cocudos_offsety + button_height / 2 + cocudos_down_button.hovered * 11 + 2,
+        ALLEGRO_ALIGN_CENTER, "Down: %s", al_keycode_to_name(cocudos_down)
+    );
+    al_draw_textf(
+        P2_FONT,
+        cocudos_down_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255), // Main text color
+        cocudos_down_button.x + button_width / 2, cocudos_offsety + button_height / 2 + cocudos_down_button.hovered * 11,
+        ALLEGRO_ALIGN_CENTER, "Down: %s", al_keycode_to_name(cocudos_down)
+    );
+
+    cocudos_offsety += 120;
 
     draw_button(cocudos_left_button);
-    al_draw_textf(P2_FONT, cocudos_left_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
-        SCREEN_W * 3 / 4, cocudos_left_button.y, ALLEGRO_ALIGN_CENTER, "Left: %s", al_keycode_to_name(cocudos_left));
+    al_draw_textf(
+        P2_FONT,
+        al_map_rgb(50, 50, 50), // Shadow (dark gray)
+        cocudos_left_button.x + button_width / 2, cocudos_offsety + button_height / 2 + cocudos_left_button.hovered * 11 + 2,
+        ALLEGRO_ALIGN_CENTER, "Left: %s", al_keycode_to_name(cocudos_left)
+    );
+    al_draw_textf(
+        P2_FONT,
+        cocudos_left_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255), // Main text color
+        cocudos_left_button.x + button_width / 2, cocudos_offsety + button_height / 2 + cocudos_left_button.hovered * 11,
+        ALLEGRO_ALIGN_CENTER, "Left: %s", al_keycode_to_name(cocudos_left)
+    );
+
+    cocudos_offsety += 120;
 
     draw_button(cocudos_right_button);
-    al_draw_textf(P2_FONT, cocudos_right_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255),
-        SCREEN_W * 3 / 4, cocudos_right_button.y, ALLEGRO_ALIGN_CENTER, "Right: %s", al_keycode_to_name(cocudos_right));
+    al_draw_textf(
+        P2_FONT,
+        al_map_rgb(50, 50, 50), // Shadow (dark gray)
+        cocudos_right_button.x + button_width / 2, cocudos_offsety + button_height / 2 + cocudos_right_button.hovered * 11 + 2,
+        ALLEGRO_ALIGN_CENTER, "Right: %s", al_keycode_to_name(cocudos_right)
+    );
+    al_draw_textf(
+        P2_FONT,
+        cocudos_right_button.hovered ? al_map_rgb(0, 255, 0) : al_map_rgb(255, 255, 255), // Main text color
+        cocudos_right_button.x + button_width / 2, cocudos_offsety + button_height / 2 + cocudos_right_button.hovered * 11,
+        ALLEGRO_ALIGN_CENTER, "Right: %s", al_keycode_to_name(cocudos_right)
+    );
+
 }
+
 
 
 
@@ -301,6 +428,7 @@ const int sniper_price = 5;
 const int fireball_bullet_price = 10;
 const int machine_gun_price = 10;
 
+static ALLEGRO_BITMAP* shop_bitmap;
 
 static void init_shop(void) {
     coin_bitmap = al_load_bitmap("Assets/coin_icon.png");
@@ -357,6 +485,12 @@ static void init_shop(void) {
 
     // end pic shop
 
+    shop_bitmap = al_load_bitmap("Assets/shop_bg.png");
+
+    if (!shop_bitmap) {
+        game_abort("Failed to load shop bitmap");
+    }
+
     backButton = button_create(SCREEN_W / 2 - 200, 800, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
 
@@ -372,7 +506,12 @@ static void init_shop(void) {
 
     change_bgm("Assets/audio/shopping_bgm.mp3");
 }
+
+
 bool test = false;
+
+
+
 static void update_shop(void) {
 
     update_button(&backButton);
@@ -383,14 +522,7 @@ static void update_shop(void) {
     update_button(&buy_orange_bullet_Button);
     update_button(&buy_fireball_bullet_Button);
 
-    // Define a buffer to hold the formatted string
-    char coin_text[32]; // Ensure the buffer is large enough to hold the text
-
-    // Format the integer into the buffer as a string
-    al_clear_to_color(al_map_rgb(128, 128, 128));
-    snprintf(coin_text, sizeof(coin_text), "%d", coins_obtained);
-    al_draw_scaled_bitmap(coin_bitmap, 0, 0, 16, 16, 0, 0, 100, 100, 0);
-    al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), 52, 80, ALLEGRO_ALIGN_CENTER, coin_text);
+    
 
     if (mouseState.buttons && backButton.hovered == true) {
         al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
@@ -494,8 +626,25 @@ static void update_shop(void) {
     }
 }
 
+
+
 static void draw_shop(void) {
     // Constants for layout
+
+    al_draw_scaled_bitmap(shop_bitmap,
+        0, 0, 820, 500,
+        0, 0, 1640, 1000, 0);
+
+
+    // Define a buffer to hold the formatted string
+    char coin_text[32]; // Ensure the buffer is large enough to hold the text
+
+    // Format the integer into the buffer as a string
+    al_clear_to_color(al_map_rgb(128, 128, 128));
+    snprintf(coin_text, sizeof(coin_text), "%d", coins_obtained);
+    al_draw_scaled_bitmap(coin_bitmap, 0, 0, 16, 16, 0, 0, 100, 100, 0);
+    al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), 52, 80, ALLEGRO_ALIGN_CENTER, coin_text);
+
     int screen_width = 1640;
     int button_width = 275;
     int button_height = 100;
@@ -659,6 +808,8 @@ static void draw_shop(void) {
 
 static void destroy_shop(void) {
     destroy_button(&backButton);
+
+    al_destroy_bitmap(shop_bitmap);
 
     destroy_button(&buy_guns_Button);
     destroy_button(&buy_sniper_Button);

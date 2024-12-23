@@ -16,6 +16,8 @@ static int scene;
 bool starttimer = false;
 
 static ALLEGRO_BITMAP* player_bitmap;
+static ALLEGRO_BITMAP* loading_bitmap;
+
 
 // Add a pointer array to hold the background bitmaps
 static ALLEGRO_BITMAP* backgrounds[10];
@@ -30,6 +32,11 @@ static void init(void) {
     player_bitmap = al_load_bitmap("Assets/panda2.png");
     if (!player_bitmap) {
         game_abort("Failed to load player bitmap");
+    }
+
+    loading_bitmap = al_load_bitmap("Assets/loading_bg.png");
+    if (!loading_bitmap) {
+        game_abort("Failed to load loading bitmap");
     }
 
     backgrounds[0] = al_load_bitmap("Assets/loading_c1.png");
@@ -115,8 +122,13 @@ static void draw(void) {
         );
     }
     else {
+
+
         // Final scene: draw player and text
-        al_clear_to_color(al_map_rgb(0, 0, 0)); // Clear screen to black
+        al_draw_scaled_bitmap(loading_bitmap,
+            0, 0, 1920, 1080,
+            0, 0, 1640, 1000, 0);
+
         al_draw_text(
             TITLE_FONT,
             al_map_rgb(146, 161, 185),

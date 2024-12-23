@@ -21,7 +21,7 @@ BulletNode * bulletList; // Bullet
 // Weapon
 Weapon weapon; 
 // initialize coin obtained
-coins_obtained = 0;
+coins_obtained = 100;
 
 
 static void init(void){
