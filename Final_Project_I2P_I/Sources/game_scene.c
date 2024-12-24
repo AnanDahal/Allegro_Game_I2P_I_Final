@@ -21,7 +21,7 @@ BulletNode * bulletList; // Bullet
 // Weapon
 Weapon weapon; 
 // initialize coin obtained
-coins_obtained = 100;
+coins_obtained = 0;
 
 
 static void init(void){
@@ -305,7 +305,7 @@ static void init_lose(void) {
     );
 
     // Change background music to a dramatic or melancholic track
-    change_bgm("Assets/audio/sleepless_deathbed.mp3");
+    change_bgm("Assets/audio/lose_bgm.mp3");
 }
 
 

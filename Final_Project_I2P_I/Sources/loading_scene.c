@@ -23,7 +23,7 @@ static ALLEGRO_BITMAP* loading_bitmap;
 static ALLEGRO_BITMAP* backgrounds[10];
 
 static void init(void) {
-    timer_countdown = 60;
+    timer_countdown = 220;
     scene = 0;
 
     button_sfx = al_load_sample("Assets/audio/button.mp3");
@@ -34,7 +34,7 @@ static void init(void) {
         game_abort("Failed to load player bitmap");
     }
 
-    loading_bitmap = al_load_bitmap("Assets/loading_bg.png");
+    loading_bitmap = al_load_bitmap("Assets/loading_bg.jpg");
     if (!loading_bitmap) {
         game_abort("Failed to load loading bitmap");
     }
@@ -126,22 +126,58 @@ static void draw(void) {
 
         // Final scene: draw player and text
         al_draw_scaled_bitmap(loading_bitmap,
-            0, 0, 1920, 1080,
+            0, 0, 1640, 1000,
             0, 0, 1640, 1000, 0);
 
         al_draw_text(
             TITLE_FONT,
-            al_map_rgb(146, 161, 185),
-            SCREEN_W / 2,
+            al_map_rgb(0, 0, 0),
+            SCREEN_W / 7,
+            SCREEN_H / 2 - 50,
+            ALLEGRO_ALIGN_CENTER,
+            "LOADING"
+        );
+        al_draw_text(
+            TITLE_FONT,
+            al_map_rgb(199, 207, 221),
+            SCREEN_W / 7 + 2,
+            SCREEN_H / 2 - 50 + 3,
+            ALLEGRO_ALIGN_CENTER,
+            "LOADING"
+        );
+
+        al_draw_text(
+            TITLE_FONT,
+            al_map_rgb(0, 0, 0),
+            6*SCREEN_W / 7,
             SCREEN_H / 2 - 50,
             ALLEGRO_ALIGN_CENTER,
             "LEVEL 1"
         );
-        al_draw_scaled_bitmap(player_bitmap,
-            0, 0, 32, 32,                      // Source bitmap dimensions
-            SCREEN_W / 2 - 32, SCREEN_H / 2,   // Position on screen
-            64, 64,                            // Scaled dimensions
-            0                                  // Flags
+        al_draw_text(
+            TITLE_FONT,
+            al_map_rgb(199, 207, 221),
+            6 * SCREEN_W / 7 + 2,
+            SCREEN_H / 2 - 50 + 3,
+            ALLEGRO_ALIGN_CENTER,
+            "LEVEL 1"
+        );
+
+        al_draw_text(
+            TITLE_FONT,
+            al_map_rgb(0, 0, 0),
+            6 * SCREEN_W / 7,
+            SCREEN_H / 2 - 50 + 65,
+            ALLEGRO_ALIGN_CENTER,
+            "\"C\""
+        );
+        al_draw_text(
+            TITLE_FONT,
+            al_map_rgb(199, 207, 221),
+            6 * SCREEN_W / 7 + 2,
+            SCREEN_H / 2 - 50 + 65 + 3,
+            ALLEGRO_ALIGN_CENTER,
+            "\"C\""
         );
     }
 }

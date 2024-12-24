@@ -31,16 +31,12 @@ Player create_player(char* path, int row, int col, int sound) {
         if (!player.hurt_audio) {
             game_abort("Can't load hurt audio");
         }
-        
-        
     }
     else {
         player.hurt_audio = al_load_sample("Assets/audio/hurt_cocudos.mp3");
         if (!player.hurt_audio) {
             game_abort("Can't load hurt audio");
         }
-       
-        
     }
 
     return player;

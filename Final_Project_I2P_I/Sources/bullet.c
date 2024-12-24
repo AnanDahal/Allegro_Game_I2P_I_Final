@@ -154,12 +154,13 @@ void drawBulletList(BulletNode * dummyhead, Point camera){
 }
 
 void destroyBulletList(BulletNode* dummyhead) {
-    BulletNode* cur = dummyhead->next;
-    while (cur != NULL) {
-        BulletNode* del = cur;
-        cur = cur->next;
+    BulletNode* del = dummyhead;
+    dummyhead = dummyhead->next;
+    free(del); // No Images
+    while (dummyhead != NULL) {
+        BulletNode* del = dummyhead;
+        dummyhead = dummyhead->next;
         destroy_bullet(&del->bullet);
         free(del);
     }
-    free(dummyhead);
 }

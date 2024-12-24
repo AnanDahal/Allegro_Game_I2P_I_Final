@@ -10,6 +10,7 @@
       You might want to modify this functions if you are using different assets
       In short, this functions help us to find which asset to draw
  */
+
 static void get_map_offset(Map* map);
 static Point get_wall_offset_assets(Map* map, int i, int j);
 static Point get_floor_offset_assets(Map* map, int i, int j);

@@ -20,6 +20,9 @@ Map map;
 static Button backButton;
 static ALLEGRO_BITMAP* coin_bitmap;
 
+static ALLEGRO_BITMAP* setting_bitmap;
+
+
 static Button player_up_button;
 static Button player_down_button;
 static Button player_left_button;
@@ -29,10 +32,18 @@ static Button cocudos_up_button;
 static Button cocudos_down_button;
 static Button cocudos_left_button;
 static Button cocudos_right_button;
+
 int button_width = 400;
 int button_height = 100;
 
 static void init(void) {
+
+    setting_bitmap = al_load_bitmap("Assets/setting_bg.jpg");
+
+    if (!setting_bitmap) {
+        game_abort("Failed to load setting bitmap");
+    }
+
     button_sfx = al_load_sample("Assets/audio/button.mp3");
 
     // Initialize back button
@@ -66,6 +77,9 @@ static void init(void) {
     cocudos_y_offset += 120;
 
     cocudos_right_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, cocudos_y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    
+    change_bgm("Assets/audio/setting_bgm.mp3");
+
 }
 
 
@@ -109,32 +123,116 @@ static void update(void) {
         al_get_keyboard_state(&keyboardState);
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++) {
             if (al_key_down(&keyboardState, i)) {
+                // Check if the new key is already assigned to another action and swap
+                if (i == player_up) {
+                    if (waiting_for_key != PLAYER_UP) player_up = i;
+                }
+                else if (i == player_down) {
+                    if (waiting_for_key != PLAYER_DOWN) player_down = i;
+                }
+                else if (i == player_left) {
+                    if (waiting_for_key != PLAYER_LEFT) player_left = i;
+                }
+                else if (i == player_right) {
+                    if (waiting_for_key != PLAYER_RIGHT) player_right = i;
+                }
+                else if (i == cocudos_up) {
+                    if (waiting_for_key != COCUDOS_UP) cocudos_up = i;
+                }
+                else if (i == cocudos_down) {
+                    if (waiting_for_key != COCUDOS_DOWN) cocudos_down = i;
+                }
+                else if (i == cocudos_left) {
+                    if (waiting_for_key != COCUDOS_LEFT) cocudos_left = i;
+                }
+                else if (i == cocudos_right) {
+                    if (waiting_for_key != COCUDOS_RIGHT) cocudos_right = i;
+                }
+
+                // Swap the current key with the one being reassigned
                 switch (waiting_for_key) {
                 case PLAYER_UP:
+                    if (i == player_down) player_down = player_up;
+                    if (i == player_left) player_left = player_up;
+                    if (i == player_right) player_right = player_up;
+                    if (i == cocudos_up) cocudos_up = player_up;
+                    if (i == cocudos_down) cocudos_down = player_up;
+                    if (i == cocudos_left) cocudos_left = player_up;
+                    if (i == cocudos_right) cocudos_right = player_up;
                     player_up = i;
                     break;
                 case PLAYER_DOWN:
+                    if (i == player_up) player_up = player_down;
+                    if (i == player_left) player_left = player_down;
+                    if (i == player_right) player_right = player_down;
+                    if (i == cocudos_up) cocudos_up = player_down;
+                    if (i == cocudos_down) cocudos_down = player_down;
+                    if (i == cocudos_left) cocudos_left = player_down;
+                    if (i == cocudos_right) cocudos_right = player_down;
                     player_down = i;
                     break;
                 case PLAYER_LEFT:
+                    if (i == player_up) player_up = player_left;
+                    if (i == player_down) player_down = player_left;
+                    if (i == player_right) player_right = player_left;
+                    if (i == cocudos_up) cocudos_up = player_left;
+                    if (i == cocudos_down) cocudos_down = player_left;
+                    if (i == cocudos_left) cocudos_left = player_left;
+                    if (i == cocudos_right) cocudos_right = player_left;
                     player_left = i;
                     break;
                 case PLAYER_RIGHT:
+                    if (i == player_up) player_up = player_right;
+                    if (i == player_down) player_down = player_right;
+                    if (i == player_left) player_left = player_right;
+                    if (i == cocudos_up) cocudos_up = player_right;
+                    if (i == cocudos_down) cocudos_down = player_right;
+                    if (i == cocudos_left) cocudos_left = player_right;
+                    if (i == cocudos_right) cocudos_right = player_right;
                     player_right = i;
                     break;
                 case COCUDOS_UP:
+                    if (i == player_up) player_up = cocudos_up;
+                    if (i == player_down) player_down = cocudos_up;
+                    if (i == player_left) player_left = cocudos_up;
+                    if (i == player_right) player_right = cocudos_up;
+                    if (i == cocudos_down) cocudos_down = cocudos_up;
+                    if (i == cocudos_left) cocudos_left = cocudos_up;
+                    if (i == cocudos_right) cocudos_right = cocudos_up;
                     cocudos_up = i;
                     break;
                 case COCUDOS_DOWN:
+                    if (i == player_up) player_up = cocudos_down;
+                    if (i == player_down) player_down = cocudos_down;
+                    if (i == player_left) player_left = cocudos_down;
+                    if (i == player_right) player_right = cocudos_down;
+                    if (i == cocudos_up) cocudos_up = cocudos_down;
+                    if (i == cocudos_left) cocudos_left = cocudos_down;
+                    if (i == cocudos_right) cocudos_right = cocudos_down;
                     cocudos_down = i;
                     break;
                 case COCUDOS_LEFT:
+                    if (i == player_up) player_up = cocudos_left;
+                    if (i == player_down) player_down = cocudos_left;
+                    if (i == player_left) player_left = cocudos_left;
+                    if (i == player_right) player_right = cocudos_left;
+                    if (i == cocudos_up) cocudos_up = cocudos_left;
+                    if (i == cocudos_down) cocudos_down = cocudos_left;
+                    if (i == cocudos_right) cocudos_right = cocudos_left;
                     cocudos_left = i;
                     break;
                 case COCUDOS_RIGHT:
+                    if (i == player_up) player_up = cocudos_right;
+                    if (i == player_down) player_down = cocudos_right;
+                    if (i == player_left) player_left = cocudos_right;
+                    if (i == player_right) player_right = cocudos_right;
+                    if (i == cocudos_up) cocudos_up = cocudos_right;
+                    if (i == cocudos_down) cocudos_down = cocudos_right;
+                    if (i == cocudos_left) cocudos_left = cocudos_right;
                     cocudos_right = i;
                     break;
                 }
+
                 waiting_for_key = NONE; // Reset state
                 return;
             }
@@ -158,6 +256,12 @@ static void update(void) {
 
 
 static void draw(void) {
+
+    al_draw_scaled_bitmap(setting_bitmap,
+        0, 0, 1640, 1000,
+        0, 0, 1640, 1000, 0);
+
+
     // Draw back button
     draw_button(backButton);
     al_draw_text(
@@ -640,7 +744,6 @@ static void draw_shop(void) {
     char coin_text[32]; // Ensure the buffer is large enough to hold the text
 
     // Format the integer into the buffer as a string
-    al_clear_to_color(al_map_rgb(128, 128, 128));
     snprintf(coin_text, sizeof(coin_text), "%d", coins_obtained);
     al_draw_scaled_bitmap(coin_bitmap, 0, 0, 16, 16, 0, 0, 100, 100, 0);
     al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), 52, 80, ALLEGRO_ALIGN_CENTER, coin_text);

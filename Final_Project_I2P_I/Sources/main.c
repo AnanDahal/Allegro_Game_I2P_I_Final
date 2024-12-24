@@ -12,6 +12,7 @@ int main(int argc, char **argv)
     cocudos_down = ALLEGRO_KEY_DOWN;
     cocudos_left = ALLEGRO_KEY_LEFT;
     cocudos_right = ALLEGRO_KEY_RIGHT;
+
     startGame();
    
     return 0;
