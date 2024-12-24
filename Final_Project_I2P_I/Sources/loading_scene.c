@@ -202,3 +202,160 @@ Scene create_loading_scene(void) {
 
     return scene;
 }
+
+static Button shopButton;
+static Button settingButton;
+static Button exitButton;
+static ALLEGRO_BITMAP* transition_bitmap;
+
+
+static void init_transition(void) {
+
+    shopButton = button_create(SCREEN_W / 2 - 200, 550, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    settingButton = button_create(SCREEN_W / 2 - 200, 680, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    exitButton = button_create(SCREEN_W / 2 - 200, 800, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+
+    button_sfx = al_load_sample("Assets/audio/button.mp3");
+
+    transition_bitmap = al_load_bitmap("Assets/transition_bg.jpg");
+
+    if (!transition_bitmap) {
+        game_abort("Failed to load transition bitmap");
+    }
+
+    change_bgm("Assets/audio/rickroll.mp3");
+
+}
+
+
+
+static void update_transition(void) {
+
+    al_draw_scaled_bitmap(transition_bitmap,
+        0, 0, 1640, 1000,
+        0, 0, 1640, 1000, 0);
+
+
+    update_button(&shopButton);
+    update_button(&settingButton);
+    update_button(&exitButton);
+
+    if (keyState[ALLEGRO_KEY_ENTER]) {
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        change_scene(create_loading_scene());
+    }
+
+    if (shopButton.hovered && (mouseState.buttons & 1)) { // Shop button pressed
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        change_scene(create_shop_scene());
+    }
+
+    if (settingButton.hovered && (mouseState.buttons & 1)) { // Setting button pressed
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        change_scene(create_setting_scene());
+    }
+
+    if (exitButton.hovered && (mouseState.buttons & 1)) { // Exit button pressed
+        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        exit(0);
+    }
+}
+
+static void draw_transition(void) {
+    al_draw_text(
+        P1_FONT,
+        al_map_rgb(0, 0, 0),
+        SCREEN_W / 2,
+        100,
+        ALLEGRO_ALIGN_CENTER,
+        "PRESS [ENTER] TO CONTINUE NEXT MAP"
+    );
+
+    al_draw_text(
+        P1_FONT,
+        al_map_rgb(199, 207, 221),
+        SCREEN_W / 2,
+        98,
+        ALLEGRO_ALIGN_CENTER,
+        "PRESS [ENTER] TO CONTINUE NEXT MAP"
+    );
+
+    // Shop button
+    draw_button(shopButton);
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        SCREEN_W / 2,
+        550 + 28 + shopButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "SHOP"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2,
+        550 + 31 + shopButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "SHOP"
+    );
+
+    // Setting button
+    draw_button(settingButton);
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        SCREEN_W / 2,
+        680 + 28 + settingButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "SETTING"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2,
+        680 + 31 + settingButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "SETTING"
+    );
+
+    // Exit button
+    draw_button(exitButton);
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(66, 76, 110),
+        SCREEN_W / 2,
+        800 + 28 + exitButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "EXIT"
+    );
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(225, 225, 225),
+        SCREEN_W / 2,
+        800 + 31 + exitButton.hovered * 11,
+        ALLEGRO_ALIGN_CENTER,
+        "EXIT"
+    );
+}
+
+
+static void destroy_transition(void) {
+    destroy_button(&shopButton);
+    destroy_button(&settingButton);
+    destroy_button(&exitButton);
+    al_destroy_bitmap(transition_bitmap);
+}
+
+Scene create_transition_scene(void) {
+    Scene scene;
+    memset(&scene, 0, sizeof(Scene));
+
+    scene.name = "transition";
+    scene.init = &init_transition;
+    scene.draw = &draw_transition;
+    scene.update = &update_transition;
+    scene.destroy = &destroy_transition;
+
+    return scene;
+}
+

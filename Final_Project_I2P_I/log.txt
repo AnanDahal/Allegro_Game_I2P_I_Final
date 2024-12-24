@@ -10,9 +10,4 @@
 [LOG] Key 67 up
 [LOG] Key 75 down
 [LOG] Key 75 up
-[LOG] Change scene from loading to game
-[LOG] Using Assets/map0.txt to load the map
-[LOG] Creating Enemy at ( 15, 15 )
-[LOG] Creating Enemy at ( 15, 18 )
-[LOG] Window close button pressed
-[LOG] Terminating ...
+[LOG] Change scene from loading to lose

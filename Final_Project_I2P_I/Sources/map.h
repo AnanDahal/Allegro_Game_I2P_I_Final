@@ -114,7 +114,7 @@ typedef struct Map_ {
  */
 Map create_map(char* path, uint8_t type); // Create a map based on given file path
 void draw_map(Map* map, Point cam); // Draw the map
-void update_map(Map* map, Point player, Point cocudos, int* total_coins); // Update map : you might want add some parameter here
+void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* map_coin); // Update map : you might want add some parameter here
 void destroy_map(Map* map); // Destroy map
 
 

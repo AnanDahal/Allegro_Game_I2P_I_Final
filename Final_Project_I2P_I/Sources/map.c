@@ -57,6 +57,7 @@ Map create_map(char* path, uint8_t type) {
     }
 
     coin_counter = 0;
+    map_coin = 0;
 
     // Scan the map to the array
     int door_counter = 0;
@@ -240,7 +241,7 @@ void draw_map(Map* map, Point cam) {
                 break;
             }
             case TROPHY: {
-                if (coins_obtained == coin_counter && map->trophy_status[i][j] != T_DISAPPEARING) {
+                if (map_coin == coin_counter && map->trophy_status[i][j] != T_DISAPPEARING) {
                     int offsetx = 32 * (int)(trophy_animation / (64 / 9));
                     if (offsetx > 32 * 9) {
                         offsetx = 0;
@@ -309,7 +310,7 @@ void draw_map(Map* map, Point cam) {
     }
 }
 
-void update_map(Map* map, Point player, Point cocudos, int* total_coins) {
+void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* map_coins) {
     /*
         Hint: To check if it's collide with object in map, you can use tile_collision function
         e.g. to update the coins if you touch it
@@ -327,6 +328,7 @@ void update_map(Map* map, Point player, Point cocudos, int* total_coins) {
     if (map->map[center_y][center_x] == COIN &&
         map->coin_status[center_y][center_x] == APPEAR) {
         *total_coins += 1;
+        *map_coins += 1;
         map->coin_disappear_animation[center_y][center_x] = 0;
         map->coin_status[center_y][center_x] = DISAPPEARING;
         al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
@@ -335,13 +337,14 @@ void update_map(Map* map, Point player, Point cocudos, int* total_coins) {
     if (map->map[center_y][center_x] == S_COIN &&
         map->coin_status[center_y][center_x] == APPEAR) {
         *total_coins += 3;
+        *map_coins += 3;
         map->coin_disappear_animation[center_y][center_x] = 0;
         map->coin_status[center_y][center_x] = DISAPPEARING;
         al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
 
     if (map->map[center_y_cocudos][center_x_cocudos] == TROPHY &&
-        (coins_obtained == coin_counter)) {
+        (map_coin == coin_counter)) {
         map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 0;
         map->trophy_status[center_y_cocudos][center_x_cocudos] = T_DISAPPEARING;
         al_play_sample(map->trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);

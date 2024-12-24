@@ -7,6 +7,7 @@
 #include "game_scene.h"
 #include "map.h"
 #include "player.h"
+#include "loading_scene.h"
 
 
 Player player; // Player
@@ -115,7 +116,12 @@ static void update(void) {
     // Handle back button
     if (mouseState.buttons && backButton.hovered == true) {
         al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-        change_scene(create_menu_scene());
+        if (map_level == 2 || map_level == 3) {
+            change_scene(create_transition_scene());
+        }
+        else {
+            change_scene(create_menu_scene());
+        }
     }
 
     // Handle key rebinding
@@ -630,7 +636,13 @@ static void update_shop(void) {
 
     if (mouseState.buttons && backButton.hovered == true) {
         al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-        change_scene(create_menu_scene());
+        if (map_level == 2 || map_level == 3) {
+            change_scene(create_transition_scene());
+        }
+        else {
+            change_scene(create_menu_scene());
+        }
+        
     }
 
 

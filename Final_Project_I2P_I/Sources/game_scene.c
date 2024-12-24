@@ -24,12 +24,24 @@ Weapon weapon;
 coins_obtained = 0;
 
 
+
+// initialize map level
+map_level = 1;
+
+
 static void init(void){
     timer_countdown = 60;
     initEnemy();
 
-    
-    map = create_map("Assets/map0.txt", 0);
+    if (map_level == 1) {
+        map = create_map("Assets/map0.txt", 0);
+    }
+    else if (map_level == 2) {
+        map = create_map("Assets/map1.txt", 0);
+    }
+    else if (map_level == 3) {
+        map = create_map("Assets/map2.txt", 0);
+    }
 
     player = create_player("Assets/panda2.png", map.SpawnP.x, map.SpawnP.y, 1);
     cocudos = create_player("Assets/player.png", map.SpawnJ.x, map.SpawnJ.y, 0);
@@ -113,8 +125,16 @@ static void update(void){
     if (map.win) {
         timer_countdown--;
         if (timer_countdown == 0) {
-            change_scene(create_win_scene());
-            return;
+            if (map_level == 1 || map_level == 2) {
+                map_level++;
+                change_scene(create_transition_scene());
+                return;
+            }
+            else if (map_level == 3) {
+                change_scene(create_win_scene());
+                return;
+            }
+            
         }
     }
     
@@ -161,7 +181,7 @@ static void update(void){
     update_weapon(&weapon, bulletList, player.coord, Camera);
     updateBulletList(bulletList, enemyList, &map);
  
-    update_map(&map, player.coord, cocudos.coord, &coins_obtained);
+    update_map(&map, player.coord, cocudos.coord, &coins_obtained, &map_coin);
 }
 
 static void draw(void){
@@ -286,23 +306,9 @@ static void init_lose(void) {
 
     button_sfx = al_load_sample("Assets/audio/button.mp3");
 
-    restartButton = button_create(
-        (SCREEN_W - button_width) / 2, // Centered horizontally
-        SCREEN_H / 2 - (button_height + button_spacing), // Positioned above center
-        button_width,
-        button_height,
-        "Assets/UI_Button.png",
-        "Assets/UI_Button_hovered.png"
-    );
+    restartButton = button_create(SCREEN_W / 2 - 200, 650, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
-    quitButton = button_create(
-        (SCREEN_W - button_width) / 2, // Centered horizontally
-        SCREEN_H / 2 + button_spacing, // Positioned below center
-        button_width,
-        button_height,
-        "Assets/UI_Button.png",
-        "Assets/UI_Button_hovered.png"
-    );
+    quitButton = button_create(SCREEN_W / 2 - 200, 800, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
     // Change background music to a dramatic or melancholic track
     change_bgm("Assets/audio/lose_bgm.mp3");
@@ -315,7 +321,23 @@ static void update_lose(void) {
 
     if (restartButton.hovered && (mouseState.buttons & 1)) { // Check if hovered and left mouse button is pressed.
         al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-        change_scene(create_loading_scene());
+        map_level = 1;
+        coins_obtained = 0;
+        
+        yellow_eq = true;
+        guns_eq = true;
+
+        orange_eq = false;
+        sniper_eq = false;
+        orange_bought = false;
+        sniper_bought = false;
+
+        fireball_eq = false;
+        machine_gun_eq = false;
+        fireball_bought = false;
+        machine_gun_bought = false;
+
+        change_scene(create_menu_scene());
     }
 
     if (quitButton.hovered && (mouseState.buttons & 1)) { // Check if hovered and left mouse button is pressed.
@@ -335,7 +357,7 @@ static void draw_lose(void) {
         TITLE_FONT,
         al_map_rgb(146, 161, 185),
         SCREEN_W / 2,
-        150,
+        100,
         ALLEGRO_ALIGN_CENTER,
         "YOU LOSE"
     );
@@ -343,7 +365,7 @@ static void draw_lose(void) {
         TITLE_FONT,
         al_map_rgb(255, 69, 69),
         SCREEN_W / 2,
-        145,
+        95,
         ALLEGRO_ALIGN_CENTER,
         "YOU LOSE"
     );
@@ -359,6 +381,15 @@ static void draw_lose(void) {
         "Restart"
     );
 
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(255, 255, 255), // Hover changes color
+        SCREEN_W / 2,
+        restartButton.y + (restartButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (restartButton.hovered ? 7 : 0) + 3, // Shift downward slightly if hovered
+        ALLEGRO_ALIGN_CENTER,
+        "Restart"
+    );
+
     // Draw Quit button
     draw_button(quitButton);
     al_draw_text(
@@ -370,12 +401,21 @@ static void draw_lose(void) {
         "Quit"
     );
 
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(255, 255, 255), // Hover changes color
+        SCREEN_W / 2,
+        quitButton.y + (quitButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (quitButton.hovered ? 7 : 0) + 3, // Shift downward slightly if hovered
+        ALLEGRO_ALIGN_CENTER,
+        "Quit"
+    );
+
     // Optional: Add additional message
     al_draw_text(
         P3_FONT,
         al_map_rgb(225, 225, 225),
         SCREEN_W / 2,
-        100,
+        50,
         ALLEGRO_ALIGN_CENTER,
         "Better luck next time!"
     );
@@ -410,8 +450,8 @@ static ALLEGRO_BITMAP* win_bitmap;
 // Initialization function for the win scene
 static void init_win(void) {
     // Create buttons
-    mainMenuButton = button_create(SCREEN_W / 2 - 200, 500, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
-    quitButton = button_create(SCREEN_W / 2 - 200, 650, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    mainMenuButton = button_create(SCREEN_W / 2 - 200, 650, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
+    quitButton = button_create(SCREEN_W / 2 - 200, 800, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
     win_bitmap = al_load_bitmap("Assets/win_scene.png");
 
@@ -456,26 +496,37 @@ static void draw_win(void) {
     
     al_draw_text(
         TITLE_FONT,
-        al_map_rgb(200, 230, 255),
+        al_map_rgb(66, 76, 110),
         SCREEN_W / 2,
-        200,
+        100,
         ALLEGRO_ALIGN_CENTER,
         "YOU WIN!"
     );
     al_draw_text(
         TITLE_FONT,
-        al_map_rgb(255, 255, 100),
+        al_map_rgb(0, 255, 0),
         SCREEN_W / 2,
-        195,
+        95,
         ALLEGRO_ALIGN_CENTER,
         "YOU WIN!"
     );
 
     // Draw the Main Menu button
     draw_button(mainMenuButton);
+    
+
     al_draw_text(
         P2_FONT,
         al_map_rgb(66, 76, 110),
+        SCREEN_W / 2,
+        mainMenuButton.y + (mainMenuButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (mainMenuButton.hovered ? 7 : 0) + 3,
+        ALLEGRO_ALIGN_CENTER,
+        "Main Menu"
+    );
+    
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(255, 255, 255),
         SCREEN_W / 2,
         mainMenuButton.y + (mainMenuButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (mainMenuButton.hovered ? 7 : 0),
         ALLEGRO_ALIGN_CENTER,
@@ -484,9 +535,20 @@ static void draw_win(void) {
 
     // Draw the Quit button
     draw_button(quitButton);
+    
+
     al_draw_text(
         P2_FONT,
         al_map_rgb(66, 76, 110),
+        SCREEN_W / 2,
+        quitButton.y + (quitButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (quitButton.hovered ? 7 : 0) + 3,
+        ALLEGRO_ALIGN_CENTER,
+        "Quit"
+    );
+    
+    al_draw_text(
+        P2_FONT,
+        al_map_rgb(255, 255, 255),
         SCREEN_W / 2,
         quitButton.y + (quitButton.h / 2) - (al_get_font_line_height(P2_FONT) / 2) + (quitButton.hovered ? 7 : 0),
         ALLEGRO_ALIGN_CENTER,
