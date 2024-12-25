@@ -462,7 +462,7 @@ static void init_win(void) {
     button_sfx = al_load_sample("Assets/audio/button.mp3");
 
     // Change background music
-    change_bgm("Assets/audio/victory_theme.mp3");
+    change_bgm("Assets/audio/win_bgm.mp3");
 }
 
 // Update function for the win scene

@@ -111,6 +111,15 @@ Map create_map(char* path, uint8_t type) {
                 map.map[i][j] = TROPHY;
                 map.trophy_status[i][j] = T_DISAPPEAR;
                 break;
+            case 'D': // Door
+                map.map[i][j] = DOOR_CLOSE;
+                map.door_status[i][j] = CLOSED;
+                door_up = false;
+                break;
+            case 'B': // Button
+                map.map[i][j] = BUTTON;
+                map.button_status[i][j] = POP_UP;
+                break;
             case '_': // Nothing
                 map.map[i][j] = HOLE;
                 break;
@@ -132,6 +141,9 @@ Map create_map(char* path, uint8_t type) {
         game_abort("Can't load coin assets");
     }
 
+    
+
+
     // load the offset for each tiles type
     get_map_offset(&map);
 
@@ -139,6 +151,18 @@ Map create_map(char* path, uint8_t type) {
     if (!map.coin_audio) {
         game_abort("Can't load coin audio");
     }
+
+    map.door_assets = al_load_bitmap("Assets/Door.png");
+    if (!map.door_assets) {
+        game_abort("Can't load door assets");
+    }
+
+
+    map.button_assets = al_load_bitmap("Assets/Button.png");
+    if (!map.button_assets) {
+        game_abort("Can't load button assets");
+    }
+
 
     map.trophy_assets = al_load_bitmap("Assets/trophy.png");
     if (!map.trophy_assets) {
@@ -189,6 +213,9 @@ void draw_map(Map* map, Point cam) {
 
             int src_coin_width = 16;
             int src_coin_height = 16;
+
+            int src_door_height = 16;
+            int src_door_width = 32;
 
 
             switch (map->map[i][j]) {
@@ -256,7 +283,7 @@ void draw_map(Map* map, Point cam) {
                 }
 
                 if (map->trophy_status[i][j] == T_DISAPPEARING) {
-                    int offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 8) + 16;
+                    int offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 8);
                     int offsety = 1 * src_coin_height;
                     map->coin_disappear_animation[i][j] += 1;
                     if (map->coin_disappear_animation[i][j] == 64) {
@@ -282,7 +309,7 @@ void draw_map(Map* map, Point cam) {
                 }
 
                 if (map->health_status[i][j] == H_DISAPPEARING) {
-                    int offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 8) + 16;
+                    int offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 8);
                     int offsety = 1 * src_coin_height;
                     map->coin_disappear_animation[i][j] += 1;
                     if (map->coin_disappear_animation[i][j] == 64) {
@@ -297,6 +324,104 @@ void draw_map(Map* map, Point cam) {
 
                 break;
             }
+            case DOOR_CLOSE: {
+                int offsetx = 0;
+                int offsety = 0;
+
+                if (map->door_status[i][j] == CLOSED) {
+                    if (door_up) { // Button is pressed
+                        map->door_status[i][j] = OPENING;
+                        map->coin_disappear_animation[i][j] = 0; // Reset animation
+                    }
+                    offsetx = 0;
+                }
+                else if (map->door_status[i][j] == OPENING) {
+                    offsety = 0;
+                    offsetx = src_door_width * (int)(map->coin_disappear_animation[i][j] / 32);
+                    map->coin_disappear_animation[i][j] += 5;
+
+                    if (map->coin_disappear_animation[i][j] >= 200) { // Animation completed
+                        map->door_status[i][j] = OPEN;
+                        map->map[i][j] = DOOR_OPEN;
+                    }
+                }
+
+                al_draw_scaled_bitmap(map->door_assets,
+                    offsetx, offsety, src_door_width, src_door_height,
+                    dx, dy, TILE_SIZE, TILE_SIZE,
+                    0);
+                break;
+            }
+            case DOOR_OPEN: {
+                int offsetx = 0;
+                int offsety = 16;
+
+                if (map->door_status[i][j] == OPEN) {
+                    if (!door_up) { // Button released
+                        map->door_status[i][j] = CLOSING;
+                        map->coin_disappear_animation[i][j] = 0; // Start closing 
+                    }
+                }
+                else if (map->door_status[i][j] == CLOSING) {
+                    offsetx = src_door_width * (int)(map->coin_disappear_animation[i][j] / 32);
+                    map->coin_disappear_animation[i][j] += 5;
+
+                    if (map->coin_disappear_animation[i][j] >= 200) { // Animation completed
+                        map->door_status[i][j] = CLOSED;
+                        map->map[i][j] = DOOR_CLOSE;
+                    }
+                }
+
+                al_draw_scaled_bitmap(map->door_assets,
+                    offsetx, offsety, src_door_width, src_door_height,
+                    dx, dy, TILE_SIZE, TILE_SIZE,
+                    0);
+                break;
+            }
+
+            
+
+            case BUTTON: {
+                int offsetx = 0;
+
+                if (map->button_status[i][j] == POP_UP) {
+                    offsetx = 0;
+                }
+                else if (map->button_status[i][j] == POPPING) {
+                    offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 16);
+                    map->coin_disappear_animation[i][j] += 1;
+
+                    if (map->coin_disappear_animation[i][j] >= 32) { // Animation completed
+                        map->button_status[i][j] = POP_DOWN;
+                        door_up = true; // Button pressed
+                    }
+                }
+                else if (map->button_status[i][j] == POP_DOWN) {
+                    offsetx = 32;
+
+                    if (!player_on_button && !cocudos_on_button) { // No player or cocudos on the button
+                        map->button_status[i][j] = POPPING_UP;
+                        map->coin_disappear_animation[i][j] = 16;
+                        door_up = false; // Button released
+                    }
+                }
+                else if (map->button_status[i][j] == POPPING_UP) {
+                    offsetx = src_coin_width * (int)(map->coin_disappear_animation[i][j] / 16);
+                    map->coin_disappear_animation[i][j] += 1;
+
+                    if (map->coin_disappear_animation[i][j] >= 32) { // Animation completed
+                        map->button_status[i][j] = POP_UP;
+                    }
+                }
+
+                al_draw_scaled_bitmap(map->button_assets,
+                    offsetx, 0, src_coin_width, src_coin_height,
+                    dx, dy, TILE_SIZE, TILE_SIZE,
+                    0);
+                break;
+            }
+
+
             default:
                 break;
             }
@@ -352,12 +477,48 @@ void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* ma
 
     if (map->map[center_y_cocudos][center_x_cocudos] == HEALTH &&
         map->health_status[center_y_cocudos][center_x_cocudos] == APPEAR) {
-        map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 0;
+        map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 16;
         map->health_status[center_y_cocudos][center_x_cocudos] = DISAPPEARING;
-        // change health status when picked here
         add_health = true;
         al_play_sample(map->health_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
+
+
+    // Check if player is on the button
+    if (map->map[center_y][center_x] == BUTTON &&
+        map->button_status[center_y][center_x] == POP_UP && !player_on_button) {
+        map->coin_disappear_animation[center_y][center_x] = 16;
+        map->button_status[center_y][center_x] = POPPING;
+        player_on_button = true;
+        //game_log("PLAYER ON BUTTON");
+        //al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+    else if (map->map[center_y][center_x] == BUTTON) {
+        player_on_button = true;
+        //game_log("COCUDOS NOT ON BUTTON");
+    }
+    else {
+        player_on_button = false;
+    }
+
+
+    // Check if cocudos is on the button
+    if (map->map[center_y_cocudos][center_x_cocudos] == BUTTON &&
+        map->button_status[center_y_cocudos][center_x_cocudos] == POP_UP && !player_on_button) {
+        map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 16;
+        map->button_status[center_y_cocudos][center_x_cocudos] = POPPING;
+        cocudos_on_button = true;
+        //game_log("COCUDOS ON BUTTON");
+        //al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+    else if (map->map[center_y_cocudos][center_x_cocudos] == BUTTON ){
+        cocudos_on_button = true;
+        //game_log("COCUDOS NOT ON BUTTON");
+    }
+    else {
+        cocudos_on_button = false;
+    }
+
 }
 
 void destroy_map(Map* map) {
@@ -375,10 +536,13 @@ void destroy_map(Map* map) {
     al_destroy_sample(map->trophy_audio);
     al_destroy_bitmap(map->health_assets);
     al_destroy_sample(map->health_audio);
+    al_destroy_bitmap(map->door_assets);
+    al_destroy_bitmap(map->button_assets);
 }
 
 bool isWalkable(BLOCK_TYPE block) {
-    if (block == FLOOR || block == COIN || block == TROPHY || block == HEALTH || block == S_COIN) return true;
+    if (block == FLOOR || block == COIN || block == TROPHY || block == HEALTH || block == S_COIN
+        || block == BUTTON || block == DOOR_OPEN) return true;
     return false;
 }
 
@@ -592,6 +756,15 @@ static void get_map_offset(Map* map) {
                 break;
             case HOLE:
                 map->offset_assets[i][j] = get_hole_offset_assets(map, i, j);
+                break;
+            case DOOR_OPEN:
+                map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
+                break;
+            case DOOR_CLOSE:
+                map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
+                break;
+            case BUTTON:
+                map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
                 break;
 
             case NOTHING:

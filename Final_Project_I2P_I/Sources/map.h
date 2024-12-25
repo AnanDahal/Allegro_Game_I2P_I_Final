@@ -56,9 +56,17 @@ typedef enum _HEALTH_STATUS {
 
 typedef enum _DOOR_STATUS {
     CLOSED,
+    CLOSING,
     OPENING,
-    OPEN
+    OPEN,
 } DOOR_STATUS;
+
+typedef enum _BUTTON_STATUS {
+    POP_UP,
+    POPPING,
+    POP_DOWN,
+    POPPING_UP
+} BUTTON_STATUS;
 
 
 // Map Struct
@@ -73,6 +81,8 @@ typedef struct Map_ {
     ALLEGRO_BITMAP* coin_assets;
     ALLEGRO_BITMAP* health_assets;
     ALLEGRO_BITMAP* trophy_assets;
+    ALLEGRO_BITMAP* door_assets;
+    ALLEGRO_BITMAP* button_assets;
     // Coin Properties
     ALLEGRO_SAMPLE* coin_audio;
     
@@ -89,11 +99,10 @@ typedef struct Map_ {
     HEALTH_STATUS health_status[MAX_MAP_ROW][MAX_MAP_COL];
 
     // Door Properties
-    ALLEGRO_BITMAP* door_assets;
-    DOOR_STATUS door_status;
-
-    // Button Assets
-    ALLEGRO_BITMAP* button_assets;
+    
+    DOOR_STATUS door_status[MAX_MAP_ROW][MAX_MAP_COL];
+    BUTTON_STATUS button_status[MAX_MAP_ROW][MAX_MAP_COL];
+    
 
     // Spawn Coordinate
     Point SpawnP;
@@ -107,6 +116,12 @@ typedef struct Map_ {
     bool toofar;
 
 } Map;
+
+bool door_up;
+bool player_on_button;
+bool cocudos_on_button;
+
+
 
 /*
     MAP FUNCTION

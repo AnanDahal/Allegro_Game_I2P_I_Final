@@ -748,7 +748,7 @@ static void draw_shop(void) {
     // Constants for layout
 
     al_draw_scaled_bitmap(shop_bitmap,
-        0, 0, 820, 500,
+        0, 0, 1640, 1000,
         0, 0, 1640, 1000, 0);
 
 
