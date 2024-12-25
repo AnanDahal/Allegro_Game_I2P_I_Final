@@ -9,7 +9,7 @@
 #include "utility.h"
 
 // Bullet
-typedef struct _Bullet{
+typedef struct _Bullet {
     PointFloat coord;
     float speed;
     float angle;
@@ -18,17 +18,17 @@ typedef struct _Bullet{
 } Bullet;
 
 // Linked List of Bullet
-typedef struct _bulletNode{
+typedef struct _bulletNode {
     Bullet bullet;
-    struct _bulletNode * next;
+    struct _bulletNode* next;
 } BulletNode;
 
 Bullet create_bullet(char* bullet_path, PointFloat coord, float angle, float speed, float damage);
 
-BulletNode * createBulletList(void);
-void insertBulletList(BulletNode * dummyhead, Bullet bullet);
-void updateBulletList(BulletNode * dummyhead, enemyNode * enemyList, Map * map);
-void drawBulletList(BulletNode * dummyhead, Point camera);
-void destroyBulletList(BulletNode * dummyhead);
+BulletNode* createBulletList(void);
+void insertBulletList(BulletNode* dummyhead, Bullet bullet);
+void updateBulletList(BulletNode* dummyhead, enemyNode* enemyList, Map* map);
+void drawBulletList(BulletNode* dummyhead, Point camera);
+void destroyBulletList(BulletNode* dummyhead);
 
 #endif /* bullet_h */

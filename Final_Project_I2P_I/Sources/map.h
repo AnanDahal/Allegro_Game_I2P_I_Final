@@ -32,7 +32,8 @@ typedef enum _BLOCK_TYPE {
     BUTTON,
     DOOR_OPEN,
     HEALTH,
-    S_COIN
+    S_COIN,
+    SHOOTING_WALL
 } BLOCK_TYPE;
 
 typedef enum _COIN_STATUS {
@@ -85,7 +86,7 @@ typedef struct Map_ {
     ALLEGRO_BITMAP* button_assets;
     // Coin Properties
     ALLEGRO_SAMPLE* coin_audio;
-    
+
 
     uint8_t animation;
 
@@ -99,10 +100,10 @@ typedef struct Map_ {
     HEALTH_STATUS health_status[MAX_MAP_ROW][MAX_MAP_COL];
 
     // Door Properties
-    
+
     DOOR_STATUS door_status[MAX_MAP_ROW][MAX_MAP_COL];
     BUTTON_STATUS button_status[MAX_MAP_ROW][MAX_MAP_COL];
-    
+
 
     // Spawn Coordinate
     Point SpawnP;

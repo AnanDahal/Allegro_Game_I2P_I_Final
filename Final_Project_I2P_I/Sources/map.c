@@ -4,6 +4,7 @@
 
 #include "map.h"
 #include "game_scene.h"
+#include "bullet.h"
 
 /*
     [OFFSET CALCULATOR FUNCTIONS]
@@ -69,6 +70,10 @@ Map create_map(char* path, uint8_t type) {
             {
             case '#': // Case Wall
                 map.map[i][j] = WALL;
+                break;
+
+            case 'W': // Shooting Wall
+                map.map[i][j] = SHOOTING_WALL;
                 break;
 
             case '.': // Case Floor
@@ -141,7 +146,7 @@ Map create_map(char* path, uint8_t type) {
         game_abort("Can't load coin assets");
     }
 
-    
+
 
 
     // load the offset for each tiles type
@@ -219,6 +224,14 @@ void draw_map(Map* map, Point cam) {
 
 
             switch (map->map[i][j]) {
+            case SHOOTING_WALL: {
+                al_draw_scaled_bitmap(map->assets,
+                    32, 48, 16, 16,
+                    dx, dy, TILE_SIZE, TILE_SIZE,
+                    0);
+                
+                break;
+            }
             case COIN: {
                 int offsetx = 0;
                 int offsety = 0;
@@ -379,7 +392,7 @@ void draw_map(Map* map, Point cam) {
                 break;
             }
 
-            
+
 
             case BUTTON: {
                 int offsetx = 0;
@@ -511,7 +524,7 @@ void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* ma
         //game_log("COCUDOS ON BUTTON");
         //al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
-    else if (map->map[center_y_cocudos][center_x_cocudos] == BUTTON ){
+    else if (map->map[center_y_cocudos][center_x_cocudos] == BUTTON) {
         cocudos_on_button = true;
         //game_log("COCUDOS NOT ON BUTTON");
     }
@@ -743,6 +756,9 @@ static void get_map_offset(Map* map) {
             case WALL:
                 map->offset_assets[i][j] = get_wall_offset_assets(map, i, j);
                 break;
+            case SHOOTING_WALL:
+                map->offset_assets[i][j] = get_wall_offset_assets(map, i, j);
+                break;
             case FLOOR:
             case COIN:
                 map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
@@ -778,7 +794,7 @@ static void get_map_offset(Map* map) {
 
 static bool isWall(Map* map, int i, int j) {
     if (i < 0 || j < 0 || i >= map->row || j >= map->col) return false;
-    if (map->map[i][j] == WALL) return true;
+    if (map->map[i][j] == WALL || map->map[i][j] == SHOOTING_WALL) return true;
     return false;
 }
 

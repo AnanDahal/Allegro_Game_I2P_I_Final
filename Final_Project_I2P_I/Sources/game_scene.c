@@ -16,10 +16,10 @@ static int timer_countdown;
 Player player; // Player
 Player cocudos; // Cocudos
 Map map; // Map
-enemyNode * enemyList; // Enemy List
-BulletNode * bulletList; // Bullet 
+enemyNode* enemyList; // Enemy List
+BulletNode* bulletList; // Bullet 
 // Weapon
-Weapon weapon; 
+Weapon weapon;
 // initialize coin obtained
 coins_obtained = 0;
 
@@ -29,7 +29,7 @@ coins_obtained = 0;
 map_level = 1;
 
 
-static void init(void){
+static void init(void) {
     timer_countdown = 60;
     initEnemy();
 
@@ -50,7 +50,7 @@ static void init(void){
     bulletList = createBulletList();
 
     // cooldown , speed, damage
-    
+
     if (guns_eq) {
         if (yellow_eq) {
             weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
@@ -86,8 +86,8 @@ static void init(void){
     }
 
     //weapon = create_weapon("Assets/guns.png", "Assets/orange_bullet.png", 16, 8, 10);
-    
-    for(int i=0; i<map.EnemySpawnSize; i++){
+
+    for (int i = 0; i < map.EnemySpawnSize; i++) {
         Enemy enemy = createEnemy(map.EnemySpawn[i].x, map.EnemySpawn[i].y, map.EnemyCode[i]);
         insertEnemyList(enemyList, enemy);
     }
@@ -95,15 +95,15 @@ static void init(void){
     change_bgm("Assets/audio/wii_music.mp3");
 }
 
-static void update(void){
+static void update(void) {
     /*
         [TODO Homework]
-        
+
         Change the scene if winning/losing to win/lose scene
     */
 
     // Start HW 
-    
+
     int distance = sqrt((player.coord.x - cocudos.coord.x) * (player.coord.x - cocudos.coord.x) +
         (player.coord.y - cocudos.coord.y) * (player.coord.y - cocudos.coord.y));
 
@@ -134,11 +134,11 @@ static void update(void){
                 change_scene(create_win_scene());
                 return;
             }
-            
+
         }
     }
-    
-    if(player.health <= 0 || cocudos.health <= 0 || map.toofar) {
+
+    if (player.health <= 0 || cocudos.health <= 0 || map.toofar) {
         timer_countdown--;
         if (timer_countdown == 0) {
             coins_obtained = 0;
@@ -153,7 +153,7 @@ static void update(void){
         cocudos.health += 10;
     }
 
-    
+
 
     // End HW
 
@@ -163,7 +163,7 @@ static void update(void){
     Point Camera;
     /*
         [TODO HACKATHON 1-3]
-        
+
         Calcualte the formula for the Camera
         Camera.x = ...
         Camera.y = ...
@@ -175,20 +175,20 @@ static void update(void){
     Camera.y = player.coord.y - (SCREEN_H / 2);
     // End 1 - 3
 
-    
-    
+
+
     updateEnemyList(enemyList, &map, &player, &cocudos);
     update_weapon(&weapon, bulletList, player.coord, Camera);
     updateBulletList(bulletList, enemyList, &map);
- 
+
     update_map(&map, player.coord, cocudos.coord, &coins_obtained, &map_coin);
 }
 
-static void draw(void){
+static void draw(void) {
     Point Camera;
     /*
         [TODO HACKATHON 1-4]
-        
+
         Calcualte the formula for the Camera
         Camera.x = ...
         Camera.y = ...
@@ -205,11 +205,11 @@ static void draw(void){
     draw_map(&map, Camera);
     draw_player(&player, Camera);
     draw_player2(&cocudos, Camera);
-    
+
 
     /*
         [TODO Homework]
-        
+
         Draw the UI of Health and Total Coins
     */
 
@@ -263,7 +263,7 @@ static void draw(void){
     // End HW
 }
 
-static void destroy(void){
+static void destroy(void) {
     delete_player(&player);
     delete_player(&cocudos);
     delete_weapon(&weapon);
@@ -274,16 +274,16 @@ static void destroy(void){
 }
 
 
-Scene create_game_scene(void){
+Scene create_game_scene(void) {
     Scene scene;
     memset(&scene, 0, sizeof(Scene));
-    
+
     scene.name = "game";
     scene.init = &init;
     scene.draw = &draw;
     scene.update = &update;
     scene.destroy = &destroy;
-    
+
     return scene;
 }
 
@@ -323,7 +323,7 @@ static void update_lose(void) {
         al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         map_level = 1;
         coins_obtained = 0;
-        
+
         yellow_eq = true;
         guns_eq = true;
 
@@ -493,7 +493,7 @@ static void draw_win(void) {
 
     // Draw the "YOU WIN!" title with a glow effect
 
-    
+
     al_draw_text(
         TITLE_FONT,
         al_map_rgb(66, 76, 110),
@@ -513,7 +513,7 @@ static void draw_win(void) {
 
     // Draw the Main Menu button
     draw_button(mainMenuButton);
-    
+
 
     al_draw_text(
         P2_FONT,
@@ -523,7 +523,7 @@ static void draw_win(void) {
         ALLEGRO_ALIGN_CENTER,
         "Main Menu"
     );
-    
+
     al_draw_text(
         P2_FONT,
         al_map_rgb(255, 255, 255),
@@ -535,7 +535,7 @@ static void draw_win(void) {
 
     // Draw the Quit button
     draw_button(quitButton);
-    
+
 
     al_draw_text(
         P2_FONT,
@@ -545,7 +545,7 @@ static void draw_win(void) {
         ALLEGRO_ALIGN_CENTER,
         "Quit"
     );
-    
+
     al_draw_text(
         P2_FONT,
         al_map_rgb(255, 255, 255),
@@ -576,4 +576,3 @@ Scene create_win_scene(void) {
 
     return scene;
 }
-
