@@ -136,10 +136,19 @@ Map create_map(char* path, uint8_t type) {
         }
     }
 
-    map.assets = al_load_bitmap("Assets/map_packets.png");
-    if (!map.assets) {
-        game_abort("Can't load map assets");
+    if (map_level == 3) {
+        map.assets = al_load_bitmap("Assets/map_packets_3.png");
+        if (!map.assets) {
+            game_abort("Can't load map assets");
+        }
     }
+    else {
+        map.assets = al_load_bitmap("Assets/map_packets.png");
+        if (!map.assets) {
+            game_abort("Can't load map assets");
+        }
+    }
+    
 
     map.coin_assets = al_load_bitmap("Assets/coins.png");
     if (!map.coin_assets) {
@@ -200,7 +209,16 @@ Map create_map(char* path, uint8_t type) {
 
 void draw_map(Map* map, Point cam) {
     // Draw map based on the camera point coordinate
-    al_clear_to_color(al_map_rgb(24, 20, 37));
+   
+    if (map_level == 3) {
+        al_clear_to_color(al_map_rgb(75, 5, 0));
+    }
+    else {
+        al_clear_to_color(al_map_rgb(24, 20, 37));
+    }
+    
+    
+    
 
     for (int i = 0; i < map->row; i++) {
         for (int j = 0; j < map->col; j++) {
@@ -210,11 +228,14 @@ void draw_map(Map* map, Point cam) {
 
             Point offset_asset = map->offset_assets[i][j];
 
+            
             al_draw_scaled_bitmap(map->assets, // image
                 offset_asset.x, offset_asset.y, 16, 16, // source x, source y, width, height
                 dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, destiny y, destiny width, destiny height
-                0 // flag : set 0
-            );
+                0 ); // flag : set 0
+              
+            
+            
 
             int src_coin_width = 16;
             int src_coin_height = 16;
