@@ -32,7 +32,9 @@ bool update_bullet(Bullet* bullet, enemyNode* enemyList, Map* map, Player* playe
     int tile_x = (int)(bullet->coord.y / TILE_SIZE);
     if (tile_x < 0 || tile_x >= map->row || tile_y < 0 || tile_y >= map->col 
         || map->map[tile_x][tile_y] == WALL || map->map[tile_x][tile_y] == SHOOTING_WALL
-        || map->map[tile_x][tile_y] == DOOR_CLOSE) {
+        || map->map[tile_x][tile_y] == DOOR_CLOSE || map->map[tile_x][tile_y] == D2C
+        || map->map[tile_x][tile_y] == D3C || map->map[tile_x][tile_y] == D4C
+        || map->map[tile_x][tile_y] == D5C || map->map[tile_x][tile_y] == D6C) {
         return true;
     }
     

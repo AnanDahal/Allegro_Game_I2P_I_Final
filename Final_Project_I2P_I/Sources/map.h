@@ -33,7 +33,14 @@ typedef enum _BLOCK_TYPE {
     DOOR_OPEN,
     HEALTH,
     S_COIN,
-    SHOOTING_WALL
+    SHOOTING_WALL,
+    D2O, D2C,
+    D3O, D3C,
+    D4O, D4C,
+    D5O, D5C,
+    D6O, D6C,
+    B2, B3, B4,
+    B5, B6
 } BLOCK_TYPE;
 
 typedef enum _COIN_STATUS {
@@ -86,6 +93,7 @@ typedef struct Map_ {
     ALLEGRO_BITMAP* button_assets;
     // Coin Properties
     ALLEGRO_SAMPLE* coin_audio;
+    ALLEGRO_SAMPLE* button_audio;
 
 
     uint8_t animation;
@@ -105,6 +113,7 @@ typedef struct Map_ {
     BUTTON_STATUS button_status[MAX_MAP_ROW][MAX_MAP_COL];
 
 
+
     // Spawn Coordinate
     Point SpawnP;
     Point SpawnJ;
@@ -119,9 +128,45 @@ typedef struct Map_ {
 } Map;
 
 bool door_up;
+bool door_up2;
+bool door_up3;
+bool door_up4;
+bool door_up5;
+bool door_up6;
+
+DOOR_STATUS d2_status[MAX_MAP_ROW][MAX_MAP_COL];
+DOOR_STATUS d3_status[MAX_MAP_ROW][MAX_MAP_COL];
+DOOR_STATUS d4_status[MAX_MAP_ROW][MAX_MAP_COL];
+DOOR_STATUS d5_status[MAX_MAP_ROW][MAX_MAP_COL];
+DOOR_STATUS d6_status[MAX_MAP_ROW][MAX_MAP_COL];
+
+BUTTON_STATUS b2_status[MAX_MAP_ROW][MAX_MAP_COL];
+BUTTON_STATUS b3_status[MAX_MAP_ROW][MAX_MAP_COL];
+BUTTON_STATUS b4_status[MAX_MAP_ROW][MAX_MAP_COL];
+BUTTON_STATUS b5_status[MAX_MAP_ROW][MAX_MAP_COL];
+BUTTON_STATUS b6_status[MAX_MAP_ROW][MAX_MAP_COL];
+
+
 bool player_on_button;
 bool cocudos_on_button;
-PointFloat shootingwall_coord[MAX_MAP_ROW][MAX_MAP_COL];
+
+bool player2_on_button;
+bool cocudos2_on_button;
+
+bool player3_on_button;
+bool cocudos3_on_button;
+
+bool player4_on_button;
+bool cocudos4_on_button;
+
+bool player5_on_button;
+bool cocudos5_on_button;
+
+bool player6_on_button;
+bool cocudos6_on_button;
+
+
+
 
 
 /*
@@ -133,6 +178,7 @@ void draw_map(Map* map, Point cam); // Draw the map
 void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* map_coin); // Update map : you might want add some parameter here
 void destroy_map(Map* map); // Destroy map
 
+PointFloat shootingwall_coord[MAX_MAP_ROW][MAX_MAP_COL];
 
 bool isWalkable(BLOCK_TYPE block);
 

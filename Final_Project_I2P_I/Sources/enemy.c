@@ -92,7 +92,19 @@ bool isTileAvailable(Map* map, int x, int y) {
         map->map[y][x] != S_COIN &&
         map->map[y][x] != WALL &&
         map->map[y][x] != HEALTH &&
-        map->map[y][x] != HOLE;
+        map->map[y][x] != HOLE &&
+        map->map[y][x] != DOOR_CLOSE &&
+        map->map[y][x] != BUTTON &&
+        map->map[y][x] != B2 &&
+        map->map[y][x] != B3 &&
+        map->map[y][x] != B4 &&
+        map->map[y][x] != B5 &&
+        map->map[y][x] != B6 &&
+        map->map[y][x] != D2C &&
+        map->map[y][x] != D3C &&
+        map->map[y][x] != D4C &&
+        map->map[y][x] != D5C &&
+        map->map[y][x] != D6C;
 }
 
 // Helper function to find the nearest available tile

@@ -26,7 +26,7 @@ coins_obtained = 0;
 
 
 // initialize map level
-map_level = 1;
+map_level = 2;
 
 
 static void init(void) {
@@ -450,6 +450,7 @@ static ALLEGRO_BITMAP* win_bitmap;
 // Initialization function for the win scene
 static void init_win(void) {
     // Create buttons
+    map_level = 1;
     mainMenuButton = button_create(SCREEN_W / 2 - 200, 650, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     quitButton = button_create(SCREEN_W / 2 - 200, 800, 400, 100, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
 
