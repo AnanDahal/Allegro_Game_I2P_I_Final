@@ -14,6 +14,8 @@ typedef struct _Bullet {
     float speed;
     float angle;
     float damage;
+    bool playerhit;
+    bool cocudoshit;
     ALLEGRO_BITMAP* image;
 } Bullet;
 

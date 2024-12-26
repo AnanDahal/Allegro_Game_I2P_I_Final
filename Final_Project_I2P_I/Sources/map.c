@@ -5,6 +5,8 @@
 #include "map.h"
 #include "game_scene.h"
 #include "bullet.h"
+#include "player.h"
+
 
 /*
     [OFFSET CALCULATOR FUNCTIONS]
@@ -24,6 +26,9 @@ static int trophy_animation = 0;
 static int button_animation = 0;
 static int door_animation = 0;
 
+Bullet bullet;
+BulletNode* bulletList;
+int timer = 60;
 
 static bool tile_collision(Point player, Point tile_coord);
 
@@ -74,6 +79,8 @@ Map create_map(char* path, uint8_t type) {
 
             case 'W': // Shooting Wall
                 map.map[i][j] = SHOOTING_WALL;
+                shootingwall_coord[i][j] = (PointFloat){ i , j };
+                game_log("POINT FOR SHOOTING WALL X = %lf, Y = %lf", shootingwall_coord[i][j].x, shootingwall_coord[i][j].y);
                 break;
 
             case '.': // Case Floor
@@ -148,7 +155,7 @@ Map create_map(char* path, uint8_t type) {
             game_abort("Can't load map assets");
         }
     }
-    
+
 
     map.coin_assets = al_load_bitmap("Assets/coins.png");
     if (!map.coin_assets) {
@@ -209,16 +216,16 @@ Map create_map(char* path, uint8_t type) {
 
 void draw_map(Map* map, Point cam) {
     // Draw map based on the camera point coordinate
-   
+
     if (map_level == 3) {
         al_clear_to_color(al_map_rgb(75, 5, 0));
     }
     else {
         al_clear_to_color(al_map_rgb(24, 20, 37));
     }
-    
-    
-    
+
+
+
 
     for (int i = 0; i < map->row; i++) {
         for (int j = 0; j < map->col; j++) {
@@ -228,14 +235,12 @@ void draw_map(Map* map, Point cam) {
 
             Point offset_asset = map->offset_assets[i][j];
 
-            
+
             al_draw_scaled_bitmap(map->assets, // image
                 offset_asset.x, offset_asset.y, 16, 16, // source x, source y, width, height
                 dx, dy, TILE_SIZE, TILE_SIZE, // destiny x, destiny y, destiny width, destiny height
-                0 ); // flag : set 0
-              
-            
-            
+                0); // flag : set 0
+
 
             int src_coin_width = 16;
             int src_coin_height = 16;
@@ -243,14 +248,35 @@ void draw_map(Map* map, Point cam) {
             int src_door_height = 16;
             int src_door_width = 32;
 
-
             switch (map->map[i][j]) {
             case SHOOTING_WALL: {
+                
                 al_draw_scaled_bitmap(map->assets,
                     32, 48, 16, 16,
                     dx, dy, TILE_SIZE, TILE_SIZE,
                     0);
-                
+
+                if (timer == 0) {
+                    /*game_log("shooting multiplied x = %d y = %d", (shootingwall_coord[i][j].x * TILE_SIZE) + TILE_SIZE / 2,
+                        (shootingwall_coord[i][j].y * TILE_SIZE) + TILE_SIZE / 2);*/
+
+                    /*shootingwall_coord[i][j].x = (shootingwall_coord[i][j].x * TILE_SIZE) + TILE_SIZE / 2;
+                    shootingwall_coord[i][j].y = (shootingwall_coord[i][j].x * TILE_SIZE) + TILE_SIZE / 2;*/
+
+                    PointFloat center = (PointFloat){
+                        (shootingwall_coord[i][j].y * TILE_SIZE) + TILE_SIZE / 2,
+                        (shootingwall_coord[i][j].x * TILE_SIZE) + TILE_SIZE / 2
+                    };
+
+                    Bullet bullet = create_bullet("Assets/orange_bullet.png", center, 1.571, 16, 20); // 1.571 radians = ~90° (downwards)
+                    insertBulletList(bulletList, bullet);
+                    timer = 60;
+                }
+                else {
+                    timer--;
+                }
+
+
                 break;
             }
             case COIN: {
@@ -504,7 +530,7 @@ void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* ma
 
     if (map->map[center_y_cocudos][center_x_cocudos] == TROPHY &&
         (map_coin == coin_counter)) {
-        map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 0;
+        map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 16;
         map->trophy_status[center_y_cocudos][center_x_cocudos] = T_DISAPPEARING;
         al_play_sample(map->trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
@@ -553,6 +579,7 @@ void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* ma
         cocudos_on_button = false;
     }
 
+    
 }
 
 void destroy_map(Map* map) {

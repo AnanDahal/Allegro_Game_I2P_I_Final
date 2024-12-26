@@ -121,7 +121,7 @@ typedef struct Map_ {
 bool door_up;
 bool player_on_button;
 bool cocudos_on_button;
-
+PointFloat shootingwall_coord[MAX_MAP_ROW][MAX_MAP_COL];
 
 
 /*

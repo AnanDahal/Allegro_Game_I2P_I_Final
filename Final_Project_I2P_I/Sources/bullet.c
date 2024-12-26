@@ -18,74 +18,30 @@ Bullet create_bullet(char* bullet_path, PointFloat coord, float angle, float spe
 
 // Return true if the bullet collides, so it will be deleted from the list
 bool update_bullet(Bullet* bullet, enemyNode* enemyList, Map* map) {
-    /*
-        [TODO Hackathon 3-1]
-
-        Calculate the correct formula to update the bullet,
-        Parameter: bullet->speed, bullet->angle
-
-        bullet->coord.x += bullet->speed * cos(bullet->angle);
-        bullet->coord.y += bullet->speed * sin(bullet->angle);
-    */
-
-    // Start 3 - 1
+    
     bullet->coord.x += bullet->speed * cos(bullet->angle);
     bullet->coord.y += bullet->speed * sin(bullet->angle);
-    // End 3 - 1
-
-
-    /*
-        [TODO Hackathon 2-3]
-
-        Return true if the bullet collides, so it will deleted from the lists
-
-        int tile_y = (int)(bullet->coord.x / TILE_SIZE);
-        int tile_x = (int)(bullet->coord.y / TILE_SIZE);
-        if(tile_x < 0 || ...  || map->map[tile_x][tile_y] == ...){
-            return true;
-        }
-    */
-
-    // Start 2 - 3
+    
 
     int tile_y = (int)(bullet->coord.x / TILE_SIZE);
     int tile_x = (int)(bullet->coord.y / TILE_SIZE);
     if (tile_x < 0 || tile_x >= map->row || tile_y < 0 || tile_y >= map->col 
-        || map->map[tile_x][tile_y] == WALL || map->map[tile_x][tile_y] == SHOOTING_WALL) {
+        || map->map[tile_x][tile_y] == WALL || map->map[tile_x][tile_y] == SHOOTING_WALL
+        || map->map[tile_x][tile_y] == DOOR_CLOSE) {
         return true;
     }
 
-    // End 2 - 3
-
-    // Check if the bullet collide with the enemies by simple iterating
+    
     enemyNode* cur = enemyList->next;
     while (cur != NULL) {
         Point enemyCoord = cur->enemy.coord;
 
-        /*
-            [TODO Hackathon 3-2] Hit the enemy
-
-            Return true if the bullet hit the enemy so we can erase the bullet
-
-            In here, we iterate list of enemies until we hit one of them
-
-            Hint: The enemy coordinate is defined at enemyCoord variable,
-            while their width & height are equal to TILE_SIZE
-
-            if(...){
-                hitEnemy(...);
-                return true;
-            }
-        */
-
-        // start 3 - 2
 
         if (tile_y >= enemyCoord.x / TILE_SIZE && tile_x >= enemyCoord.y / TILE_SIZE && tile_x <= (enemyCoord.y + TILE_SIZE - 1) / TILE_SIZE && tile_y <= (enemyCoord.x + TILE_SIZE - 1) / TILE_SIZE) {
             hitEnemy(&cur->enemy, bullet->damage, bullet->angle);
             return true;
         }
 
-        // end 3 - 2
 
         cur = cur->next;
     }
@@ -94,7 +50,6 @@ bool update_bullet(Bullet* bullet, enemyNode* enemyList, Map* map) {
 
 void draw_bullet(Bullet* bullet, Point camera) {
     float scale = TILE_SIZE / 16;
-    //al_draw_filled_circle(bullet->coord.x - camera.x, bullet->coord.y - camera.y, scale, al_map_rgb(255, 255, 0));
     al_draw_bitmap(bullet->image, bullet->coord.x - camera.x - 16, bullet->coord.y - camera.y - 16, 0);
 }
 
