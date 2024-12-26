@@ -268,7 +268,7 @@ void draw_map(Map* map, Point cam) {
                         (shootingwall_coord[i][j].x * TILE_SIZE) + TILE_SIZE / 2
                     };
 
-                    Bullet bullet = create_bullet("Assets/orange_bullet.png", center, 1.571, 16, 20, 0, 1); // 1.571 radians = ~90° (downwards)
+                    Bullet bullet = create_bullet("Assets/orange_bullet.png", center, 1.571, 7, 20, 0, 1); // 1.571 radians = ~90° (downwards)
                     insertBulletList(bulletList, bullet);
                     timer = 60;
                 }
@@ -755,13 +755,15 @@ static Point get_wall_offset_assets(Map* map, int i, int j) {
         else
             return (Point) { 7 * offset, 7 * offset };
     }
-    if (down) {
-        return (Point) { 1 * offset, 2 * offset };
+    if (down || up) {
+        bool left_ = isFloor(map, i, j - 1);
+        bool right_ = isFloor(map, i, j + 1);
+        if ((left_ ^ right_) == 0)
+            return (Point) { 1 * offset, 3 * offset };
+        if (left_)
+            return (Point) { 2 * offset, 5 * offset };
+        return (Point) { 4 * offset, 5 * offset };
     }
-    if (up) {
-        return (Point) { 1 * offset, 4 * offset };
-    }
-
     return (Point) { 0, 0 };
 }
 

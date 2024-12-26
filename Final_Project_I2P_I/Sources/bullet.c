@@ -45,7 +45,7 @@ bool update_bullet(Bullet* bullet, enemyNode* enemyList, Map* map, Player* playe
                 hitEnemy(&cur->enemy, bullet->damage, bullet->angle);
                 return true;
             }
-            game_log("BUL COORD X == %d Y == %d PLAYER COORD X == %d Y == %d ENEMYCOORD X == %d Y == %d", bulcoord.x, bulcoord.y, player->coord.x, player->coord.y, cur->enemy.coord.x, cur->enemy.coord.y);
+            //game_log("BUL COORD X == %d Y == %d PLAYER COORD X == %d Y == %d ENEMYCOORD X == %d Y == %d", bulcoord.x, bulcoord.y, player->coord.x, player->coord.y, cur->enemy.coord.x, cur->enemy.coord.y);
 
             cur = cur->next;
         }
@@ -59,7 +59,7 @@ bool update_bullet(Bullet* bullet, enemyNode* enemyList, Map* map, Player* playe
     if (!bullet->playershoot) {
         if (tile_y >= player->coord.x / TILE_SIZE && tile_x >= player->coord.y / TILE_SIZE &&
             tile_x <= (player->coord.y + TILE_SIZE - 1) / TILE_SIZE && tile_y <= (player->coord.x + TILE_SIZE - 1) / TILE_SIZE) {
-            game_log("PLAYERS HIT");
+            //game_log("PLAYERS HIT");
             hitPlayer(player, bulcoord, bullet->damage);
             return true;
         }
@@ -68,7 +68,7 @@ bool update_bullet(Bullet* bullet, enemyNode* enemyList, Map* map, Player* playe
 
     if (tile_y >= cocudos->coord.x / TILE_SIZE && tile_x >= cocudos->coord.y / TILE_SIZE &&
         tile_x <= (cocudos->coord.y + TILE_SIZE - 1) / TILE_SIZE && tile_y <= (cocudos->coord.x + TILE_SIZE - 1) / TILE_SIZE) {
-        game_log("COCUDOS HIT");
+        //game_log("COCUDOS HIT");
         hitPlayer(cocudos, bulcoord, bullet->damage);
         return true;
     }
