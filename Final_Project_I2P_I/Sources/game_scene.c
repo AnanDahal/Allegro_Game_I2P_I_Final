@@ -179,7 +179,7 @@ static void update(void) {
 
     updateEnemyList(enemyList, &map, &player, &cocudos);
     update_weapon(&weapon, bulletList, player.coord, Camera);
-    updateBulletList(bulletList, enemyList, &map);
+    updateBulletList(bulletList, enemyList, &map, &player, &cocudos);
 
     update_map(&map, player.coord, cocudos.coord, &coins_obtained, &map_coin);
 }

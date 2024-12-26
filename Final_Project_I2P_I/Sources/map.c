@@ -268,7 +268,7 @@ void draw_map(Map* map, Point cam) {
                         (shootingwall_coord[i][j].x * TILE_SIZE) + TILE_SIZE / 2
                     };
 
-                    Bullet bullet = create_bullet("Assets/orange_bullet.png", center, 1.571, 16, 20); // 1.571 radians = ~90° (downwards)
+                    Bullet bullet = create_bullet("Assets/orange_bullet.png", center, 1.571, 16, 20, 0, 1); // 1.571 radians = ~90° (downwards)
                     insertBulletList(bulletList, bullet);
                     timer = 60;
                 }

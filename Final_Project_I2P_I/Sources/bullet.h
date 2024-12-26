@@ -14,8 +14,8 @@ typedef struct _Bullet {
     float speed;
     float angle;
     float damage;
-    bool playerhit;
-    bool cocudoshit;
+    bool playershoot;
+    bool shootingwallshoot;
     ALLEGRO_BITMAP* image;
 } Bullet;
 
@@ -25,11 +25,11 @@ typedef struct _bulletNode {
     struct _bulletNode* next;
 } BulletNode;
 
-Bullet create_bullet(char* bullet_path, PointFloat coord, float angle, float speed, float damage);
+Bullet create_bullet(char* bullet_path, PointFloat coord, float angle, float speed, float damage, bool playershoot, bool shootingwallshoot);
 
 BulletNode* createBulletList(void);
 void insertBulletList(BulletNode* dummyhead, Bullet bullet);
-void updateBulletList(BulletNode* dummyhead, enemyNode* enemyList, Map* map);
+void updateBulletList(BulletNode* dummyhead, enemyNode* enemyList, Map* map, Player* player, Player* cocudos);
 void drawBulletList(BulletNode* dummyhead, Point camera);
 void destroyBulletList(BulletNode* dummyhead);
 

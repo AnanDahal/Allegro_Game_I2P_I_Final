@@ -369,24 +369,6 @@ static bool isCollision(Player* player, Map* map) {
         (player->coord.y + TILE_SIZE - 1) / TILE_SIZE >= map->row)
         return true;
 
-    /*
-
-        [TODO HACKATHON 2-1]
-
-        Check every corner of enemy if it's collide or not
-
-        We check every corner if it's collide with the wall/hole or not
-        You can activate DRAW_HITBOX in utility.h to see how the collision work
-
-        if(!isWalkable(map->map[...][...])) return true;
-        if(!isWalkable(map->map[...][...])) return true;
-        if(!isWalkable(map->map[...][...])) return true;
-        if(!isWalkable(map->map[...][...])) return true;
-
-    */
-
-    // Start 2 - 1
-
     if (!isWalkable(map->map[player->coord.y / TILE_SIZE][player->coord.x / TILE_SIZE])) return true;
     if (!isWalkable(map->map[(player->coord.y + TILE_SIZE - 1) / TILE_SIZE][player->coord.x / TILE_SIZE])) return true;
     if (!isWalkable(map->map[player->coord.y / TILE_SIZE][(player->coord.x + TILE_SIZE - 1) / TILE_SIZE])) return true;
@@ -403,25 +385,6 @@ void hitPlayer(Player* player, Point enemy_coord, int damage) {
         float dX = player->coord.x - enemy_coord.x;
         float angle = atan2(dY, dX);
 
-        /*
-            [TODO Homework]
-
-            Game Logic when the player get hit or die
-
-            player->knockback_angle = angle;
-            player->knockback_CD = 32;
-
-            player->health = ...
-            if(player->health <= 0){
-
-                player->health = 0;
-                player->status = ...
-
-                ...
-            }
-        */
-
-        // Start HW
         player->knockback_angle = angle;
         player->knockback_CD = 32;
 

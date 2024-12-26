@@ -60,7 +60,7 @@ void update_weapon(Weapon * weapon, BulletNode * bulletList, Point playerCoord, 
     if(mouseState.buttons & 1 && weapon->cooldown_counter == 0){
         weapon->cooldown_counter = weapon->cooldown;
         PointFloat center = (PointFloat){playerCoord.x + TILE_SIZE / 2, playerCoord.y + TILE_SIZE / 2};
-        Bullet bullet = create_bullet(weapon->bullet_path, center, weapon->angle, weapon->speed, weapon->damage);
+        Bullet bullet = create_bullet(weapon->bullet_path, center, weapon->angle, weapon->speed, weapon->damage, 1, 0);
         insertBulletList(bulletList, bullet);
         if (!al_play_sample(weapon->shooting_audio, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL)) {
             game_log("Audio not playing, please increase your RESERVE_SAMPLES variable");

@@ -1,13 +1,15 @@
 #include "bullet.h"
 #include <math.h>
 
-Bullet create_bullet(char* bullet_path, PointFloat coord, float angle, float speed, float damage) {
+Bullet create_bullet(char* bullet_path, PointFloat coord, float angle, float speed, float damage, bool playershoot, bool shootingwallshoot) {
     Bullet bullet;
     bullet.coord = coord;
     bullet.angle = angle;
     bullet.speed = speed;
     bullet.damage = damage;
     bullet.image = al_load_bitmap(bullet_path);
+    bullet.playershoot = playershoot;
+    bullet.shootingwallshoot = shootingwallshoot;
 
     // For better repositioning
     bullet.coord.x += (float)(TILE_SIZE / 2) * cos(bullet.angle);
@@ -16,8 +18,11 @@ Bullet create_bullet(char* bullet_path, PointFloat coord, float angle, float spe
     return bullet;
 }
 
+Point bulcoord;
+
+
 // Return true if the bullet collides, so it will be deleted from the list
-bool update_bullet(Bullet* bullet, enemyNode* enemyList, Map* map) {
+bool update_bullet(Bullet* bullet, enemyNode* enemyList, Map* map, Player* player, Player* cocudos) {
     
     bullet->coord.x += bullet->speed * cos(bullet->angle);
     bullet->coord.y += bullet->speed * sin(bullet->angle);
@@ -30,21 +35,45 @@ bool update_bullet(Bullet* bullet, enemyNode* enemyList, Map* map) {
         || map->map[tile_x][tile_y] == DOOR_CLOSE) {
         return true;
     }
-
     
     enemyNode* cur = enemyList->next;
-    while (cur != NULL) {
-        Point enemyCoord = cur->enemy.coord;
+    if (!bullet->shootingwallshoot) {
+        while (cur != NULL) {
+            Point enemyCoord = cur->enemy.coord;
+
+            if (tile_y >= enemyCoord.x / TILE_SIZE && tile_x >= enemyCoord.y / TILE_SIZE && tile_x <= (enemyCoord.y + TILE_SIZE - 1) / TILE_SIZE && tile_y <= (enemyCoord.x + TILE_SIZE - 1) / TILE_SIZE) {
+                hitEnemy(&cur->enemy, bullet->damage, bullet->angle);
+                return true;
+            }
+            game_log("BUL COORD X == %d Y == %d PLAYER COORD X == %d Y == %d ENEMYCOORD X == %d Y == %d", bulcoord.x, bulcoord.y, player->coord.x, player->coord.y, cur->enemy.coord.x, cur->enemy.coord.y);
+
+            cur = cur->next;
+        }
+    }
+    
+
+    bulcoord.x = (int)bullet->coord.x;
+    bulcoord.y = (int)bullet->coord.y;
 
 
-        if (tile_y >= enemyCoord.x / TILE_SIZE && tile_x >= enemyCoord.y / TILE_SIZE && tile_x <= (enemyCoord.y + TILE_SIZE - 1) / TILE_SIZE && tile_y <= (enemyCoord.x + TILE_SIZE - 1) / TILE_SIZE) {
-            hitEnemy(&cur->enemy, bullet->damage, bullet->angle);
+    if (!bullet->playershoot) {
+        if (tile_y >= player->coord.x / TILE_SIZE && tile_x >= player->coord.y / TILE_SIZE &&
+            tile_x <= (player->coord.y + TILE_SIZE - 1) / TILE_SIZE && tile_y <= (player->coord.x + TILE_SIZE - 1) / TILE_SIZE) {
+            game_log("PLAYERS HIT");
+            hitPlayer(player, bulcoord, bullet->damage);
             return true;
         }
-
-
-        cur = cur->next;
     }
+    
+
+    if (tile_y >= cocudos->coord.x / TILE_SIZE && tile_x >= cocudos->coord.y / TILE_SIZE &&
+        tile_x <= (cocudos->coord.y + TILE_SIZE - 1) / TILE_SIZE && tile_y <= (cocudos->coord.x + TILE_SIZE - 1) / TILE_SIZE) {
+        game_log("COCUDOS HIT");
+        hitPlayer(cocudos, bulcoord, bullet->damage);
+        return true;
+    }
+
+
     return false;
 }
 
@@ -83,12 +112,12 @@ void insertBulletList(BulletNode* dummyhead, Bullet bullet) {
     dummyhead->next = tmp;
 }
 
-void updateBulletList(BulletNode* dummyhead, enemyNode* enemyList, Map* map) {
+void updateBulletList(BulletNode* dummyhead, enemyNode* enemyList, Map* map, Player* player, Player* cocudos) {
     BulletNode* cur = dummyhead->next;
     BulletNode* prev = dummyhead;
 
     while (cur != NULL) {
-        bool shouldDelete = update_bullet(&cur->bullet, enemyList, map);
+        bool shouldDelete = update_bullet(&cur->bullet, enemyList, map, player, cocudos);
         if (shouldDelete) {
             prev->next = cur->next;
             destroy_bullet(&cur->bullet);
