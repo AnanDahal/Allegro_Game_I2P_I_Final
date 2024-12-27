@@ -11,12 +11,13 @@
 #include "player.h"
 
 typedef enum {
-    slime, magma
+    slime, magma, skeleton
 } enemyType;
 
 typedef enum {
     ALIVE, DYING, DEAD
 } EnemyStatus;
+
 
 typedef struct _enemy {
     ALLEGRO_BITMAP* image;

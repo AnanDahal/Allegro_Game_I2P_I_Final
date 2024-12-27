@@ -23,18 +23,21 @@ Weapon weapon;
 // initialize coin obtained
 coins_obtained = 0;
 
+ALLEGRO_BITMAP* heart;
 
 
 // initialize map level
-map_level = 2;
+map_level = 1;
 
 
 static void init(void) {
     timer_countdown = 60;
     initEnemy();
 
+    
+
     if (map_level == 1) {
-        map = create_map("Assets/map0.txt", 0);
+        map = create_map("Assets/tester.txt", 0);
     }
     else if (map_level == 2) {
         map = create_map("Assets/map1.txt", 0);
@@ -42,6 +45,8 @@ static void init(void) {
     else if (map_level == 3) {
         map = create_map("Assets/map2.txt", 0);
     }
+    
+    heart = al_load_bitmap("assets/heart.png");
 
     player = create_player("Assets/panda2.png", map.SpawnP.x, map.SpawnP.y, 1);
     cocudos = create_player("Assets/player.png", map.SpawnJ.x, map.SpawnJ.y, 0);
@@ -252,11 +257,11 @@ static void draw(void) {
     }
 
     for (int i = 0; i < player.health / 10; i++) {
-        al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1240 + ((50 - player.health) * 6)), 0, 100, 100, 0);
+        al_draw_scaled_bitmap(heart, 0, 0, 32, 32, (i * 65) + (1240 + ((50 - player.health) * 6)), 0, 100, 100, 0);
     }
 
     for (int i = 0; i < cocudos.health / 10; i++) {
-        al_draw_scaled_bitmap(al_load_bitmap("assets/heart.png"), 0, 0, 32, 32, (i * 65) + (1240 + ((50 - cocudos.health) * 6)), 60, 100, 100, 0);
+        al_draw_scaled_bitmap(heart, 0, 0, 32, 32, (i * 65) + (1240 + ((50 - cocudos.health) * 6)), 60, 100, 100, 0);
     }
 
 

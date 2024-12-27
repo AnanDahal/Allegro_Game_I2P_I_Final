@@ -146,39 +146,111 @@ static void draw(void) {
             "LOADING"
         );
 
-        al_draw_text(
-            TITLE_FONT,
-            al_map_rgb(0, 0, 0),
-            6*SCREEN_W / 7,
-            SCREEN_H / 2 - 50,
-            ALLEGRO_ALIGN_CENTER,
-            "LEVEL 1"
-        );
-        al_draw_text(
-            TITLE_FONT,
-            al_map_rgb(199, 207, 221),
-            6 * SCREEN_W / 7 + 2,
-            SCREEN_H / 2 - 50 + 3,
-            ALLEGRO_ALIGN_CENTER,
-            "LEVEL 1"
-        );
+        if (map_level == 1) {
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(0, 0, 0),
+                6 * SCREEN_W / 7,
+                SCREEN_H / 2 - 50,
+                ALLEGRO_ALIGN_CENTER,
+                "LEVEL 1"
+            );
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(199, 207, 221),
+                6 * SCREEN_W / 7 + 2,
+                SCREEN_H / 2 - 50 + 3,
+                ALLEGRO_ALIGN_CENTER,
+                "LEVEL 1"
+            );
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(0, 0, 0),
+                6 * SCREEN_W / 7,
+                SCREEN_H / 2 - 50 + 65,
+                ALLEGRO_ALIGN_CENTER,
+                "\"C\""
+            );
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(199, 207, 221),
+                6 * SCREEN_W / 7 + 2,
+                SCREEN_H / 2 - 50 + 65 + 3,
+                ALLEGRO_ALIGN_CENTER,
+                "\"C\""
+            );
+        }
+        else if (map_level == 2) {
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(0, 0, 0),
+                6 * SCREEN_W / 7,
+                SCREEN_H / 2 - 50,
+                ALLEGRO_ALIGN_CENTER,
+                "LEVEL 2"
+            );
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(199, 207, 221),
+                6 * SCREEN_W / 7 + 2,
+                SCREEN_H / 2 - 50 + 3,
+                ALLEGRO_ALIGN_CENTER,
+                "LEVEL 2"
+            );
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(0, 0, 0),
+                6 * SCREEN_W / 7,
+                SCREEN_H / 2 - 50 + 65,
+                ALLEGRO_ALIGN_CENTER,
+                "\"D\""
+            );
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(199, 207, 221),
+                6 * SCREEN_W / 7 + 2,
+                SCREEN_H / 2 - 50 + 65 + 3,
+                ALLEGRO_ALIGN_CENTER,
+                "\"D\""
+            );
+        }
+        else if (map_level == 3) {
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(0, 0, 0),
+                6 * SCREEN_W / 7,
+                SCREEN_H / 2 - 50,
+                ALLEGRO_ALIGN_CENTER,
+                "LEVEL 3"
+            );
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(199, 207, 221),
+                6 * SCREEN_W / 7 + 2,
+                SCREEN_H / 2 - 50 + 3,
+                ALLEGRO_ALIGN_CENTER,
+                "LEVEL 3"
+            );
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(0, 0, 0),
+                6 * SCREEN_W / 7,
+                SCREEN_H / 2 - 50 + 65,
+                ALLEGRO_ALIGN_CENTER,
+                "\"M\""
+            );
+            al_draw_text(
+                TITLE_FONT,
+                al_map_rgb(199, 207, 221),
+                6 * SCREEN_W / 7 + 2,
+                SCREEN_H / 2 - 50 + 65 + 3,
+                ALLEGRO_ALIGN_CENTER,
+                "\"M\""
+            );
+        }
+        
 
-        al_draw_text(
-            TITLE_FONT,
-            al_map_rgb(0, 0, 0),
-            6 * SCREEN_W / 7,
-            SCREEN_H / 2 - 50 + 65,
-            ALLEGRO_ALIGN_CENTER,
-            "\"C\""
-        );
-        al_draw_text(
-            TITLE_FONT,
-            al_map_rgb(199, 207, 221),
-            6 * SCREEN_W / 7 + 2,
-            SCREEN_H / 2 - 50 + 65 + 3,
-            ALLEGRO_ALIGN_CENTER,
-            "\"C\""
-        );
+        
     }
 }
 

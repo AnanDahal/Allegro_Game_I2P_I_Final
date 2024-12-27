@@ -12,6 +12,7 @@
  */
 
 ALLEGRO_BITMAP* slimeBitmap;
+ALLEGRO_BITMAP* skeletonBitmap;
 
 // To check if p0 sprite and p1 sprite can go directly
 static bool validLine(Map* map, Point p0, Point p1);
@@ -32,11 +33,19 @@ void initEnemy(void) {
     // For memory efficiency, we load the image once
     // as every enemy bitmap are pointer, they will point to the same global bitmap variable
 
+    
+
     // Slime
     char* slimePath = "Assets/Slime.png";
     slimeBitmap = al_load_bitmap(slimePath);
     if (!slimeBitmap) {
         game_abort("Error Load Bitmap with path : %s", slimePath);
+    }
+
+    char* skeletonPath = "Assets/skeleton.png";
+    skeletonBitmap = al_load_bitmap(skeletonPath);
+    if (!skeletonBitmap) {
+        game_abort("Error Load Bitmap with path : %s", skeletonPath);
     }
 }
 
@@ -59,20 +68,26 @@ Enemy createEnemy(int row, int col, char type) {
     case 'S':
         enemy.health = 100;
         enemy.type = slime;
-        enemy.speed = 2;
+        enemy.speed = 3;
         enemy.image = slimeBitmap;
         break;
         // Insert more here to have more enemy variant
     case 'M':
         enemy.health = 200;
         enemy.type = magma;
-        enemy.speed = 4;
+        enemy.speed = 2;
         enemy.image = slimeBitmap;
+        break;
+    case 'L':
+        enemy.health = 200;
+        enemy.type = skeleton;
+        enemy.speed = 4;
+        enemy.image = skeletonBitmap;
         break;
     default:
         enemy.health = 100;
         enemy.type = slime;
-        enemy.speed = 2;
+        enemy.speed = 3;
         enemy.image = slimeBitmap;
         break;
     }
@@ -126,26 +141,17 @@ void findAvailableTile(Map* map, int* tileX, int* tileY) {
             return;
         }
     }
-
-    // If no adjacent tiles are available, keep the coin in the original location
-    // You could also expand this logic to search further away if needed
 }
 
 // Return True if the enemy is dead
 bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
 
-        /*
-            [TODO Homework]
-
-            Configure the death animation tick for dying animation,
-            Return true when the enemy is dead
-        */
-
-        // Start HW
-    if (enemy->status == DYING) {
+    // Start HW
+    if (enemy->status == DYING && enemy->type != skeleton) {
         enemy->death_animation_tick++;
+        
         if (enemy->death_animation_tick > 64) { // Assuming 64 ticks for the animation
-            
+
             int tileX = enemy->coord.x / TILE_SIZE;
             int tileY = enemy->coord.y / TILE_SIZE;
 
@@ -165,18 +171,24 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
                 coin_counter += 3;
             }
 
-            return true; // Enemy is considered "dead" after animation
+            return true; 
         }
-        return false; // Continue animation
+  
     }
-        // End 
 
+    if (enemy->status == DYING && enemy->type == skeleton) {
+        enemy->death_animation_tick += 16;
+        if (enemy->death_animation_tick >= 800) {
+            return true;
+        }
+    }
+  
     if (enemy->status != ALIVE) return false;
 
-    enemy->animation_tick = (enemy->animation_tick + 1) % 64;
+    enemy->animation_tick = (enemy->animation_tick + 1) % 16;
 
     if (enemy->animation_hit_tick > 0) {
-        enemy->animation_tick = (enemy->animation_tick + 1) % 64;
+        enemy->animation_tick = (enemy->animation_tick + 1) % 16;
         enemy->animation_hit_tick--;
     }
 
@@ -195,14 +207,9 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
         if (!isCollision(next, map)) {
             enemy->coord = next;
         }
+        
     }
     else {
-        /*
-            [TODO Homework]
-
-            Replace delta variable with the function below to start enemy movement
-            Point delta = shortestPath(map, enemy->coord, player->coord);
-        */
 
         // Start HW
         Point delta;
@@ -244,14 +251,6 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
                 }
             }
         }
-
-
-        // Calculate squared distances
-
-
-        //game_log("1 ===== x == %d y == %d ", delta1.x, delta1.y);
-        //game_log("2 ===== x == %d y == %d ", delta2.x, delta2.y);
-
 
         Point next, prev = enemy->coord;
 
@@ -301,6 +300,18 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
                 hitPlayer(cocudos, enemy->coord, 20);
             }
         }
+        if (enemy->type == skeleton) {
+            if (playerCollision(enemy->coord, player->coord) && enemy->animation_hit_tick == 0) {
+                enemy->animation_tick = 0;
+                enemy->animation_hit_tick = 32;
+                hitPlayer(player, enemy->coord, 30);
+            }
+            else if (cocudosCollision(enemy->coord, cocudos->coord) && enemy->animation_hit_tick == 0) {
+                enemy->animation_tick = 0;
+                enemy->animation_hit_tick = 832;
+                hitPlayer(cocudos, enemy->coord, 30);
+            }
+        }
     }
 
     return false;
@@ -310,15 +321,43 @@ void drawEnemy(Enemy* enemy, Point cam) {
 
     int dy = enemy->coord.y - cam.y; // destiny y axis
     int dx = enemy->coord.x - cam.x; // destiny x axis
+    int offset;
 
     if (enemy->status == ALIVE) {
-        int offset = 16 * (int)(enemy->animation_tick / 8);
-        if (enemy->animation_hit_tick > 0) {
-            offset += 16 * 8;
+        if (enemy->type != skeleton) {
+            offset = 16 * (int)(enemy->animation_tick / 4);
+            if (enemy->animation_hit_tick > 0) {
+                offset += 16 * 8;
+            }
         }
+        else {
+
+            if(!enemy->knockback_CD) offset = 64 * (int)(enemy->animation_tick / 2);
+            else offset = 64 * (int)(enemy->animation_tick / 16);
+
+            if (offset >= 768 && !enemy->knockback_CD) {
+                offset = offset % 768;
+            }
+            else if(offset >= 192 && enemy->knockback_CD){
+                offset = offset % 192;
+            }
+        }
+        
+
         int flag = enemy->dir == RIGHT ? 1 : 0;
+        int flag2 = enemy->dir == RIGHT ? 0 : 1;
         int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
         int tint_red2 = enemy->knockback_CD > 0 ? 255 : 160;
+
+        int temp = 2;
+
+        if (enemy->knockback_CD > 0 && enemy->type == skeleton) {
+            temp = 4;
+        }
+        else if (enemy->animation_hit_tick) {
+            temp = 0;
+        }
+
         if (enemy->type == slime) {
             al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, 0, 16, 16, al_map_rgb(tint_red, 255, 255),
                 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16,
@@ -331,48 +370,58 @@ void drawEnemy(Enemy* enemy, Point cam) {
                 0, flag);
         }
 
+        if (enemy->type == skeleton) {
+            al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, temp * 64, 64, 64, al_map_rgb(255, 255, 255),
+                0, 0, dx - 32, dy - 32, TILE_SIZE / 32, TILE_SIZE / 32,
+                0, flag2);
+        }
+
         // Health bar dimensions and colors
-        int bar_width = TILE_SIZE;   // Total width of the health bar
-        int bar_height = 5;         // Height of the health bar
-        int bar_x = dx;             // X position of the health bar
-        int bar_y = dy - bar_height - 2; // Y position above the enemy
+        int bar_width = TILE_SIZE;   
+        int bar_height = 5;         
+        int bar_x = dx;             
+        int bar_y = dy - bar_height - 2; 
         int max_health;
         if (enemy->type == magma) {
-            max_health = 200; // Max health of the enemy
+            max_health = 200; 
         }
-        else {
-            max_health = 100; // Max health of the enemy
+        else if (enemy->type == slime) {
+            max_health = 100; 
         }
-        
-        int health_width = (enemy->health * bar_width) / max_health; // Scale health proportionally
+        else if (enemy->type == skeleton) {
+            max_health = 5000;
+        }
 
-        // Clamp health width to avoid overflow
+        int health_width = (enemy->health * bar_width) / max_health; 
+
         if (health_width > bar_width) health_width = bar_width;
-
-        // Draw health bar (background and health)
         al_draw_filled_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height, al_map_rgb(100, 100, 100)); // Gray background
         al_draw_filled_rectangle(bar_x, bar_y, bar_x + health_width, bar_y + bar_height, al_map_rgb(255, 0, 0)); // Red for current health
-
-        // Optional: Add border for health bar
         al_draw_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height, al_map_rgb(0, 0, 0), 2); // Black border
 
     }
+
     else if (enemy->status == DYING) {
-        /*
-        [TODO Homework]
 
-        Draw Dying Animation for enemy
-        */
-
-        // Start HW
-
-        int flag = enemy->dir == RIGHT ? 1 : 0;
+        
         //int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
 
-        int frame = enemy->death_animation_tick / 8; // Assuming 8 ticks per frame
-        al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, frame * 16, 16, 16, 16, al_map_rgb(255, 255, 255), 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16, 0, flag);
+        if (enemy->type != skeleton) {
+            int flag = enemy->dir == RIGHT ? 0 : 1;
+            int frame = enemy->death_animation_tick / 4; // Assuming 8 ticks per frame
+            
+            al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, frame * 16, 16, 16, 16, al_map_rgb(255, 255, 255), 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16, 0, flag);
+        }
+        else {
+            int flag = enemy->dir == RIGHT ? 1 : 0;
+            int frame = 64 * (int)enemy->death_animation_tick / 64; // Assuming 8 ticks per frame
+            if (frame >= 832) {
+                
+            }
+            al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, frame, 64, 64, 64, al_map_rgb(255, 255, 255), 0, 0, dx - 32, dy - 32, TILE_SIZE / 32, TILE_SIZE / 32, 0, flag);
 
-        // End HW
+        }
+
     }
 
 #ifdef DRAW_HITBOX
@@ -383,35 +432,23 @@ void drawEnemy(Enemy* enemy, Point cam) {
 #endif
 }
 
+
 void destroyEnemy(Enemy* enemy) {
 
 }
 
 void terminateEnemy(void) {
     al_destroy_bitmap(slimeBitmap);
+    al_destroy_bitmap(skeletonBitmap);
 }
 
 void hitEnemy(Enemy* enemy, int damage, float angle) {
 
-    /*
-        [TODO Homework]
-
-        Decrease the enemy health with damage, if the health < 0, then set the status to DYING
-
-        enemy->health = ...
-        if(...){
-            enemy->status = DYING;
-        }
-    */
-
-    // Start HW
     enemy->health -= damage;
     if (enemy->health <= 0) {
         enemy->status = DYING;
 
     }
-    // End HW
-
 
     enemy->knockback_angle = angle;
     if (yellow_eq) {

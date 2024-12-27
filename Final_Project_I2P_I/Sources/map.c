@@ -80,7 +80,6 @@ Map create_map(char* path, uint8_t type) {
             case 'W': // Shooting Wall
                 map.map[i][j] = SHOOTING_WALL;
                 shootingwall_coord[i][j] = (PointFloat){ i , j };
-                game_log("POINT FOR SHOOTING WALL X = %lf, Y = %lf", shootingwall_coord[i][j].x, shootingwall_coord[i][j].y);
                 break;
 
             case '.': // Case Floor
@@ -97,7 +96,6 @@ Map create_map(char* path, uint8_t type) {
                 map.SpawnJ = (Point){ i, j };
                 break;
 
-
             case 'S': // Slime Enemy
                 map.map[i][j] = FLOOR;
                 map.EnemyCode[map.EnemySpawnSize] = ch;
@@ -105,6 +103,12 @@ Map create_map(char* path, uint8_t type) {
                 break;
 
             case 'M': // Magma Enemy
+                map.map[i][j] = FLOOR;
+                map.EnemyCode[map.EnemySpawnSize] = ch;
+                map.EnemySpawn[map.EnemySpawnSize++] = (Point){ i, j };
+                break;
+
+            case 'L': // Boss Skeleton Enemy
                 map.map[i][j] = FLOOR;
                 map.EnemyCode[map.EnemySpawnSize] = ch;
                 map.EnemySpawn[map.EnemySpawnSize++] = (Point){ i, j };
@@ -276,9 +280,6 @@ void draw_map(Map* map, Point cam) {
         al_clear_to_color(al_map_rgb(24, 20, 37));
     }
 
-
-
-
     for (int i = 0; i < map->row; i++) {
         for (int j = 0; j < map->col; j++) {
 
@@ -309,11 +310,6 @@ void draw_map(Map* map, Point cam) {
                     0);
 
                 if (timer == 0) {
-                    /*game_log("shooting multiplied x = %d y = %d", (shootingwall_coord[i][j].x * TILE_SIZE) + TILE_SIZE / 2,
-                        (shootingwall_coord[i][j].y * TILE_SIZE) + TILE_SIZE / 2);*/
-
-                    /*shootingwall_coord[i][j].x = (shootingwall_coord[i][j].x * TILE_SIZE) + TILE_SIZE / 2;
-                    shootingwall_coord[i][j].y = (shootingwall_coord[i][j].x * TILE_SIZE) + TILE_SIZE / 2;*/
 
                     PointFloat center = (PointFloat){
                         (shootingwall_coord[i][j].y * TILE_SIZE) + TILE_SIZE / 2,
