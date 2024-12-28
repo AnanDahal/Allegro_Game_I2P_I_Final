@@ -126,7 +126,14 @@ void draw_player(Player* player, Point cam) {
 
     int scene_x = 0;
     int scene_y = 0;
-    int red_tint = player->knockback_CD > 0 ? 0 : 255;
+    int red_tint;
+
+    if (player->knockback_CD || reduce_health_player && reduce_health_player_stepped_off) {
+        red_tint = 0;
+    }
+    else {
+        red_tint = 255;
+    }
 
     switch (player->status) {
     case (PLAYER_IDLE):
@@ -195,24 +202,7 @@ void update_player2(Player* player, Map* map) {
         }
     }
 
-    /*
-        [TODO HACKATHON 1-1]
-
-        Player Movement
-        Adjust the movement by player->speed
-
-        if (keyState[player->up]) {
-            player->coord.y = ...
-            player->direction = ...
-        }
-        if (keyState[player->down]) {
-            player->coord.y = ...
-            player->direction = ...
-        }
-    */
-
-
-    // Start 1 - 1
+    
     if ((keyState[cocudos_up] || keyState[cocudos_down] || keyState[cocudos_left] || keyState[cocudos_right]) && player->health > 0) {
         player->status = PLAYER_WALKING;
     }
@@ -269,7 +259,14 @@ void draw_player2(Player* player, Point cam) {
 
     int scene_x = 0;
     int scene_y = 0;
-    int red_tint = player->knockback_CD > 0 ? 0 : 255;
+    int red_tint;
+
+    if (player->knockback_CD || reduce_health_cocudos && reduce_health_cocudos_stepped_off) {
+        red_tint = 0;
+    }
+    else {
+        red_tint = 255;
+    }
 
     switch (player->status) {
     case (PLAYER_IDLE):

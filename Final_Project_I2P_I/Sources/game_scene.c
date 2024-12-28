@@ -152,6 +152,19 @@ static void update(void) {
         cocudos.health += 10;
     }
 
+    if (reduce_health_player && reduce_health_player_stepped_off) {
+        al_play_sample(player.hurt_audio, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        player.health -= 10;
+        reduce_health_player_stepped_off = false;
+    }
+
+    if (reduce_health_cocudos && reduce_health_cocudos_stepped_off) {
+        reduce_health_cocudos = false;
+        al_play_sample(cocudos.hurt_audio, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        cocudos.health -= 10;
+        reduce_health_cocudos_stepped_off = false;
+    }
+
     update_player(&player, &map);
     update_player2(&cocudos, &map);
 

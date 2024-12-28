@@ -18,6 +18,13 @@ const char* font_file = "Assets/Minecraft.ttf";
 const int TILE_SIZE = 64;
 
 bool add_health = false;
+bool reduce_health_cocudos = false;
+bool reduce_health_player = false;
+bool reduce_health_cocudos_stepped_off = true;
+bool reduce_health_player_stepped_off = true;
+
+
+
 
 ALLEGRO_SAMPLE* BGM = NULL;
 

@@ -29,6 +29,8 @@ static int door_animation = 0;
 Bullet bullet;
 BulletNode* bulletList;
 int timer = 60;
+int timer_player = 60;
+int timer_cocudos = 60;
 
 static bool tile_collision(Point player, Point tile_coord);
 
@@ -119,6 +121,10 @@ Map create_map(char* path, uint8_t type) {
                 map.coin_status[i][j] = APPEAR;
                 coin_counter++;
                 break;
+            case 'K': // Spikes
+                map.map[i][j] = SPIKE;
+                break;
+
             case 'H': // Health
                 map.map[i][j] = HEALTH;
                 map.health_status[i][j] = H_APPEAR;
@@ -240,6 +246,11 @@ Map create_map(char* path, uint8_t type) {
         game_abort("Can't load button assets");
     }
 
+    map.spikes_assets = al_load_bitmap("Assets/spikes.png");
+    if (!map.spikes_assets) {
+        game_abort("Can't load spikes assets");
+    }
+
 
     map.trophy_assets = al_load_bitmap("Assets/trophy.png");
     if (!map.trophy_assets) {
@@ -324,6 +335,15 @@ void draw_map(Map* map, Point cam) {
                     timer--;
                 }
 
+
+                break;
+            }
+            case SPIKE: {
+
+                al_draw_scaled_bitmap(map->spikes_assets,
+                    0, 0, 16, 16,
+                    dx, dy, TILE_SIZE, TILE_SIZE,
+                    0);
 
                 break;
             }
@@ -1008,6 +1028,8 @@ void draw_map(Map* map, Point cam) {
     }
 }
 
+
+
 void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* map_coins) {
     /*
         Hint: To check if it's collide with object in map, you can use tile_collision function
@@ -1023,21 +1045,21 @@ void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* ma
     int center_x_cocudos = (int)((cocudos.x + (int)(TILE_SIZE / 2)) / TILE_SIZE);
     int center_y_cocudos = (int)((cocudos.y + (int)(TILE_SIZE / 2)) / TILE_SIZE);
 
-    if (map->map[center_y][center_x] == COIN &&
-        map->coin_status[center_y][center_x] == APPEAR) {
+    if (map->map[center_y_cocudos][center_x_cocudos] == COIN &&
+        map->coin_status[center_y_cocudos][center_x_cocudos] == APPEAR) {
         *total_coins += 1;
         *map_coins += 1;
-        map->coin_disappear_animation[center_y][center_x] = 0;
-        map->coin_status[center_y][center_x] = DISAPPEARING;
+        map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 0;
+        map->coin_status[center_y_cocudos][center_x_cocudos] = DISAPPEARING;
         al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
 
-    if (map->map[center_y][center_x] == S_COIN &&
-        map->coin_status[center_y][center_x] == APPEAR) {
+    if (map->map[center_y_cocudos][center_x_cocudos] == S_COIN &&
+        map->coin_status[center_y_cocudos][center_x_cocudos] == APPEAR) {
         *total_coins += 3;
         *map_coins += 3;
-        map->coin_disappear_animation[center_y][center_x] = 0;
-        map->coin_status[center_y][center_x] = DISAPPEARING;
+        map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 0;
+        map->coin_status[center_y_cocudos][center_x_cocudos] = DISAPPEARING;
         al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
 
@@ -1054,6 +1076,24 @@ void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* ma
         map->health_status[center_y_cocudos][center_x_cocudos] = DISAPPEARING;
         add_health = true;
         al_play_sample(map->health_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+
+    
+
+    if (map->map[center_y_cocudos][center_x_cocudos] == SPIKE) {
+        reduce_health_cocudos = true;
+    }
+    else if(map->map[center_y_cocudos][center_x_cocudos] != SPIKE && reduce_health_cocudos){
+        reduce_health_cocudos = false;
+        reduce_health_cocudos_stepped_off = true;
+    }
+
+    if (map->map[center_y][center_x] == SPIKE) {
+        reduce_health_player = true;
+    }
+    else if (map->map[center_y][center_x] != SPIKE && reduce_health_player){
+        reduce_health_player = false;
+        reduce_health_player_stepped_off = true;
     }
 
 
@@ -1247,7 +1287,9 @@ void destroy_map(Map* map) {
     free(map->map);
     free(map->offset_assets);
 
+
     al_destroy_bitmap(map->assets);
+    al_destroy_bitmap(map->spikes_assets);
     al_destroy_bitmap(map->coin_assets);
     al_destroy_sample(map->coin_audio);
     al_destroy_bitmap(map->trophy_assets);
@@ -1262,7 +1304,7 @@ void destroy_map(Map* map) {
 bool isWalkable(BLOCK_TYPE block) {
     if (block == FLOOR || block == COIN || block == TROPHY || block == HEALTH || block == S_COIN
         || block == BUTTON || block == DOOR_OPEN || block == B2 || block == B3 || block == B4 || block == B5
-        || block == B6 || block == D2O || block == D3O || block == D4O || block == D5O || block == D6O) return true;
+        || block == B6 || block == D2O || block == D3O || block == D4O || block == D5O || block == D6O || block == SPIKE) return true;
     return false;
 }
 
@@ -1542,6 +1584,9 @@ static void get_map_offset(Map* map) {
                 map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
                 break;
             case B6:
+                map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
+                break;
+            case SPIKE:
                 map->offset_assets[i][j] = get_floor_offset_assets(map, i, j);
                 break;
             case NOTHING:

@@ -40,7 +40,7 @@ typedef enum _BLOCK_TYPE {
     D5O, D5C,
     D6O, D6C,
     B2, B3, B4,
-    B5, B6
+    B5, B6, SPIKE
 } BLOCK_TYPE;
 
 typedef enum _COIN_STATUS {
@@ -91,6 +91,7 @@ typedef struct Map_ {
     ALLEGRO_BITMAP* trophy_assets;
     ALLEGRO_BITMAP* door_assets;
     ALLEGRO_BITMAP* button_assets;
+    ALLEGRO_BITMAP* spikes_assets;
     // Coin Properties
     ALLEGRO_SAMPLE* coin_audio;
     ALLEGRO_SAMPLE* button_audio;

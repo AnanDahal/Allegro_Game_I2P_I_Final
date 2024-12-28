@@ -46,6 +46,12 @@ extern ALLEGRO_FONT* P2_FONT; // 36px
 extern ALLEGRO_FONT* P3_FONT; // 24px
 
 extern bool add_health;
+extern bool reduce_health_player;
+extern bool reduce_health_cocudos;
+extern bool reduce_health_cocudos_stepped_off;
+extern bool reduce_health_player_stepped_off;
+
+
 
 /*
     FUNCTION POINTER

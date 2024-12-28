@@ -66,7 +66,7 @@ Enemy createEnemy(int row, int col, char type) {
 
     switch (type) {
     case 'S':
-        enemy.health = 10; // 100
+        enemy.health = 100; // 100
         enemy.type = slime;
         enemy.speed = 3;
         enemy.image = slimeBitmap;
@@ -79,7 +79,7 @@ Enemy createEnemy(int row, int col, char type) {
         enemy.image = slimeBitmap;
         break;
     case 'L':
-        enemy.health = 10;
+        enemy.health = 5000;
         enemy.type = skeleton;
         enemy.speed = 4;
         enemy.image = skeletonBitmap;
