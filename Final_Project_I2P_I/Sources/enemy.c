@@ -79,7 +79,7 @@ Enemy createEnemy(int row, int col, char type) {
         enemy.image = slimeBitmap;
         break;
     case 'L':
-        enemy.health = 5000;
+        enemy.health = 2000;
         enemy.type = skeleton;
         enemy.speed = 4;
         enemy.image = skeletonBitmap;
@@ -386,7 +386,7 @@ void drawEnemy(Enemy* enemy, Point cam) {
             max_health = 100; 
         }
         else if (enemy->type == skeleton) {
-            max_health = 5000;
+            max_health = 2000;
         }
 
         int health_width = (enemy->health * bar_width) / max_health; 
@@ -443,20 +443,18 @@ void hitEnemy(Enemy* enemy, int damage, float angle) {
     enemy->health -= damage;
     if (enemy->health <= 0) {
         enemy->status = DYING;
-
     }
 
     enemy->knockback_angle = angle;
     if (yellow_eq) {
-        enemy->knockback_CD = 16;
+        enemy->knockback_CD = 10;
     }
     else if (orange_eq) {
-        enemy->knockback_CD = 30;
+        enemy->knockback_CD = 15;
     }
     else if (fireball_eq) {
-        enemy->knockback_CD = 50;
+        enemy->knockback_CD = 25;
     }
-
 }
 
 /*

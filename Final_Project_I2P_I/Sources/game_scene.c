@@ -25,7 +25,6 @@ coins_obtained = 0;
 
 ALLEGRO_BITMAP* heart;
 
-
 // initialize map level
 map_level = 1;
 
@@ -37,13 +36,16 @@ static void init(void) {
     
 
     if (map_level == 1) {
-        map = create_map("Assets/tester.txt", 0);
+        map = create_map("Assets/map0.txt", 0);
+        change_bgm("Assets/audio/wii_music.mp3");
     }
     else if (map_level == 2) {
         map = create_map("Assets/map1.txt", 0);
+        change_bgm("Assets/audio/without_a_whisper.mp3");
     }
     else if (map_level == 3) {
         map = create_map("Assets/map2.txt", 0);
+        change_bgm("Assets/audio/sleepless_deathbed.mp3");
     }
     
     heart = al_load_bitmap("assets/heart.png");
@@ -61,10 +63,10 @@ static void init(void) {
             weapon = create_weapon("Assets/guns.png", "Assets/yellow_bullet.png", 16, 8, 10);
         }
         else if (orange_eq) {
-            weapon = create_weapon("Assets/guns.png", "Assets/orange_bullet.png", 16, 8, 15);
+            weapon = create_weapon("Assets/guns.png", "Assets/orange_bullet.png", 16, 8, 20);
         }
         else if (fireball_eq) {
-            weapon = create_weapon("Assets/guns.png", "Assets/fireball.png", 16, 8, 25);
+            weapon = create_weapon("Assets/guns.png", "Assets/fireball.png", 16, 8, 30);
         }
     }
     else if (sniper_eq) {
@@ -72,7 +74,7 @@ static void init(void) {
             weapon = create_weapon("Assets/sniper.png", "Assets/yellow_bullet.png", 50, 20, 50);
         }
         else if (orange_eq) {
-            weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 50, 20, 75);
+            weapon = create_weapon("Assets/sniper.png", "Assets/orange_bullet.png", 50, 20, 70);
         }
         else if (fireball_eq) {
             weapon = create_weapon("Assets/sniper.png", "Assets/fireball.png", 50, 20, 100);
@@ -83,10 +85,10 @@ static void init(void) {
             weapon = create_weapon("Assets/machine_gun.png", "Assets/yellow_bullet.png", 5, 15, 20);
         }
         else if (orange_eq) {
-            weapon = create_weapon("Assets/machine_gun.png", "Assets/orange_bullet.png", 5, 15, 25);
+            weapon = create_weapon("Assets/machine_gun.png", "Assets/orange_bullet.png", 5, 15, 30);
         }
         else if (fireball_eq) {
-            weapon = create_weapon("Assets/machine_gun.png", "Assets/fireball.png", 5, 15, 34);
+            weapon = create_weapon("Assets/machine_gun.png", "Assets/fireball.png", 5, 15, 40);
         }
     }
 
@@ -97,7 +99,7 @@ static void init(void) {
         insertEnemyList(enemyList, enemy);
     }
 
-    change_bgm("Assets/audio/wii_music.mp3");
+    
 }
 
 static void update(void) {
@@ -298,7 +300,7 @@ static void update_lose(void) {
     update_button(&restartButton);
 
     if (restartButton.hovered && (mouseState.buttons & 1)) { // Check if hovered and left mouse button is pressed.
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         map_level = 1;
         coins_obtained = 0;
 
@@ -319,7 +321,7 @@ static void update_lose(void) {
     }
 
     if (quitButton.hovered && (mouseState.buttons & 1)) { // Check if hovered and left mouse button is pressed.
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         exit(0);
     }
 }
@@ -452,11 +454,11 @@ static void update_win(void) {
 
     // Handle button actions
     if (mainMenuButton.hovered && (mouseState.buttons & 1)) { // Main Menu button pressed
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_menu_scene());
     }
     if (quitButton.hovered && (mouseState.buttons & 1)) { // Quit button pressed
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         coins_obtained = 0;
         al_rest(0.2); // Add a small delay to avoid abrupt exit
         exit(0);

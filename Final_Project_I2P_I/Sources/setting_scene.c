@@ -20,9 +20,10 @@ ALLEGRO_KEYBOARD_STATE keyboardState;
 Map map;
 static Button backButton;
 static ALLEGRO_BITMAP* coin_bitmap;
-
 static ALLEGRO_BITMAP* setting_bitmap;
 
+ALLEGRO_BITMAP* slider_bitmap;
+ALLEGRO_BITMAP* hovered_bitmap;
 
 static Button player_up_button;
 static Button player_down_button;
@@ -37,7 +38,20 @@ static Button cocudos_right_button;
 int button_width = 400;
 int button_height = 100;
 
+float bgm = 300.0;
+float sfx = 300.0;
+
 static void init(void) {
+
+    slider_bitmap = al_load_bitmap("Assets/slider.png");
+    if (!slider_bitmap) {
+        game_abort("Failed to load slider bitmap");
+    }
+    
+    hovered_bitmap = al_load_bitmap("Assets/slider_hovered.png");
+    if (!hovered_bitmap) {
+        game_abort("Failed to load hovered bitmap");
+    }
 
     setting_bitmap = al_load_bitmap("Assets/setting_bg.jpg");
 
@@ -79,6 +93,9 @@ static void init(void) {
 
     cocudos_right_button = button_create(SCREEN_W * 3 / 4 - button_width / 2, cocudos_y_offset, button_width, button_height, "Assets/UI_Button.png", "Assets/UI_Button_hovered.png");
     
+    
+
+
     change_bgm("Assets/audio/setting_bgm.mp3");
 
 }
@@ -115,7 +132,7 @@ static void update(void) {
 
     // Handle back button
     if (mouseState.buttons && backButton.hovered == true) {
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         if (map_level == 2 || map_level == 3) {
             change_scene(create_transition_scene());
         }
@@ -256,6 +273,16 @@ static void update(void) {
         else if (cocudos_left_button.hovered == true) waiting_for_key = COCUDOS_LEFT;
         else if (cocudos_right_button.hovered == true) waiting_for_key = COCUDOS_RIGHT;
     }
+
+    if (mouseState.buttons && mouseState.x >= 100 && mouseState.x <= 700 && mouseState.y >= 750 && mouseState.y <= 780) {
+        bgm = (float)mouseState.x - 100.0f;
+    }
+    BGM_VOLUME = bgm / 600.0f;
+    if (mouseState.buttons && mouseState.x >= 940 && mouseState.x <= 1540 && mouseState.y >= 750 && mouseState.y <= 780) {
+        sfx = (float)mouseState.x - 940.0f;
+
+    }
+    SFX_VOLUME = sfx / 600.0f;
 }
 
 
@@ -454,9 +481,53 @@ static void draw(void) {
         ALLEGRO_ALIGN_CENTER, "Right: %s", al_keycode_to_name(cocudos_right)
     );
 
+    al_draw_text(
+        TITLE_FONT,
+        al_map_rgb(50, 50, 50),
+        SCREEN_W / 4,
+        650,
+        ALLEGRO_ALIGN_CENTER,
+        "BGM"
+    );
+
+    al_draw_text(
+        TITLE_FONT,
+        al_map_rgb(255, 255, 255),
+        SCREEN_W / 4,
+        650 + 3,
+        ALLEGRO_ALIGN_CENTER,
+        "BGM"
+    );
+    al_draw_text(
+        TITLE_FONT,
+        al_map_rgb(50, 50, 50),
+        3 * SCREEN_W / 4,
+        650,
+        ALLEGRO_ALIGN_CENTER,
+        "SFX"
+    );
+    al_draw_text(
+        TITLE_FONT,
+        al_map_rgb(255, 255, 255),
+        3 * SCREEN_W / 4,
+        650 + 3,
+        ALLEGRO_ALIGN_CENTER,
+        "SFX"
+    );
+
+    al_draw_scaled_bitmap(slider_bitmap,
+        0, 0, 600, 20,
+        100, 750, 600, 30, 0);
+    al_draw_scaled_bitmap(hovered_bitmap,
+        0, 0, 600, 20,
+        100, 750, bgm, 30, 0);
+    al_draw_scaled_bitmap(slider_bitmap,
+        0, 0, 600, 20,
+        940, 750, 600, 30, 0);
+    al_draw_scaled_bitmap(hovered_bitmap,
+        0, 0, 600, 20,
+        940, 750, sfx, 30, 0);
 }
-
-
 
 
 
@@ -472,6 +543,10 @@ static void destroy(void) {
     destroy_button(&cocudos_down_button);
     destroy_button(&cocudos_left_button);
     destroy_button(&cocudos_right_button);
+
+    al_destroy_bitmap(slider_bitmap);
+    al_destroy_bitmap(setting_bitmap);
+    al_destroy_bitmap(hovered_bitmap);
 }
 
 
@@ -488,19 +563,6 @@ Scene create_setting_scene(void) {
     return scene;
 }
 
-
-
-/*
-update shop
-    // Define a buffer to hold the formatted string
-    char coin_text[32]; // Ensure the buffer is large enough to hold the text
-
-    // Format the integer into the buffer as a string
-    snprintf(coin_text, sizeof(coin_text), "%d", coins_obtained);
-    al_draw_scaled_bitmap(coin_bitmap, 0, 0, 16, 16, 0, 0, 100, 100, 0);
-    al_draw_text(P2_FONT, al_map_rgb(255, 255, 255), 52, 80, ALLEGRO_ALIGN_CENTER, coin_text);
-
-*/
 
 static Button buy_yellow_bullet_Button;
 static Button buy_orange_bullet_Button;
@@ -635,7 +697,7 @@ static void update_shop(void) {
     
 
     if (mouseState.buttons && backButton.hovered == true) {
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         if (map_level == 2 || map_level == 3) {
             change_scene(create_transition_scene());
         }
@@ -671,7 +733,7 @@ static void update_shop(void) {
     // sniper
     if (mouseState.buttons && buy_sniper_Button.hovered == true && !test) {
         if (!sniper_bought && coins_obtained >= sniper_price) {
-            al_play_sample(buy_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+            al_play_sample(buy_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             coins_obtained -= sniper_price;
             test = true;
             sniper_bought = true;
@@ -689,7 +751,7 @@ static void update_shop(void) {
     // orange bullet
     if (mouseState.buttons && buy_orange_bullet_Button.hovered == true && !test) {
         if (!orange_bought && coins_obtained >= orange_bullet_price) {
-            al_play_sample(buy_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+            al_play_sample(buy_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             coins_obtained -= orange_bullet_price;
             test = true;
             orange_bought = true;
@@ -708,7 +770,7 @@ static void update_shop(void) {
     // machine gun
     if (mouseState.buttons && buy_machine_gun_Button.hovered == true && !test) {
         if (!machine_gun_bought && coins_obtained >= machine_gun_price) {
-            al_play_sample(buy_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+            al_play_sample(buy_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             coins_obtained -= machine_gun_price;
             test = true;
             machine_gun_bought = true;
@@ -726,7 +788,7 @@ static void update_shop(void) {
     // fireball bullet
     if (mouseState.buttons && buy_fireball_bullet_Button.hovered == true && !test) {
         if (!fireball_bought && coins_obtained >= fireball_bullet_price) {
-            al_play_sample(buy_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+            al_play_sample(buy_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
             coins_obtained -= fireball_bullet_price;
             test = true;
             fireball_bought = true;

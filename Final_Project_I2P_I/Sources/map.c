@@ -28,7 +28,7 @@ static int door_animation = 0;
 
 Bullet bullet;
 BulletNode* bulletList;
-int timer = 60;
+int timer = 80;
 int timer_player = 60;
 int timer_cocudos = 60;
 
@@ -131,7 +131,8 @@ Map create_map(char* path, uint8_t type) {
                 break;
             case 'T': // Trophy
                 map.map[i][j] = TROPHY;
-                map.trophy_status[i][j] = T_DISAPPEAR;
+                if(map_level != 3) map.trophy_status[i][j] = T_DISAPPEAR;
+                else map.trophy_status[i][j] = T_APPEAR;
                 break;
             case 'D': // Door
                 map.map[i][j] = DOOR_CLOSE;
@@ -327,7 +328,7 @@ void draw_map(Map* map, Point cam) {
                         (shootingwall_coord[i][j].x * TILE_SIZE) + TILE_SIZE / 2
                     };
 
-                    Bullet bullet = create_bullet("Assets/orange_bullet.png", center, 1.571, 7, 20, 0, 1); // 1.571 radians = ~90° (downwards)
+                    Bullet bullet = create_bullet("Assets/orange_bullet.png", center, 1.571, 7, 10, 0, 1); // 1.571 radians = ~90° (downwards)
                     insertBulletList(bulletList, bullet);
                     timer = 60;
                 }

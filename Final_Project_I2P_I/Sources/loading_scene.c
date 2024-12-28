@@ -70,14 +70,14 @@ static void update(void) {
 
     // If SPACEBAR is pressed, increment scene
     if (mouseState.buttons && scene < 10 && !starttimer && !click) {
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         scene++;
         click = true;
     }
 
     // If ENTER is pressed, set scene to 10 and start timer
     if ((scene == 10 || al_key_down(&key_state, ALLEGRO_KEY_SPACE)) && !starttimer) {
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         scene = 10;
         starttimer = true;
         click = true;
@@ -313,22 +313,22 @@ static void update_transition(void) {
     update_button(&exitButton);
 
     if (keyState[ALLEGRO_KEY_ENTER]) {
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_loading_scene());
     }
 
     if (shopButton.hovered && (mouseState.buttons & 1)) { // Shop button pressed
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_shop_scene());
     }
 
     if (settingButton.hovered && (mouseState.buttons & 1)) { // Setting button pressed
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         change_scene(create_setting_scene());
     }
 
     if (exitButton.hovered && (mouseState.buttons & 1)) { // Exit button pressed
-        al_play_sample(button_sfx, SFX_VOLUME + 3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(button_sfx, SFX_VOLUME, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         exit(0);
     }
 }
