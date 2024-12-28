@@ -46,17 +46,8 @@ void draw_button(Button button) {
 void update_button(Button* button) {
 	Point mouse = { mouseState.x, mouseState.y };
 	RecArea rect = { button->x, button->y, button->w, button->h };
-	/*
-		[TODO Hackathon 4-2] 
-		
-		Using function you completed before,
-		determine the button if it's hovered or not (button->hovered)
-	*/
 
-	// Start 4 - 2
 	button->hovered = mouse_in_rect(mouse, rect);
-	// End 4 - 2
-
 }
 
 void destroy_button(Button* button) {

@@ -66,7 +66,7 @@ Enemy createEnemy(int row, int col, char type) {
 
     switch (type) {
     case 'S':
-        enemy.health = 100;
+        enemy.health = 10; // 100
         enemy.type = slime;
         enemy.speed = 3;
         enemy.image = slimeBitmap;
@@ -79,7 +79,7 @@ Enemy createEnemy(int row, int col, char type) {
         enemy.image = slimeBitmap;
         break;
     case 'L':
-        enemy.health = 200;
+        enemy.health = 10;
         enemy.type = skeleton;
         enemy.speed = 4;
         enemy.image = skeletonBitmap;
@@ -146,7 +146,6 @@ void findAvailableTile(Map* map, int* tileX, int* tileY) {
 // Return True if the enemy is dead
 bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
 
-    // Start HW
     if (enemy->status == DYING && enemy->type != skeleton) {
         enemy->death_animation_tick++;
         
@@ -175,20 +174,20 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
         }
   
     }
-
+    
     if (enemy->status == DYING && enemy->type == skeleton) {
-        enemy->death_animation_tick += 16;
-        if (enemy->death_animation_tick >= 800) {
-            return true;
+        enemy->death_animation_tick += 2;  
+        if (enemy->death_animation_tick >= 254) { 
+            return true; 
         }
     }
-  
+    
     if (enemy->status != ALIVE) return false;
 
-    enemy->animation_tick = (enemy->animation_tick + 1) % 16;
+    enemy->animation_tick = (enemy->animation_tick + 1) % 64;
 
     if (enemy->animation_hit_tick > 0) {
-        enemy->animation_tick = (enemy->animation_tick + 1) % 16;
+        enemy->animation_tick = (enemy->animation_tick + 1) % 64;
         enemy->animation_hit_tick--;
     }
 
@@ -211,7 +210,6 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
     }
     else {
 
-        // Start HW
         Point delta;
         Point delta1 = shortestPath(map, enemy->coord, player->coord);
         Point delta2 = shortestPath(map, enemy->coord, cocudos->coord);
@@ -325,13 +323,12 @@ void drawEnemy(Enemy* enemy, Point cam) {
 
     if (enemy->status == ALIVE) {
         if (enemy->type != skeleton) {
-            offset = 16 * (int)(enemy->animation_tick / 4);
+            offset = 16 * (int)(enemy->animation_tick / 8);
             if (enemy->animation_hit_tick > 0) {
                 offset += 16 * 8;
             }
         }
         else {
-
             if(!enemy->knockback_CD) offset = 64 * (int)(enemy->animation_tick / 2);
             else offset = 64 * (int)(enemy->animation_tick / 16);
 
@@ -372,7 +369,7 @@ void drawEnemy(Enemy* enemy, Point cam) {
 
         if (enemy->type == skeleton) {
             al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, offset, temp * 64, 64, 64, al_map_rgb(255, 255, 255),
-                0, 0, dx - 32, dy - 32, TILE_SIZE / 32, TILE_SIZE / 32,
+                0, 0, dx - 25, dy - 25, TILE_SIZE / 25, TILE_SIZE / 25,
                 0, flag2);
         }
 
@@ -404,22 +401,21 @@ void drawEnemy(Enemy* enemy, Point cam) {
     else if (enemy->status == DYING) {
 
         
-        //int tint_red = enemy->knockback_CD > 0 ? 255 : 0;
-
         if (enemy->type != skeleton) {
             int flag = enemy->dir == RIGHT ? 0 : 1;
-            int frame = enemy->death_animation_tick / 4; // Assuming 8 ticks per frame
+            int frame = enemy->death_animation_tick / 8; 
             
             al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, frame * 16, 16, 16, 16, al_map_rgb(255, 255, 255), 0, 0, dx, dy, TILE_SIZE / 16, TILE_SIZE / 16, 0, flag);
         }
         else {
             int flag = enemy->dir == RIGHT ? 1 : 0;
-            int frame = 64 * (int)enemy->death_animation_tick / 64; // Assuming 8 ticks per frame
-            if (frame >= 832) {
-                
-            }
-            al_draw_tinted_scaled_rotated_bitmap_region(enemy->image, frame, 64, 64, 64, al_map_rgb(255, 255, 255), 0, 0, dx - 32, dy - 32, TILE_SIZE / 32, TILE_SIZE / 32, 0, flag);
-
+            int frame = enemy->death_animation_tick / 16; // Frame derived from tick
+            al_draw_tinted_scaled_rotated_bitmap_region(enemy->image,
+                frame * 64, 64, 64, 64,
+                al_map_rgb(255, 255, 255), 0, 0,
+                dx - 25, dy - 25,
+                TILE_SIZE / 25, TILE_SIZE / 25, 0, flag);
+            
         }
 
     }
@@ -714,26 +710,11 @@ static bool isCollision(Point enemyCoord, Map* map) {
         (enemyCoord.y + TILE_SIZE - 1) / TILE_SIZE >= map->row)
         return true;
 
-    /*
-        [TODO HACKATHON 2-2]
-
-        Check every corner of enemy if it's collide or not
-        Return true if it's not walkable
-
-        if(!isWalkable(map->map[...][...])) return true;
-        if(!isWalkable(map->map[...][...])) return true;
-        if(!isWalkable(map->map[...][...])) return true;
-        if(!isWalkable(map->map[...][...])) return true;
-    */
-
-    // Start 2 - 2
-
     if (!isWalkable(map->map[enemyCoord.y / TILE_SIZE][enemyCoord.x / TILE_SIZE])) return true;
     if (!isWalkable(map->map[(enemyCoord.y + TILE_SIZE - 1) / TILE_SIZE][enemyCoord.x / TILE_SIZE])) return true;
     if (!isWalkable(map->map[enemyCoord.y / TILE_SIZE][(enemyCoord.x + TILE_SIZE - 1) / TILE_SIZE])) return true;
     if (!isWalkable(map->map[(enemyCoord.y + TILE_SIZE - 1) / TILE_SIZE][(enemyCoord.x + TILE_SIZE - 1) / TILE_SIZE])) return true;
 
-    // End 2 - 2
 
     return false;
 }

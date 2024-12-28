@@ -101,13 +101,7 @@ static void init(void) {
 }
 
 static void update(void) {
-    /*
-        [TODO Homework]
-
-        Change the scene if winning/losing to win/lose scene
-    */
-
-    // Start HW 
+    
 
     int distance = sqrt((player.coord.x - cocudos.coord.x) * (player.coord.x - cocudos.coord.x) +
         (player.coord.y - cocudos.coord.y) * (player.coord.y - cocudos.coord.y));
@@ -158,78 +152,44 @@ static void update(void) {
         cocudos.health += 10;
     }
 
-
-
-    // End HW
-
     update_player(&player, &map);
     update_player2(&cocudos, &map);
 
     Point Camera;
-    /*
-        [TODO HACKATHON 1-3]
 
-        Calcualte the formula for the Camera
-        Camera.x = ...
-        Camera.y = ...
-
-        Hint: Adjust it based on player position variable, then subtract it with half of the gameplay screen
-    */
-    // Start 1 - 3
     Camera.x = player.coord.x - (SCREEN_W / 2);
     Camera.y = player.coord.y - (SCREEN_H / 2);
-    // End 1 - 3
 
 
 
     updateEnemyList(enemyList, &map, &player, &cocudos);
     update_weapon(&weapon, bulletList, player.coord, Camera);
     updateBulletList(bulletList, enemyList, &map, &player, &cocudos);
-
-    update_map(&map, player.coord, cocudos.coord, &coins_obtained, &map_coin);
+    if (player.health > 0 && cocudos.health > 0 && !map.toofar) {
+        update_map(&map, player.coord, cocudos.coord, &coins_obtained, &map_coin);
+    }
 }
 
 static void draw(void) {
     Point Camera;
-    /*
-        [TODO HACKATHON 1-4]
-
-        Calcualte the formula for the Camera
-        Camera.x = ...
-        Camera.y = ...
-
-        Hint: Just copy from the [TODO HACKATHON 1-3]
-    */
-
-    // Start 1 - 4
+    
     Camera.x = player.coord.x - (SCREEN_W / 2);
     Camera.y = player.coord.y - (SCREEN_H / 2);
-    // End 1 - 4
 
-    // Draw
     draw_map(&map, Camera);
     draw_player(&player, Camera);
     draw_player2(&cocudos, Camera);
 
+    char coin_text[32]; 
 
-    /*
-        [TODO Homework]
-
-        Draw the UI of Health and Total Coins
-    */
-
-    // Start HW
-
-    // Define a buffer to hold the formatted string
-    char coin_text[32]; // Ensure the buffer is large enough to hold the text
-
-    // Format the integer into the buffer as a string
     snprintf(coin_text, sizeof(coin_text), "%d", coins_obtained);
 
-    drawEnemyList(enemyList, Camera);
-    drawBulletList(bulletList, Camera);
-    draw_weapon(&weapon, player.coord, Camera);
-
+    if (player.health > 0 && cocudos.health > 0 && !map.toofar) {
+        drawEnemyList(enemyList, Camera);
+        drawBulletList(bulletList, Camera);
+        draw_weapon(&weapon, player.coord, Camera);
+    }
+    
     al_draw_scaled_bitmap(map.coin_assets, 0, 0, 16, 16, 0, 0, 100, 100, 0);
 
     al_draw_text(P3_FONT, al_map_rgb(255, 255, 255), 52, 75, ALLEGRO_ALIGN_CENTER, coin_text);
@@ -265,7 +225,7 @@ static void draw(void) {
     }
 
 
-    // End HW
+    
 }
 
 static void destroy(void) {

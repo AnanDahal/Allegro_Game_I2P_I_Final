@@ -65,24 +65,7 @@ void update_player(Player* player, Map* map) {
         }
     }
 
-    /*
-        [TODO HACKATHON 1-1]
-
-        Player Movement
-        Adjust the movement by player->speed
-
-        if (keyState[player->up]) {
-            player->coord.y = ...
-            player->direction = ...
-        }
-        if (keyState[player->down]) {
-            player->coord.y = ...
-            player->direction = ...
-        }
-    */
-
-
-    // Start 1 - 1
+   
     if ((keyState[player_up] || keyState[player_down] || keyState[player_left] || keyState[player_right]) && player->health > 0) {
         player->status = PLAYER_WALKING;
     }
@@ -103,32 +86,11 @@ void update_player(Player* player, Map* map) {
         }
     }
 
-    // End 1 - 1
-
-
-    // if Collide, snap to the grid to make it pixel perfect
     if (isCollision(player, map)) {
         player->coord.y = round((float)original.y / (float)TILE_SIZE) * TILE_SIZE;
     }
 
-    /*
-        [TODO HACKATHON 1-2]
-
-        Player Movement
-        Add/Subtract the movement by player->speed
-
-        if (keyState[player->left]) {
-            player->coord.y = ...
-            player->direction = ...
-        }
-        if (keyState[player->right]) {
-            player->coord.y = ...
-            player->direction = ...
-
-    }
-    */
-
-    // Start 1 - 2
+  
     if (player->status != PLAYER_DYING) {
 
         if (keyState[player_left]) {
@@ -139,7 +101,6 @@ void update_player(Player* player, Map* map) {
             player->coord.x += player->speed;
             player->direction = RIGHT;
         }
-        // End 1 - 2
     }
 
 
@@ -149,15 +110,8 @@ void update_player(Player* player, Map* map) {
         player->coord.x = round((float)original.x / (float)TILE_SIZE) * TILE_SIZE;
     }
 
-    /*
-        [TODO Homework]
-
-        Calculate the animation tick to draw animation later
-    */
-    // Start HW 
     player->animation_tick = (player->animation_tick + 1) % 64;
 
-    // End HW
 }
 
 int flag = 0; // Change the flag to flip character
@@ -168,13 +122,7 @@ void draw_player(Player* player, Point cam) {
 
     
 
-    /*
-        [TODO Homework]
-
-        Draw Animation of Dying, Walking, and Idle
-    */
-
-    // Start HW 
+    
 
     int scene_x = 0;
     int scene_y = 0;
@@ -213,7 +161,7 @@ void draw_player(Player* player, Point cam) {
         flag // Flip or not
     );
 
-    // End HW
+    
 
 
 #ifdef DRAW_HITBOX
@@ -354,7 +302,7 @@ void draw_player2(Player* player, Point cam) {
         flag2 // Flip or not
     );
 
-    // End HW
+    
 }
 
 void delete_player(Player* player) {
@@ -399,8 +347,6 @@ void hitPlayer(Player* player, Point enemy_coord, int damage) {
             player->animation_tick = 0;
             // Trigger game-over logic if needed
         }
-
-        // End HW
 
     }
 }
