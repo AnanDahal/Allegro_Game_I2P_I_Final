@@ -85,21 +85,11 @@ void draw_bullet(Bullet* bullet, Point camera) {
 }
 
 void destroy_bullet(Bullet* bullet) {
-    // In case you are using immage asset for the bullet, free it here
     if (bullet && bullet->image) {
         al_destroy_bitmap(bullet->image);
     }
 }
 
-/*
-    LINKED LIST IMPLEMENTATION FOR BULLET
-    THERE ARE :
-        (1) CREATE      : INITIALIZING DUMMY HEAD
-        (2) INSERT      : INSERT NEW NODE OF BULLET
-        (3) UPDATE      : ITERATE EVERYTHING AND UPDATE THE BULLET
-        (4) DRAW        : ITERATE EVERYTHING AND DRAW THE BULLET
-        (5) DESTROY     : DESTROY THE LINKED LIST
- */
 
 BulletNode* createBulletList(void) {
     BulletNode* dummyhead = (BulletNode*)malloc(sizeof(BulletNode));

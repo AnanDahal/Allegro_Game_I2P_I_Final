@@ -12,10 +12,7 @@
 #include <allegro5/allegro_acodec.h>
 #include "utility.h"
 
-/*
-	The state of the keys
-	If the key is pressed then keyState[...] will be true
-*/
+
 extern bool keyState[ALLEGRO_KEY_MAX];
 extern ALLEGRO_MOUSE_STATE mouseState;
 

@@ -81,13 +81,7 @@ void destroy_init(void) {
     al_destroy_font(P3_FONT);
 }
 
-/*
-    [GAME LOG]
 
-    You can disable the log by remove the "#define LOG_ENABLE" in utility.h
-    It's not recommended if you are still in progress on making this game
-    You may do it after finishing it for performance boost purpose
-*/
 void print_log(const char * msg, va_list arg, logtype type){
 #ifdef LOG_ENABLE
     // Open File

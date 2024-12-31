@@ -19,7 +19,7 @@ Player create_player(char* path, int row, int col, int sound) {
     };
 
     player.speed = 4;
-    player.health = 50;
+    player.health = 70;
 
     player.image = al_load_bitmap(path);
     if (!player.image) {

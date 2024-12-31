@@ -14,10 +14,7 @@
 #define MAX_ENEMY_SPAWN 100
 #define MAX_DOORS 3
 
-/*
-    Map Tiles type
-    Hint : Some type might need a background, to configure it try to modify "get_map_offset(Map * map)"
-*/
+
 
 int coin_counter;
 
@@ -170,10 +167,7 @@ bool cocudos6_on_button;
 
 
 
-/*
-    MAP FUNCTION
-    Feel free to add more if you have some idea or interaction with the map
- */
+
 Map create_map(char* path, uint8_t type); // Create a map based on given file path
 void draw_map(Map* map, Point cam); // Draw the map
 void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* map_coin); // Update map : you might want add some parameter here

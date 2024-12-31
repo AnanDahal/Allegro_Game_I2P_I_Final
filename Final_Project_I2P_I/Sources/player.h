@@ -15,7 +15,7 @@ typedef enum {
 
 typedef struct _Player{
     Point coord; // coordinate of the player
-    int speed; // TODO: CHANGE SPEED SCALED TO THE SIZE OF THE TILES
+    int speed; 
     int direction;
     int health;
 

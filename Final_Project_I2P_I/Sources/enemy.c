@@ -7,9 +7,7 @@
 
 #define QUEUE_SIZE 2000
 
-/*
-    ENEMY IMPLEMENTATION
- */
+
 
 ALLEGRO_BITMAP* slimeBitmap;
 ALLEGRO_BITMAP* skeletonBitmap;
@@ -30,11 +28,6 @@ static bool cocudosCollision(Point enemyCoord, Point cocudosCoord);
 
 
 void initEnemy(void) {
-    // For memory efficiency, we load the image once
-    // as every enemy bitmap are pointer, they will point to the same global bitmap variable
-
-    
-
     // Slime
     char* slimePath = "Assets/Slime.png";
     slimeBitmap = al_load_bitmap(slimePath);
@@ -71,7 +64,7 @@ Enemy createEnemy(int row, int col, char type) {
         enemy.speed = 3;
         enemy.image = slimeBitmap;
         break;
-        // Insert more here to have more enemy variant
+        
     case 'M':
         enemy.health = 200;
         enemy.type = magma;
@@ -149,7 +142,7 @@ bool updateEnemy(Enemy* enemy, Map* map, Player* player, Player* cocudos) {
     if (enemy->status == DYING && enemy->type != skeleton) {
         enemy->death_animation_tick++;
         
-        if (enemy->death_animation_tick > 64) { // Assuming 64 ticks for the animation
+        if (enemy->death_animation_tick > 64) { 
 
             int tileX = enemy->coord.x / TILE_SIZE;
             int tileY = enemy->coord.y / TILE_SIZE;
@@ -457,15 +450,7 @@ void hitEnemy(Enemy* enemy, int damage, float angle) {
     }
 }
 
-/*
-    LINKED LIST IMPLEMENTATION FOR ENEMY
-    THERE ARE :
-        (1) CREATE      : INITIALIZING DUMMY HEAD
-        (2) INSERT      : INSERT NEW NODE OF ENEMY
-        (3) UPDATE      : ITERATE EVERYTHING AND UPDATE THE ENEMY
-        (4) DRAW        : ITERATE EVERYTHING AND DRAW THE ENEMY
-        (5) DESTROY     : DESTROY THE LINKED LIST
- */
+
 
 enemyNode* createEnemyList(void) {
     enemyNode* dummyhead = (enemyNode*)malloc(sizeof(enemyNode));

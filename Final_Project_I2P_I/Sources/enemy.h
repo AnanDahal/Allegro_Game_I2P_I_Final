@@ -48,11 +48,6 @@ Enemy createEnemy(int row, int col, char type);
 void hitEnemy(Enemy* enemy, int damage, float angle);
 
 
-/*
-    Struct of 1 node of enemy
-    We use linked list data structure to store enemy information
-    Since the enemy might die at one point, linked list will be better here since the deletion is O(1)
-*/
 typedef struct _enemyNode {
     Enemy enemy;
     struct _enemyNode* next;

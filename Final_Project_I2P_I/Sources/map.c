@@ -8,11 +8,7 @@
 #include "player.h"
 
 
-/*
-    [OFFSET CALCULATOR FUNCTIONS]
-      You might want to modify this functions if you are using different assets
-      In short, this functions help us to find which asset to draw
- */
+
 
 static void get_map_offset(Map* map);
 static Point get_wall_offset_assets(Map* map, int i, int j);
@@ -397,7 +393,7 @@ void draw_map(Map* map, Point cam) {
                 break;
             }
             case TROPHY: {
-                if (map_coin == coin_counter && map->trophy_status[i][j] != T_DISAPPEARING) {
+                if ((map_coin == coin_counter && map->trophy_status[i][j] != T_DISAPPEARING) || map_level == 3 && (map->trophy_status[i][j] != T_DISAPPEARING)) {
                     int offsetx = 32 * (int)(trophy_animation / (64 / 9));
                     if (offsetx > 32 * 9) {
                         offsetx = 0;
@@ -1032,10 +1028,7 @@ void draw_map(Map* map, Point cam) {
 
 
 void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* map_coins) {
-    /*
-        Hint: To check if it's collide with object in map, you can use tile_collision function
-        e.g. to update the coins if you touch it
-    */
+    
 
     coin_animation = (coin_animation + 1) % 64;
     trophy_animation = (trophy_animation + 1) % (64 * 2);
@@ -1063,9 +1056,9 @@ void update_map(Map* map, Point player, Point cocudos, int* total_coins, int* ma
         map->coin_status[center_y_cocudos][center_x_cocudos] = DISAPPEARING;
         al_play_sample(map->coin_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
-
+    
     if (map->map[center_y_cocudos][center_x_cocudos] == TROPHY &&
-        (map_coin == coin_counter)) {
+        ((map_coin == coin_counter) || (map_level == 3))) {
         map->coin_disappear_animation[center_y_cocudos][center_x_cocudos] = 16;
         map->trophy_status[center_y_cocudos][center_x_cocudos] = T_DISAPPEARING;
         al_play_sample(map->trophy_audio, SFX_VOLUME, 0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
@@ -1309,10 +1302,7 @@ bool isWalkable(BLOCK_TYPE block) {
     return false;
 }
 
-/*
-    DON'T CHANGE CODE BELOW UNLESS YOU ARE UNDERSTAND WELL
-    OR WANT TO CHANGE TO DIFFERENT ASSETS
- */
+
 static bool isWall(Map* map, int i, int j);
 //static bool isFloorHole(Map * map, int i, int j);
 static bool isFloor(Map* map, int i, int j);

@@ -814,8 +814,8 @@ static void draw_shop(void) {
         0, 0, 1640, 1000, 0);
 
 
-    // Define a buffer to hold the formatted string
-    char coin_text[32]; // Ensure the buffer is large enough to hold the text
+   
+    char coin_text[32]; 
 
     // Format the integer into the buffer as a string
     snprintf(coin_text, sizeof(coin_text), "%d", coins_obtained);

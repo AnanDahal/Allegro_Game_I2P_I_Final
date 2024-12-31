@@ -56,18 +56,8 @@ void destroy_button(Button* button) {
 }
 
 static bool mouse_in_rect(Point mouse, RecArea rect) {
-	/*
-		[TODO Hackathon 4-1] 
-		
-		Return true if mouse is inside the rectangle
-	*/
 
-	// Start 4 - 1
 	return (mouse.x >= rect.x && mouse.x <= rect.x + rect.w && mouse.y >= rect.y && mouse.y <= rect.y + rect.h);
-	// End 4 - 1
-
-
-	
 
 	return false;
 }

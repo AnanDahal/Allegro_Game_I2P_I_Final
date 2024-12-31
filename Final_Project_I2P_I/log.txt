@@ -5,7 +5,65 @@
 [LOG] Change scene from NULL to menu
 [LOG] Scene menu created, initializing ... 
 [LOG] Start Game Event Loop
-[LOG] Change scene from menu to setting
-[LOG] Change scene from setting to menu
-[LOG] Change scene from menu to setting
-[LOG] Change scene from setting to menu
+[LOG] Key 67 down
+[LOG] Key 67 up
+[LOG] Key 67 down
+[LOG] Change scene from menu to loading
+[LOG] Key 67 up
+[LOG] Key 75 down
+[LOG] Key 75 up
+[LOG] Change scene from loading to game
+[LOG] Using Assets/map0.txt to load the map
+[LOG] Creating Enemy at ( 9, 34 )
+[LOG] Creating Enemy at ( 11, 10 )
+[LOG] Creating Enemy at ( 11, 16 )
+[LOG] Creating Enemy at ( 11, 22 )
+[LOG] Creating Enemy at ( 14, 34 )
+[LOG] Creating Enemy at ( 28, 34 )
+[LOG] Creating Enemy at ( 31, 10 )
+[LOG] Creating Enemy at ( 31, 16 )
+[LOG] Creating Enemy at ( 31, 22 )
+[LOG] Creating Enemy at ( 33, 34 )
+[LOG] Key 19 down
+[LOG] Key 4 down
+[LOG] Key 4 up
+[LOG] Key 4 down
+[LOG] Key 19 up
+[LOG] Key 23 down
+[LOG] Key 4 up
+[LOG] Key 1 down
+[LOG] Key 83 down
+[LOG] Key 1 up
+[LOG] Key 83 up
+[LOG] Key 23 up
+[LOG] Key 83 down
+[LOG] Key 4 down
+[LOG] Key 84 down
+[LOG] Key 84 up
+[LOG] Key 85 down
+[LOG] Key 19 down
+[LOG] Key 4 up
+[LOG] Key 82 down
+[LOG] Key 83 up
+[LOG] Key 83 down
+[LOG] Key 83 up
+[LOG] Key 4 down
+[LOG] Key 4 up
+[LOG] Key 83 down
+[LOG] Key 82 up
+[LOG] Key 1 down
+[LOG] Key 82 down
+[LOG] Key 1 up
+[LOG] Key 83 up
+[LOG] Key 19 up
+[LOG] Key 85 up
+[LOG] Key 1 down
+[LOG] Change scene from game to lose
+[LOG] Key 82 up
+[LOG] Key 83 down
+[LOG] Key 1 up
+[LOG] Key 83 up
+[LOG] Key 67 down
+[LOG] Key 67 up
+[LOG] Key 67 down
+[LOG] Key 67 up

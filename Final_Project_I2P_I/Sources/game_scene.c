@@ -33,8 +33,6 @@ static void init(void) {
     timer_countdown = 60;
     initEnemy();
 
-    
-
     if (map_level == 1) {
         map = create_map("Assets/map0.txt", 0);
         change_bgm("Assets/audio/wii_music.mp3");
@@ -88,7 +86,7 @@ static void init(void) {
             weapon = create_weapon("Assets/machine_gun.png", "Assets/orange_bullet.png", 5, 15, 30);
         }
         else if (fireball_eq) {
-            weapon = create_weapon("Assets/machine_gun.png", "Assets/fireball.png", 5, 15, 40);
+            weapon = create_weapon("Assets/machine_gun.png", "Assets/fireball.png", 5, 15, 100);
         }
     }
 
